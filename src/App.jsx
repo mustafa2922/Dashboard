@@ -1,23 +1,29 @@
 import React from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import Home from "./Pages/Home/Home";
 import Clients from "./Pages/Clients/Clients";
 import Agents from "./Pages/Agents/Agents";
 import Navbar from "./Components/Navbar";
 import SideBar from "./Components/SideBar";
+import Itineraries from "./Pages/Itineraries/Itineraries";
+import Queries from "./Pages/Queries/Queries";
+import Corporate from "./Pages/Corporate/Corporate";
+import Dashboard from "./Pages/Home/Dashboard";
 
 const App = () => {
   const Layout = () => {
     return (
-      <div className="main">
+      <div className="main h-screen w-screen">
         <Navbar />
-        <div className="wrapper flex">
-          <div className="sideBar-Wrapper w-[12%] bg-black text-white">
+        <div className="wrapper flex h-full">
+
+          <div className="sideBar-Wrapper w-[4rem] h-full bg-[#12344d] text-white">
             <SideBar />
           </div>
-          <div className="content-Wrapper w-[88%] bg-blue-300 text-white">
+
+          <div className="content-Wrapper w-full bg-blue-300 text-white">
             <Outlet />
           </div>
+
         </div>
       </div>
     );
@@ -28,9 +34,12 @@ const App = () => {
       path: "/",
       element: <Layout />,
       children: [
-        { path: "/", element: <Home /> },
+        { path: "/", element: <Dashboard /> },
         { path: "/clients", element: <Clients /> },
         { path: "/agents", element: <Agents /> },
+        { path: "/itineraries", element: <Itineraries/> },
+        { path: "/queries", element: <Queries/> },
+        { path: "/corporate", element: <Corporate/> },
       ],
     },
   ]);
