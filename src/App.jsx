@@ -8,19 +8,21 @@ import Itineraries from "./Pages/Itineraries/Itineraries";
 import Queries from "./Pages/Queries/Queries";
 import Corporate from "./Pages/Corporate/Corporate";
 import Dashboard from "./Pages/Home/Dashboard";
+import Setting from "./Pages/Settings/Setting";
+import Expense from "./Pages/Expense/Expense";
 
 const App = () => {
   const Layout = () => {
     return (
-      <div className="main h-screen w-screen">
+      <div className="main h-screen w-full">
         <Navbar />
-        <div className="wrapper flex h-full">
+        <div className="wrapper flex h-[92.5vh]">
 
           <div className="sideBar-Wrapper w-[4rem] h-full bg-[#12344d] text-white">
             <SideBar />
           </div>
 
-          <div className="content-Wrapper w-full bg-blue-300 text-white">
+          <div className="content-Wrapper w-full h-full overflow-scroll">
             <Outlet />
           </div>
 
@@ -40,6 +42,8 @@ const App = () => {
         { path: "/itineraries", element: <Itineraries/> },
         { path: "/queries", element: <Queries/> },
         { path: "/corporate", element: <Corporate/> },
+        { path: "/settings", element: <Setting/> },
+        { path: "/expenses", element: <Expense/> },
       ],
     },
   ]);

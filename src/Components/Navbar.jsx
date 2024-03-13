@@ -6,10 +6,11 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import DesktopWindowsOutlinedIcon from '@mui/icons-material/DesktopWindowsOutlined';
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <div className="flex justify-between items-center w-screen bg-white px-1 h-[3rem]">
+    <div className="sticky top-0 z-10 flex justify-between items-center w-full bg-[#eff3f7] px-1 h-[3rem]">
       <div className="md:visible invisible flex items-center w-[50%] h-full ">
 
         <div className="w-[22%] h-full ">
@@ -42,15 +43,17 @@ const Navbar = () => {
           <div className="group-hover:visible invisible w-fit p-1 h-fit rounded-md top-9 text-sm  bg-black text-white absolute" >Notifications</div>
         </div>
 
-        <div className="relative group flex justify-center cursor-pointer">
-          <SettingsOutlinedIcon />
-          <div className="group-hover:visible invisible w-fit p-1 h-fit rounded-md top-9 text-sm  bg-black text-white absolute" >Settings</div>
-        </div>
+        <Link to={'/settings'} >
+          <div className="relative group flex justify-center cursor-pointer">
+            <SettingsOutlinedIcon />
+            <div className="group-hover:visible invisible w-fit p-1 h-fit rounded-md top-9 text-sm  bg-black text-white absolute" >Settings</div>
+          </div></Link>
 
-        <div className="relative group flex  justify-center cursor-pointer">
-          <ReceiptLongOutlinedIcon />
-          <div className="group-hover:visible flex justify-center items-center invisible w-[8rem] p-1 h-fit rounded-md top-9 text-sm  bg-black text-white absolute" >Company Expense</div>
-        </div>
+        <Link to={'/expenses'} >
+          <div className="relative group flex  justify-center cursor-pointer">
+            <ReceiptLongOutlinedIcon />
+            <div className="group-hover:visible flex justify-center items-center invisible w-[8rem] p-1 h-fit rounded-md top-9 text-sm  bg-black text-white absolute" >Company Expense</div>
+          </div></Link>
 
         <div ><AccountCircleOutlinedIcon /> </div>
 
