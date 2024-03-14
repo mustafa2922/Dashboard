@@ -10,6 +10,7 @@ import Corporate from "./Pages/Corporate/Corporate";
 import Dashboard from "./Pages/Home/Dashboard";
 import Setting from "./Pages/Settings/Setting";
 import Expense from "./Pages/Expense/Expense";
+import ClientDetail from "./Pages/ClientDetails/ClientDetail";
 
 const App = () => {
   const Layout = () => {
@@ -38,6 +39,7 @@ const App = () => {
       children: [
         { path: "/", element: <Dashboard /> },
         { path: "/clients", element: <Clients /> },
+        { path: "/clients/:clientId", element:  <ClientDetail/> },
         { path: "/agents", element: <Agents /> },
         { path: "/itineraries", element: <Itineraries/> },
         { path: "/queries", element: <Queries/> },
