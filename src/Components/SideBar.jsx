@@ -10,9 +10,9 @@ import AdjustOutlinedIcon from '@mui/icons-material/AdjustOutlined';
 import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined';
 import { Link } from 'react-router-dom';
 
-const SideBar = () => {
+const SideBar = ( ) => {
   return (
-    <div className='relative flex flex-col items-center mt-3 z-10'>
+    <div className=' relative w-full flex flex-col items-center mt-3 z-10'>
 
       <Link to={'/'} >
         <div className='group flex' >
@@ -69,7 +69,7 @@ const SideBar = () => {
             <AssessmentOutlinedIcon />
           </div>
 
-          <div className='group-hover:visible invisible flex flex-col p-2 bg-[#12344d] rounded-lg h-fit w-[15rem] left-16  absolute' >
+          <div className='group-hover:visible invisible flex flex-col p-2 md:text-base bg-[#12344d] text-xs rounded-lg h-fit w-[12rem] md:w-[15rem] left-16  absolute' >
 
             <div className='flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600'>
               <AdjustOutlinedIcon style={{ fontSize: '20px' }} />
@@ -121,7 +121,7 @@ const SideBar = () => {
             <LayersOutlinedIcon />
           </div>
 
-          <div className='group-hover:visible invisible flex flex-col p-2 bg-[#12344d] rounded-lg h-fit w-[13rem] left-16  absolute' >
+          <div className='group-hover:visible invisible flex flex-col p-2 md:text-base text-xs  bg-[#12344d] rounded-lg h-fit w-[11rem] md:w-[13rem] left-16  absolute' >
 
             <div className='flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600'>
               <AdjustOutlinedIcon style={{ fontSize: '20px' }} />
