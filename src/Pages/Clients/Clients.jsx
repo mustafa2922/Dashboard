@@ -1,17 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { Link } from "react-router-dom";
-import Modal from "@mui/material/Modal";
-import CloseIcon from "@mui/icons-material/Close";
-import TextField from "@mui/material/TextField";
 import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
 import CustomModal from "../../Components/CustomModal";
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 
@@ -285,7 +281,7 @@ const Clients = () => {
             rowSelection="multiple"
           />
 
-          <CustomModal status={modalStat} openVal={open} setOpenVal={setOpen} />
+          <CustomModal page={'Client'} status={modalStat} openVal={open} setOpenVal={setOpen} />
         </div>
       </div>
     </div>

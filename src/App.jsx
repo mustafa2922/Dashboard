@@ -11,6 +11,13 @@ import Dashboard from "./Pages/Home/Dashboard";
 import Setting from "./Pages/Settings/Setting";
 import Expense from "./Pages/Expense/Expense";
 import ClientDetail from "./Pages/ClientDetails/ClientDetail";
+import AgentDetails from "./Pages/AgentDetails/AgentDetails";
+import EmailTemplate from "./Pages/EmailTemplate/EmailTemplate";
+import MarketingDashboard from "./Pages/MarketingDashboard/MarketingDashboard";
+import ClientsGroup from "./Pages/ClientsGroup/ClientsGroup";
+import Campagins from "./Pages/Campagins/Campagins";
+import LandingPages from "./Pages/LandingPages/LandingPages";
+import CreateCampaign from "./Pages/createCampaign/CreateCampaign";
 
 const App = () => {
   const Layout = () => {
@@ -50,11 +57,18 @@ const App = () => {
         { path: "/clients", element: <Clients /> },
         { path: "/clients/:clientId", element: <ClientDetail /> },
         { path: "/agents", element: <Agents /> },
+        { path: "/agents/:agentId", element: <AgentDetails/> },
         { path: "/itineraries", element: <Itineraries /> },
         { path: "/queries", element: <Queries /> },
         { path: "/corporate", element: <Corporate /> },
         { path: "/settings", element: <Setting /> },
         { path: "/expenses", element: <Expense /> },
+        { path: "/marketingDashboard", element: <MarketingDashboard/> },
+        { path: "/clientsGroup", element: <ClientsGroup/> },
+        { path: "/emailTemplate", element: <EmailTemplate/> },
+        { path: "/campagins", element: <Campagins/>  },
+        { path: "/campagins/createCampaigns", element: <CreateCampaign/> },
+        { path: "/landingPages", element: <LandingPages/> },
       ],
     },
   ]);

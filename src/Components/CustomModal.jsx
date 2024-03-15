@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@mui/material/TextField";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 
-function CustomModal({ status, openVal, setOpenVal }) {
-
+function CustomModal({ page, status, openVal, setOpenVal }) {
   const [value, setValue] = useState();
 
   const handleClose = () => setOpenVal(false);
@@ -21,7 +24,9 @@ function CustomModal({ status, openVal, setOpenVal }) {
     >
       <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[70%] h-[60%]">
         <div className="flex justify-between items-center h-[10%] px-2">
-          <div className="font-bold text-lg">{status} Client</div>
+          <div className="font-bold text-lg">
+            {status} {page}
+          </div>
           <div className="cursor-pointer" onClick={handleClose}>
             <CloseIcon />
           </div>
@@ -43,12 +48,14 @@ function CustomModal({ status, openVal, setOpenVal }) {
                 size="small"
                 label="First Name"
                 variant="outlined"
+                sx={{ width: "48%" }}
               />
               <TextField
                 id="outlined-basic"
                 size="small"
                 label="Last Name"
                 variant="outlined"
+                sx={{ width: "48%" }}
               />
             </div>
 
@@ -92,7 +99,7 @@ function CustomModal({ status, openVal, setOpenVal }) {
               />
             </div>
           </div>
-          <div className="w-[48%] ">
+          <div className="w-[48%]">
             <div className="w-full">
               <TextField
                 fullWidth
@@ -113,36 +120,61 @@ function CustomModal({ status, openVal, setOpenVal }) {
               />
             </div>
 
-            <div className="mt-4 w-full">
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                size="small"
-                label="Date of Birth"
-                variant="outlined"
-              />
-            </div>
+            {page === "Client" ? (
+              <>
+                <div className="flex justify-between">
+                  <div className="mt-4 w-[48%]">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <MobileDatePicker
+                        label="Date Of Birth"
+                        sx={{ minWidth: "100%" }}
+                        defaultValue={dayjs("2022-04-17")}
+                      />
+                    </LocalizationProvider>
+                  </div>
 
-            <div className="mt-4 w-full">
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                size="small"
-                label="Marriage Anniversary"
-                variant="outlined"
-              />
-            </div>
+                  <div className="mt-4 w-[48%]">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <MobileDatePicker
+                        label="Marriage Anniversary"
+                        sx={{ minWidth: "100%" }}
+                        defaultValue={dayjs("2022-04-17")}
+                      />
+                    </LocalizationProvider>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="mt-4 w-full">
+                  <TextField
+                    fullWidth
+                    id="outlined-basic"
+                    size="small"
+                    label="Company"
+                    variant="outlined"
+                  />
+                </div>
 
-            <div className="mt-4 w-full rounded-md h-10">
+                <div className="mt-4 w-full">
+                  <TextField
+                    fullWidth
+                    id="outlined-basic"
+                    size="small"
+                    label="GST"
+                    variant="outlined"
+                  />
+                </div>
+              </>
+            )}
+
+            <div className="mt-4 w-full rounded-md h-10  ">
               <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
                 Save
               </button>
             </div>
 
-            <div
-              onClick={handleClose}
-              className="mt-4 w-full rounded-md h-10"
-            >
+            <div onClick={handleClose} className="mt-4 w-full rounded-md h-10">
               <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
                 Cancel
               </button>
