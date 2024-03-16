@@ -18,6 +18,7 @@ import ClientsGroup from "./Pages/ClientsGroup/ClientsGroup";
 import Campagins from "./Pages/Campagins/Campagins";
 import LandingPages from "./Pages/LandingPages/LandingPages";
 import CreateCampaign from "./Pages/createCampaign/CreateCampaign";
+import CreateEmailTemplate from "./Pages/CreateEmailTemplate/CreateEmailTemplate";
 
 const App = () => {
   const Layout = () => {
@@ -40,7 +41,7 @@ const App = () => {
             <SideBar />
           </div>
 
-          <div className="content-Wrapper w-full h-full overflow-scroll">
+          <div className="content-Wrapper w-full h-full overflow-auto">
             <Outlet />
           </div>
         </div>
@@ -66,6 +67,7 @@ const App = () => {
         { path: "/marketingDashboard", element: <MarketingDashboard/> },
         { path: "/clientsGroup", element: <ClientsGroup/> },
         { path: "/emailTemplate", element: <EmailTemplate/> },
+        { path: "/emailTemplate/createTemplate", element: <CreateEmailTemplate/> },
         { path: "/campagins", element: <Campagins/>  },
         { path: "/campagins/createCampaigns", element: <CreateCampaign/> },
         { path: "/landingPages", element: <LandingPages/> },
