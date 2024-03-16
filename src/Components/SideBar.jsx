@@ -18,7 +18,7 @@ const SideBar = () => {
           <div className="p-2 m-1 cursor-pointer  hover:bg-slate-600 rounded-md">
             <SpaceDashboardOutlinedIcon />
           </div>
-          <div className="invisible  group-hover:visible self-center flex items-center justify-center left-16 absolute h-7 w-fit text-sm p-2 bg-black text-white">
+          <div className="invisible rounded-lg group-hover:visible self-center flex items-center justify-center left-16 absolute h-7 w-fit text-sm p-2 bg-black text-white">
             Dashboard
           </div>
         </div>
@@ -29,7 +29,7 @@ const SideBar = () => {
           <div className="p-2 m-1 cursor-pointer  hover:bg-slate-600 rounded-md">
             <ListAltOutlinedIcon />
           </div>
-          <div className="invisible  group-hover:visible self-center flex items-center justify-center left-16 absolute h-7 w-fit text-sm p-2 bg-black text-white">
+          <div className="invisible rounded-lg group-hover:visible self-center flex items-center justify-center left-16 absolute h-7 w-fit text-sm p-2 bg-black text-white">
             Queries
           </div>
         </div>
@@ -40,7 +40,7 @@ const SideBar = () => {
           <div className="p-2 m-1 cursor-pointer  hover:bg-slate-600 rounded-md">
             <DepartureBoardOutlinedIcon />
           </div>
-          <div className="invisible  group-hover:visible self-center flex items-center justify-center left-16 absolute h-7 w-fit text-sm p-2 bg-black text-white">
+          <div className="invisible rounded-lg group-hover:visible self-center flex items-center justify-center left-16 absolute h-7 w-fit text-sm p-2 bg-black text-white">
             Itineraries
           </div>
         </div>
@@ -51,7 +51,7 @@ const SideBar = () => {
           <div className="p-2 m-1 cursor-pointer  hover:bg-slate-600 rounded-md">
             <AccountCircleOutlinedIcon />
           </div>
-          <div className="invisible  group-hover:visible self-center flex items-center justify-center left-16 absolute h-7 w-fit text-sm p-2 bg-black text-white">
+          <div className="invisible rounded-lg group-hover:visible self-center flex items-center justify-center left-16 absolute h-7 w-fit text-sm p-2 bg-black text-white">
             Clients
           </div>
         </div>
@@ -62,7 +62,7 @@ const SideBar = () => {
           <div className="p-2 m-1 cursor-pointer  hover:bg-slate-600 rounded-md">
             <SupportAgentOutlinedIcon />
           </div>
-          <div className="invisible  group-hover:visible self-center flex items-center justify-center left-16 absolute h-7 w-fit text-sm p-2 bg-black text-white">
+          <div className="invisible rounded-lg group-hover:visible self-center flex items-center justify-center left-16 absolute h-7 w-fit text-sm p-2 bg-black text-white">
             Agents
           </div>
         </div>
@@ -73,7 +73,7 @@ const SideBar = () => {
           <div className="p-2 m-1 cursor-pointer  hover:bg-slate-600 rounded-md">
             <ApartmentOutlinedIcon />
           </div>
-          <div className="invisible  group-hover:visible self-center flex items-center justify-center left-16 absolute h-7 w-fit text-sm p-2 bg-black text-white">
+          <div className="invisible rounded-lg group-hover:visible self-center flex items-center justify-center left-16 absolute h-7 w-fit text-sm p-2 bg-black text-white">
             Corporate
           </div>
         </div>
@@ -86,45 +86,61 @@ const SideBar = () => {
           </div>
 
           <div className="group-hover:visible invisible flex flex-col p-2 md:text-base bg-[#12344d] text-xs rounded-lg h-fit w-[12rem] md:w-[15rem] left-16  absolute">
-            <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
-              <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
-              <div className="ml-1">Profit/Loss Report</div>
-            </div>
+            <Link to={'/profitLossReport'} >
+              <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
+                <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
+                <div className="ml-1">Profit/Loss Report</div>
+              </div>
+            </Link>
 
-            <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
-              <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
-              <div className="ml-1">Attendance Report</div>
-            </div>
+            <Link to={'/attendanceReport'}>
+              <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
+                <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
+                <div className="ml-1">Attendance Report</div>
+              </div>
+            </Link>
 
-            <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
-              <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
-              <div className="ml-1">Notes Report</div>
-            </div>
+            <Link to={'/notesReport'}>
+              <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
+                <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
+                <div className="ml-1">Notes Report</div>
+              </div>
+            </Link>
 
-            <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
-              <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
-              <div className="ml-1">Collection Report</div>
-            </div>
+            <Link to={'/collectionReport'}>
+              <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
+                <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
+                <div className="ml-1">Collection Report</div>
+              </div>
+            </Link>
 
-            <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
-              <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
-              <div className="ml-1">Tours Report</div>
-            </div>
+            <Link to={'/toursReport'}>
+              <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
+                <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
+                <div className="ml-1">Tours Report</div>
+              </div>
+            </Link>
 
-            <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
-              <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
-              <div className="ml-1">Task's / Followup's Report</div>
-            </div>
+            <Link to={'/taskReport'}>
+              <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
+                <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
+                <div className="ml-1">Task's / Followup's Report</div>
+              </div>
+            </Link>
 
-            <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
-              <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
-              <div className="ml-1">MIS Report</div>
-            </div>
+            <Link to={'/MIS-report'}>
+              <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
+                <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
+                <div className="ml-1">MIS Report</div>
+              </div>
+            </Link>
 
-            <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
-              <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
-              <div className="ml-1">Ledger Report</div>
-            </div>
+            <Link to={'/ledgerReport'}>
+              <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
+                <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
+                <div className="ml-1">Ledger Report</div>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
@@ -136,8 +152,7 @@ const SideBar = () => {
           </div>
 
           <div className="group-hover:visible invisible flex flex-col p-2 md:text-base text-xs  bg-[#12344d] rounded-lg h-fit w-[11rem] md:w-[13rem] left-16  absolute">
-
-            <Link to={'/marketingDashboard'} >
+            <Link to={"/marketingDashboard"}>
               <div className="flex items-center p-1 rounded-lg cursor-pointer hover:bg-slate-600">
                 <AdjustOutlinedIcon style={{ fontSize: "20px" }} />
                 <div className="ml-1">Marketing Dashboard</div>
