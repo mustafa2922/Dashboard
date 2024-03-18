@@ -1,0 +1,51 @@
+.edit-button {
+  background-color: #4557fe;
+  color: #fff;
+  padding: 1rem 3rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.edit-button:hover,
+.edit-button:active {
+  background-color: #7f8aee;
+}
+
+.settings-table {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  margin-top: 2rem;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+}
+
+/* .settings-table > p:nth-of-type(4n+3), p:nth-of-type(4n+3) + * {
+  background-color: #eee;
+}
+.settings-table > p:nth-of-type(4n+1), p:nth-of-type(4n+1) + * {
+  background-color: #fff
+} */
+/* 
+.settings-table > p:nth-child(2n+1) {
+  background-color: #4557fe;
+  color: #fff;
+}
+
+.settings-table > p:nth-child(2n+1) {
+  border-bottom: 1px solid #4557fe;
+} */
+
+.settings-table > p {
+  padding: 1rem 2rem;
+  margin: 0;
+}
+
+.settings-table > * {
+  border: 1px solid #eee;
+}

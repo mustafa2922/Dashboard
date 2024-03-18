@@ -1,0 +1,45 @@
+.editor-section:not(:first-of-type) {
+  margin-top: 3rem;
+}
+
+.title-fields label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.title-fields input {
+  display: block;
+  width: 100%;
+  padding: 0.7rem;
+  margin-top: 0.5rem;
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
+
+.editor-box h2 {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.editor-box {
+  margin-top: 2rem;
+}
+
+.submit-button {
+  background-color: #4557fe;
+  color: #fff;
+  padding: 1rem 3rem;
+  margin-top: 4rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.submit-button:hover,
+.submit-button:active {
+  background-color: #7f8aee;
+}

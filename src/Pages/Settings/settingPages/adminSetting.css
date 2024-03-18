@@ -1,0 +1,38 @@
+.admin-heading2 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.heading-text {
+  font-size: 0.8rem;
+  margin: 0;
+  padding-block: 0.5rem;
+  border-bottom: 1px dashed #aaa;
+}
+
+.button-grid {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.button-grid svg {
+  color: #4557fe;
+}
+
+.button-grid > a {
+  color: inherit;
+  padding: 1.5rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  border-radius: 10px;
+}
+
+.button-grid > a:hover,
+.button-grid > a:active {
+  background-color: #eee;
+}

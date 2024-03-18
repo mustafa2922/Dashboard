@@ -62,7 +62,7 @@ const Navbar = ({sendDataToApp}) => {
           <DesktopWindowsOutlinedIcon style={{ fontSize: 18 }} /> <span className="sm:block hidden" >Market Place</span>
         </button>
 
-        <div className="relative group flex justify-center cursor-pointer">
+        <div className="relative group flex z-10 justify-center cursor-pointer">
           <NotificationsActiveOutlinedIcon />
           <div className="group-hover:visible invisible w-fit p-1 h-fit rounded-md top-9 text-sm  bg-black text-white absolute">
             Notifications
@@ -70,7 +70,7 @@ const Navbar = ({sendDataToApp}) => {
         </div>
 
         <Link to={"/settings"}>
-          <div className="relative group flex justify-center cursor-pointer">
+          <div className="relative group z-10  flex justify-center cursor-pointer">
             <SettingsOutlinedIcon />
             <div className="group-hover:visible invisible w-fit p-1 h-fit rounded-md top-9 text-sm  bg-black text-white absolute">
               Settings
@@ -79,7 +79,7 @@ const Navbar = ({sendDataToApp}) => {
         </Link>
 
         <Link to={"/expenses"}>
-          <div className="relative group flex  justify-center cursor-pointer">
+          <div className="relative group flex z-10  justify-center cursor-pointer">
             <ReceiptLongOutlinedIcon />
             <div className="group-hover:visible flex justify-center items-center invisible w-[8rem] p-1 h-fit rounded-md top-9 text-sm  bg-black text-white absolute">
               Company Expense

@@ -1,0 +1,9 @@
+.file-input > label {
+  display: block;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.settings-heading2 {
+  font-size: 1rem;
+}

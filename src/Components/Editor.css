@@ -1,0 +1,12 @@
+.editor {
+  border: 1px solid #eee;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  min-height: 300px;
+}
+
+.toolbar-wrapper {
+  background-color: #eee;
+  border-radius: 0.5rem;
+}
+
