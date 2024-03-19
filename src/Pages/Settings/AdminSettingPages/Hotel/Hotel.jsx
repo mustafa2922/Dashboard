@@ -11,17 +11,20 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TextField from "@mui/material/TextField";
 import ReactStars from "react-rating-stars-component";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
-import { Link } from "react-router-dom";
 import Textarea from "@mui/joy/Textarea";
 import { Button, Input } from "@mui/material";
-import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import "./Hotel.css";
 
 const data = [
   {
     id: "12EF34RC1",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "15-03-2024",
     name: "Premium Delux",
     stars: 2,
@@ -30,7 +33,7 @@ const data = [
   },
   {
     id: "98AB76YZ3",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "16-03-2024",
     name: "Luxury Suite",
     stars: 4,
@@ -39,7 +42,7 @@ const data = [
   },
   {
     id: "45CD67FG8",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "17-03-2024",
     name: "Executive Room",
     stars: 3,
@@ -48,7 +51,7 @@ const data = [
   },
   {
     id: "23GH89IJ5",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "18-03-2024",
     name: "Standard Twin",
     stars: 5,
@@ -57,7 +60,7 @@ const data = [
   },
   {
     id: "67KL12MN0",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "19-03-2024",
     name: "Family Villa",
     stars: 1,
@@ -66,7 +69,7 @@ const data = [
   },
   {
     id: "34OP56QR7",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "20-03-2024",
     name: "Ocean View Suite",
     stars: 4,
@@ -75,7 +78,7 @@ const data = [
   },
   {
     id: "89ST23UV4",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "21-03-2024",
     name: "Penthouse Loft",
     stars: 3,
@@ -84,7 +87,7 @@ const data = [
   },
   {
     id: "12WX34YZ5",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "22-03-2024",
     name: "Honeymoon Retreat",
     stars: 2,
@@ -93,7 +96,7 @@ const data = [
   },
   {
     id: "56CD78EF9",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "23-03-2024",
     name: "Mountain Chalet",
     stars: 5,
@@ -102,7 +105,7 @@ const data = [
   },
   {
     id: "78GH90IJ1",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "24-03-2024",
     name: "Beach Bungalow",
     stars: 3,
@@ -127,7 +130,6 @@ function Hotel() {
     {
       headerName: "Name",
       field: "name",
-      width: 310,
     },
     {
       headerName: "Category",
@@ -147,29 +149,45 @@ function Hotel() {
     {
       headerName: "Destination",
       field: "destination",
+      width: 150,
     },
     {
-      headerName: "Price",
+      headerName: "Tarif",
       width: 70,
       sortable: false,
       filter: false,
       cellRenderer: (params) => {
         return (
-          <div onClick={()=>{navigate('/hotel/wwcd', { state: { id: 7, color: 'green' } })}} className="flex items-center justify-center w-full h-full">
-            {/* <Link to={`/hotel/${params.data.name.replace(/\s/g, "")}`}> */}
-              <NorthEastIcon
-                className="hover:bg-black hover:text-white rounded-full border p-1 border-black"
-                style={{ fontSize: "25px" }}
-              />
-            {/* </Link> */}
+          <div
+            onClick={() => {
+              navigate(`/hotel/${params.data.name.replace(/\s/g, "")}`, {
+                state: { id: params.data.id, name: params.data.name },
+              });
+            }}
+            className="flex items-center justify-center w-full h-full"
+          >
+            <NorthEastIcon
+              className="hover:bg-black hover:text-white rounded-full border p-1 border-black"
+              style={{ fontSize: "25px" }}
+            />
           </div>
         );
       },
     },
     {
+      headerName: "Tarif Valid From",
+      field: "date",
+      width: 150,
+    },
+    {
+      headerName: "Tarif Valid To",
+      field: "date",
+      width: 150,
+    },
+    {
       headerName: "Status",
       field: "status",
-      width: 140,
+      width: 100,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -187,7 +205,7 @@ function Hotel() {
       },
     },
     {
-      headerName: "By",
+      headerName: "Updated By",
       field: "by",
       cellRenderer: (params) => {
         return (
@@ -201,7 +219,7 @@ function Hotel() {
       },
     },
     {
-      headerName: "Date",
+      headerName: "Updated On",
       field: "date",
       width: 150,
     },
@@ -329,7 +347,7 @@ function Hotel() {
               </div>
               <div className="flex justify-between w-full mt-4 h-[90%]">
                 <div className="flex flex-col w-[48%]">
-                  <div className=" mt-4 w-full">
+                  <div className=" w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
@@ -338,28 +356,25 @@ function Hotel() {
                       sx={{ width: "100%" }}
                     />
                   </div>
-                  <select className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                  <div className="px-1 mt-2 text-sm " >Categoty</div>
+                  <select className="px-2 focus:outline-none mt-1 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
                     <option value="1">1 Star</option>
                     <option value="2">2 Star</option>
                     <option value="3">3 Star</option>
                     <option value="4">4 Star</option>
                     <option value="5">5 Star</option>
                   </select>
-                  <div className=" mt-4 w-full">
-                    <TextField
-                      id="outlined-basic"
-                      size="small"
-                      label="Destination"
-                      variant="outlined"
-                      sx={{ width: "100%" }}
-                    />
-                  </div>
+
                   <div className="mt-4 w-full">
                     <Textarea
                       placeholder="Hotel Details"
                       minRows={2}
                       maxRows={2}
-                      sx={{ width: "100%" }}
+                      sx={{
+                        width: "100%",
+                        backgroundColor: "#fff",
+                        borderColor: "#d3d3d3",
+                      }}
                     />
                   </div>
                   <div className=" mt-4 w-full">
@@ -371,6 +386,7 @@ function Hotel() {
                       sx={{ width: "100%" }}
                     />
                   </div>
+
                   <div className="border border-slate-300 rounded-md p-2 mt-4 w-full">
                     <Input
                       id="file-input"
@@ -385,12 +401,47 @@ function Hotel() {
                           Select Files
                         </Button>
                       </label>
-                      <div className="overflow-x-auto"> {selectFile} </div>
+                      <div className="hidden md:block overflow-x-auto"> {selectFile} </div>
                     </div>
+                  </div>
+
+                  <div className="mt-4 custom-date-picker">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <MobileDatePicker
+                        label="Tarif Valid From"
+                        defaultValue={dayjs("2022-04-17")}
+                      />
+                    </LocalizationProvider>
+                  </div>
+                  <div className=" mt-4 custom-date-picker">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <MobileDatePicker
+                        label="Tarif Valid To"
+                        defaultValue={dayjs("2022-04-17")}
+                      />
+                    </LocalizationProvider>
                   </div>
                 </div>
                 <div className="flex flex-col w-[48%]">
-                  <div className=" mt-4 w-full">
+                  <div className="">
+                    <PhoneInput
+                      international
+                      value={value}
+                      onChange={setValue}
+                      placeholder="Mobile No *"
+                      className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <PhoneInput
+                      international
+                      value={value}
+                      onChange={setValue}
+                      placeholder="Mobile No 2"
+                      className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                    />
+                  </div>
+                  <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
@@ -403,7 +454,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      label="Email"
+                      label="Reservation Email ID"
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -413,25 +464,35 @@ function Hotel() {
                       international
                       value={value}
                       onChange={setValue}
-                      placeholder="Number-1"
+                      placeholder="Hotel Contact No"
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
-                    />
-                  </div>
-                  <div className=" mt-4 w-full">
-                    <TextField
-                      id="outlined-basic"
-                      size="small"
-                      label="Hotel Link"
-                      variant="outlined"
-                      sx={{ width: "100%" }}
                     />
                   </div>
                   <select className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
                     <option value="active">active</option>
                     <option value="inactive">inactive</option>
                   </select>
-
-                  <div className="mt-11 flex justify-between items-center">
+                  <div className="flex justify-between items-center">
+                    <div className=" mt-4 w-[48%]">
+                      <TextField
+                        id="outlined-basic"
+                        size="small"
+                        label="Website Link"
+                        variant="outlined"
+                        sx={{ width: "100%" }}
+                      />
+                    </div>
+                    <div className=" mt-4 w-[48%]">
+                      <TextField
+                        id="outlined-basic"
+                        size="small"
+                        label="Destination"
+                        variant="outlined"
+                        sx={{ width: "100%" }}
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-4 flex justify-between items-center">
                     <div className=" w-[49%] rounded-md h-10  ">
                       <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
                         Save

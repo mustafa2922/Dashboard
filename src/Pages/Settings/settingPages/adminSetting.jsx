@@ -19,7 +19,7 @@ import Destinations from "../AdminSettingPages/Destinations";
 import RoomType from "../AdminSettingPages/RoomType";
 import MealPlan from "../AdminSettingPages/MealPlan";
 import Hotel from "../AdminSettingPages/Hotel/Hotel";
-import Activity from "../AdminSettingPages/Activity";
+import Activity from "../AdminSettingPages/Activity/Activity";
 import Transfer from "../AdminSettingPages/Transfer";
 import DayItinerary from "../AdminSettingPages/DayItinerary";
 import LeadSource from "../AdminSettingPages/LeadSource";

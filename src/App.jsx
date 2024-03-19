@@ -33,7 +33,7 @@ import Destinations from "./Pages/Settings/AdminSettingPages/Destinations";
 import RoomType from "./Pages/Settings/AdminSettingPages/RoomType";
 import MealPlan from "./Pages/Settings/AdminSettingPages/MealPlan";
 import Hotel from "./Pages/Settings/AdminSettingPages/Hotel/Hotel";
-import Activity from "./Pages/Settings/AdminSettingPages/Activity";
+import Activity from "./Pages/Settings/AdminSettingPages/Activity/Activity";
 import Transfer from "./Pages/Settings/AdminSettingPages/Transfer";
 import DayItinerary from "./Pages/Settings/AdminSettingPages/DayItinerary";
 import LeadSource from "./Pages/Settings/AdminSettingPages/LeadSource";
@@ -41,7 +41,8 @@ import PackageTheme from "./Pages/Settings/AdminSettingPages/PackageTheme";
 import MailSetting from "./Pages/Settings/AdminSettingPages/MailSetting";
 import WeatherSetting from "./Pages/Settings/AdminSettingPages/WeatherSetting";
 import Currency from "./Pages/Settings/AdminSettingPages/Currency";
-import HotelPrice from "./Pages/Settings/AdminSettingPages/Hotel/HotelPrice";
+import HotelPrice from "./Pages/Settings/AdminSettingPages/Hotel/HotelTariff";
+import ActivityPrice from "./Pages/Settings/AdminSettingPages/Activity/ActivityPrice";
 
 const App = () => {
   const Layout = () => {
@@ -54,7 +55,7 @@ const App = () => {
     return (
       <div className="main h-screen w-full">
         <Navbar sendDataToApp={getStatusFromSideBar} />
-        <div className="wrapper flex h-[92.5vh]">
+        <div className="wrapper flex h-[92vh]">
           <div
             className={`sideBar-Wrapper md:block ${
               show ? "hidden" : ""
@@ -116,6 +117,7 @@ const App = () => {
         { path: "/hotel", element: <Hotel /> },
         { path: "/hotel/:hotelName", element: <HotelPrice/> },
         { path: "/activity", element: <Activity /> },
+        { path: "/activity/:activityName", element: <ActivityPrice/> },
         { path: "/transfer", element: <Transfer /> },
         { path: "/dayItinerary", element: <DayItinerary /> },
         { path: "/leadSource", element: <LeadSource /> },

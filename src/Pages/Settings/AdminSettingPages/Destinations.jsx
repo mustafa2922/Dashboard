@@ -16,41 +16,61 @@ const data = [
   {
     id: "12EF34RC1",
     location: "London",
+    by: "JaffarSaleem.com",
+    date: "24-03-2024",
   },
   {
     id: "98AB76YZ3",
     location: "New York",
+    by: "JaffarSaleem.com",
+    date: "24-03-2024",
   },
   {
     id: "45CD67FG8",
     location: "Sydney",
+    by: "JaffarSaleem.com",
+    date: "24-03-2024",
   },
   {
     id: "23GH89IJ5",
     location: "Paris",
+    by: "JaffarSaleem.com",
+    date: "24-03-2024",
   },
   {
     id: "67KL12MN0",
     location: "Tokyo",
+    by: "JaffarSaleem.com",
+    date: "24-03-2024",
   },
   {
     id: "34OP56QR7",
     location: "Rome",
+    by: "JaffarSaleem.com",
+    date: "24-03-2024",
   },
   {
     id: "89ST23UV4",
     location: "Dubai",
+    by: "JaffarSaleem.com",
+    date: "24-03-2024",
   },
   {
     id: "12WX34YZ5",
     location: "Berlin",
+    by: "JaffarSaleem.com",
+    date: "24-03-2024",
   },
   {
     id: "56CD78EF9",
     location: "Cairo",
+    by: "JaffarSaleem.com",
+    date: "24-03-2024",
   },
   {
     id: "78GH90IJ1",
+    by: "JaffarSaleem.com",
+    date: "24-03-2024",
     location: "Moscow",
   },
 ];
@@ -67,8 +87,26 @@ function Destinations() {
 
   const [column, setColumn] = useState([
     {
-      headerName: "Name",
+      headerName: "Destination Name",
       field: "location",
+    },
+    {
+      headerName: "Updated By",
+      field: "by",
+      cellRenderer: (params) => {
+        return (
+          <div className="flex items-center justify-start gap-2 w-full h-full">
+            <div className="p-1 rounded-full border border-black h-6 w-6 flex items-center justify-center">
+              {params.value[0]}
+            </div>
+            <div>{params.value}</div>
+          </div>
+        );
+      },
+    },
+    {
+      headerName: "Updated On",
+      field: "date",
     },
     {
       width: 50,
@@ -112,7 +150,7 @@ function Destinations() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: "1245px",
+    width: 415,
     tooltipField: "name",
   };
 
@@ -184,7 +222,6 @@ function Destinations() {
                 </div>
               </div>
               <div className="flex flex-col justify-between mt-4 h-[90%]">
-
                 <div className="w-full">
                   <TextField
                     fullWidth
