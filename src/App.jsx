@@ -32,7 +32,7 @@ import Suppliers from "./Pages/Settings/AdminSettingPages/Suppliers";
 import Destinations from "./Pages/Settings/AdminSettingPages/Destinations";
 import RoomType from "./Pages/Settings/AdminSettingPages/RoomType";
 import MealPlan from "./Pages/Settings/AdminSettingPages/MealPlan";
-import Hotel from "./Pages/Settings/AdminSettingPages/Hotel";
+import Hotel from "./Pages/Settings/AdminSettingPages/Hotel/Hotel";
 import Activity from "./Pages/Settings/AdminSettingPages/Activity";
 import Transfer from "./Pages/Settings/AdminSettingPages/Transfer";
 import DayItinerary from "./Pages/Settings/AdminSettingPages/DayItinerary";
@@ -41,6 +41,7 @@ import PackageTheme from "./Pages/Settings/AdminSettingPages/PackageTheme";
 import MailSetting from "./Pages/Settings/AdminSettingPages/MailSetting";
 import WeatherSetting from "./Pages/Settings/AdminSettingPages/WeatherSetting";
 import Currency from "./Pages/Settings/AdminSettingPages/Currency";
+import HotelPrice from "./Pages/Settings/AdminSettingPages/Hotel/HotelPrice";
 
 const App = () => {
   const Layout = () => {
@@ -113,6 +114,7 @@ const App = () => {
         { path: "/roomType", element: <RoomType /> },
         { path: "/mealPlan", element: <MealPlan /> },
         { path: "/hotel", element: <Hotel /> },
+        { path: "/hotel/:hotelName", element: <HotelPrice/> },
         { path: "/activity", element: <Activity /> },
         { path: "/transfer", element: <Transfer /> },
         { path: "/dayItinerary", element: <DayItinerary /> },

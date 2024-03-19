@@ -18,7 +18,7 @@ import Suppliers from "../AdminSettingPages/Suppliers";
 import Destinations from "../AdminSettingPages/Destinations";
 import RoomType from "../AdminSettingPages/RoomType";
 import MealPlan from "../AdminSettingPages/MealPlan";
-import Hotel from "../AdminSettingPages/Hotel";
+import Hotel from "../AdminSettingPages/Hotel/Hotel";
 import Activity from "../AdminSettingPages/Activity";
 import Transfer from "../AdminSettingPages/Transfer";
 import DayItinerary from "../AdminSettingPages/DayItinerary";

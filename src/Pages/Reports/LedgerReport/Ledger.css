@@ -1,0 +1,8 @@
+.custom-date-picker .MuiInputBase-root {
+  height: 35px;
+  width: 100px;
+  font-size: 12px;
+}
+.custom-date-picker .MuiFormLabel-root {
+  font-size: 12px;
+}

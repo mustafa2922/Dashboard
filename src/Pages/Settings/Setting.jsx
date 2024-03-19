@@ -25,7 +25,7 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import CheckIcon from "@mui/icons-material/Check";
 import './setting.css'
 
-const drawerWidth = 240;
+const drawerWidth = 218;
 
 function Setting(props) {
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ function Setting(props) {
 
   const drawer = (
     <div>
-      <h1 style={{ textAlign: "center" }}>SETTING</h1>
+      <h1 className="font-bold px-5 mt-2 text-black">SETTING</h1>
       <List
         sx={{
           [`& .active, & .${listItemClasses.root}:hover`]: {
@@ -113,9 +113,6 @@ function Setting(props) {
             backgroundColor: "white",
             height: "0%",
           },
-
-
-          margin:'10px'
         }}
       >
         <Toolbar>
@@ -171,7 +168,6 @@ function Setting(props) {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >

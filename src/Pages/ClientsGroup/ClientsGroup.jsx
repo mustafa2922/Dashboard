@@ -288,7 +288,7 @@ function ClientsGroup() {
               </div>
 
               <div className="flex flex-col h-[90%]">
-                <div className="mt-8 w-full">
+                <div className="mt-4 w-full">
                   <TextField
                     fullWidth
                     id="outlined-basic"
@@ -298,7 +298,7 @@ function ClientsGroup() {
                   />
                 </div>
 
-                <div className="mt-8 w-full">
+                <div className="mt-4 w-full">
                   <TextField
                     fullWidth
                     id="outlined-basic"
@@ -308,12 +308,12 @@ function ClientsGroup() {
                   />
                 </div>
 
-                <select className="mt-8  px-2 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                <select className="mt-4  px-2 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                 </select>
 
-                <div className="mt-8 flex justify-between w-full">
+                <div className="mt-4 flex justify-between w-full">
                   <div
                     onClick={handleClose}
                     className=" w-[45%] rounded-md h-10"

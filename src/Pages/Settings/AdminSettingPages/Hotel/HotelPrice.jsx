@@ -8,8 +8,9 @@ import NorthEastIcon from "@mui/icons-material/NorthEast";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { Link } from "react-router-dom";
 import "react-phone-number-input/style.css";
-import CustomModal from "../../Components/CustomModal";
-import addCorporate from '../../assets/images/addCorporate.png'
+import CustomModal from "../../../../Components/CustomModal.jsx";
+import addCorporate from "../../../../assets/images/addCorporate.png";
+import { useLocation } from "react-router-dom";
 
 const data = [
   {
@@ -131,7 +132,14 @@ const data = [
   },
 ];
 
-function Corporate() {
+function HotelPrice() {
+  const {state} = useLocation();
+  const { id, name } = state;
+
+  console.log(id,name);
+
+  const HotelName = window.location.pathname.split("/")[2];
+
   const [search, setSearch] = useState("");
   const [row, setRow] = useState(data);
   const [open, setOpen] = useState(false);
@@ -249,10 +257,12 @@ function Corporate() {
     width: "156%",
     tooltipField: "name",
   };
+
+  console.log(HotelName);
   return (
     <div className="h-full">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
-        <div className="font-bold"> Corporate </div>
+        <div className="font-bold"> {HotelName} - Price List </div>
         <div className="flex justify-center items-center gap-3 h-full">
           <button
             onClick={() => {
@@ -312,4 +322,4 @@ function Corporate() {
   );
 }
 
-export default Corporate;
+export default HotelPrice;

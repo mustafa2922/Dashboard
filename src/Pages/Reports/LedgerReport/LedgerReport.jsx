@@ -5,6 +5,11 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useState } from "react";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import "react-phone-number-input/style.css";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import "./Ledger.css";
 
 const data = [
   {
@@ -17,8 +22,8 @@ const data = [
     email: "ethanthompson@gmail.com",
     city: "New York",
     status: "Active",
-    FromDate: "05-04-2024",
-    ToDate: "10-04-2024",
+    FromDate: "05-03-2024",
+    ToDate: "10-03-2024",
     StartTime: "6:30 PM",
     EndTime: "12:00 PM",
     Vehicle: "Private Car",
@@ -47,7 +52,7 @@ const data = [
     city: "London",
     status: "Active",
     FromDate: "07-03-2024",
-    ToDate: "07-03-2024",
+    ToDate: "10-03-2024",
     StartTime: "2:00 PM",
     EndTime: "11:00 AM",
     Vehicle: "Bike",
@@ -105,7 +110,7 @@ const data = [
     city: "Los Angeles",
     status: "Active",
     FromDate: "12-03-2024",
-    ToDate: "18-03-2024",
+    ToDate: "17-03-2024",
     StartTime: "6:00 PM",
     EndTime: "9:00 AM",
     Vehicle: "Limousine",
@@ -133,8 +138,8 @@ const data = [
     email: "michaelwilliams@gmail.com",
     city: "Paris",
     status: "Pending",
-    FromDate: "20-03-2024",
-    ToDate: "22-03-2024",
+    FromDate: "01-03-2024",
+    ToDate: "17-03-2024",
     StartTime: "8:30 PM",
     EndTime: "12:00 PM",
     Vehicle: "Private Jet",
@@ -162,8 +167,8 @@ const data = [
     email: "sophiabrown@gmail.com",
     city: "Tokyo",
     status: "Active",
-    FromDate: "25-03-2024",
-    ToDate: "28-03-2024",
+    FromDate: "11-03-2024",
+    ToDate: "17-03-2024",
     StartTime: "7:00 PM",
     EndTime: "10:00 AM",
     Vehicle: "Helicopter",
@@ -191,8 +196,8 @@ const data = [
     email: "danielanderson@gmail.com",
     city: "Sydney",
     status: "Active",
-    FromDate: "28-03-2024",
-    ToDate: "03-04-2024",
+    FromDate: "11-03-2024",
+    ToDate: "14-03-2024",
     StartTime: "5:30 PM",
     EndTime: "11:30 AM",
     Vehicle: "Yacht",
@@ -212,9 +217,36 @@ const data = [
   },
 ];
 
+const dateFilterParams = {
+  comparator: (filterLocalDateAtMidnight, cellValue) => {
+    var dateAsString = cellValue;
+    if (dateAsString == null) return -1;
+    var dateParts = dateAsString.split("-");
+    var cellDate = new Date(
+      Number(dateParts[2]),
+      Number(dateParts[1]) - 1,
+      Number(dateParts[0])
+    );
+    if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+      return 0;
+    }
+    if (cellDate < filterLocalDateAtMidnight) {
+      return -1;
+    }
+    if (cellDate > filterLocalDateAtMidnight) {
+      return 1;
+    }
+    return 0;
+  },
+};
+
 function LedgerReport() {
-  const [row, setRow] = useState(data);
+  const currentDate = dayjs().format("YYYY-MM-DD");
+
+  const [row, setRow] = useState();
   const [gridApi, setGridApi] = useState(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState(currentDate);
 
   const [column, setColumn] = useState([
     {
@@ -238,10 +270,14 @@ function LedgerReport() {
     {
       headerName: "From Date",
       field: "FromDate",
+      filter: "agDateColumnFilter",
+      filterParams: dateFilterParams,
     },
     {
       headerName: "To Date",
       field: "ToDate",
+      filter: "agDateColumnFilter",
+      filterParams: dateFilterParams,
     },
     {
       headerName: "Start Time",
@@ -310,8 +346,8 @@ function LedgerReport() {
       field: "email",
     },
     {
-      headerName:'Remarks',
-      field:'Remarks'
+      headerName: "Remarks",
+      field: "Remarks",
     },
   ]);
 
@@ -320,23 +356,92 @@ function LedgerReport() {
     setRow(data);
   };
 
+  const FromRangeDateFilter = (startDate, endDate) => {
+    console.log(`startDate : ${startDate}, endDate : ${endDate}`);
+    if (gridApi) {
+      gridApi
+        .setColumnFilterModel("FromDate", {
+          type: "inRange",
+          dateFrom: startDate,
+          dateTo: endDate,
+        })
+        .then(() => {
+          gridApi.onFilterChanged();
+        });
+    }
+  };
+
+  const ToRangeDateFilter = (startDate, endDate) => {
+    console.log(`startDate : ${startDate}, endDate : ${endDate}`);
+    if (gridApi) {
+      gridApi
+        .setColumnFilterModel("ToDate", {
+          type: "inRange",
+          dateFrom: startDate,
+          dateTo: endDate,
+        })
+        .then(() => {
+          gridApi.onFilterChanged();
+        });
+    }
+  };
+
+  const ExportData = () => {
+    if (gridApi) {
+      gridApi.exportDataAsCsv();
+    }
+  };
+
   const defaultColDef = {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 191,
+    width: 150,
     tooltipField: "name",
   };
   return (
     <div className="h-full">
-      <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
+      <div className="flex justify-between items-center h-20 gap-2 sm:h-14 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
         <div className="font-bold"> Ledger Report </div>
         <div className="flex justify-center items-center gap-3 h-full">
+          <div className="custom-date-picker">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <MobileDatePicker
+                label="From Date"
+                defaultValue={dayjs("2022-04-17")}
+                onAccept={(date) => {
+                  setStartDate(
+                    dayjs(date).subtract(1, "day").format("YYYY-MM-DD")
+                  );
+                  FromRangeDateFilter(
+                    dayjs(date).subtract(1, "day").format("YYYY-MM-DD"),
+                    endDate
+                  );
+                }}
+              />
+            </LocalizationProvider>
+          </div>
+
+          <div className="custom-date-picker">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <MobileDatePicker
+                label="To Date"
+                defaultValue={dayjs()}
+                onAccept={(date) => {
+                  setEndDate(dayjs(date).add(1, "day").format("YYYY-MM-DD"));
+                  ToRangeDateFilter(
+                    startDate,
+                    dayjs(date).add(1, "day").format("YYYY-MM-DD")
+                  );
+                }}
+              />
+            </LocalizationProvider>
+          </div>
           <button
             onClick={() => {
               ExportData();
             }}
-            className="px-2 bg-[#1d3f5a] text-white rounded-md flex items-center h-[80%]"
+            className="px-2 bg-[#1d3f5a] text-white rounded-md flex items-center h-[70%]"
           >
             <IosShareIcon style={{ fontSize: "20" }} />
           </button>
