@@ -1,15 +1,39 @@
-.css-12i7wg6-MuiPaper-root-MuiDrawer-paper{
-    position: static !important;
+.custom {
+    font-size: 14px;
+    display: block;
 }
 
-.css-1oqz257-MuiList-root{
-    padding-top: 0 !important;
+@media all and (max-width:1100px) {
+    .custom{
+        font-size: 12px;
+    }
+}
+.custom-Menu{
+    display: none;
 }
 
-.css-cveggr-MuiListItemIcon-root {
-    min-width: 35px !important;
+.custom-SideBar{
+    width: 20%;
 }
 
-.css-10hburv-MuiTypography-root{
-    font-size: 14px !important;
+.custom-container{
+    width: 80%;
+}
+
+@media all and (max-width:980px) {
+    .custom{
+        display: none;
+    }
+    .custom-heading{
+        display:none;
+    }
+    .custom-Menu{
+        display: block;
+    }
+    .custom-SideBar{
+        width: fit-content;
+    }
+    .custom-container{
+        width: 100%;
+    }
 }
