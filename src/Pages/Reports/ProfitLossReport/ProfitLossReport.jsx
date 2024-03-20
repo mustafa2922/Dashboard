@@ -3,12 +3,13 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useState } from "react";
-import IosShareIcon from "@mui/icons-material/IosShare";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { Link } from "react-router-dom";
 import "react-phone-number-input/style.css";
+import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import CustomModal from "../../../Components/CustomModal";
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 const data = [
   {
@@ -131,6 +132,8 @@ function ProfitLossReport() {
   const [column, setColumn] = useState([
     {
       headerName: "Query ID",
+      width: 110,
+      cellStyle:{display:'flex',alignItems:'center'},
       cellRenderer: (params) => {
         return (
           <Link>
@@ -142,7 +145,19 @@ function ProfitLossReport() {
         );
       },
     },
-    { headerName: "Number", field: "number" },
+    {
+      headerName: "Client",
+      cellStyle:{display:'flex',alignItems:'center'},
+      cellRenderer: (params) => {
+        return (
+          <div className="flex flex-col" >
+            <div className="text-black font-bold" > {params.data.rank} {params.data.fname} {params.data.lname}</div>
+            <div className="flex items-center gap-1  text-xs mt-[-10px]" > <PhoneAndroidIcon style={{fontSize:12}} /> {params.data.number} </div>
+            <div  className="flex items-center gap-1 text-xs mt-[-2px]"> <MailOutlineIcon style={{fontSize:12}} /> {params.data.email} </div>
+          </div>
+        );
+      },
+    },
     {
       headerName: "Email",
       field: "email",
@@ -260,7 +275,7 @@ function ProfitLossReport() {
             defaultColDef={defaultColDef}
             enableBrowserTooltips={true}
             pagination={true}
-            rowHeight={60}
+            rowHeight={70}
           />
 
           <CustomModal

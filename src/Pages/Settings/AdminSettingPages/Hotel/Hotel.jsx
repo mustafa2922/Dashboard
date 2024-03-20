@@ -134,6 +134,7 @@ function Hotel() {
     {
       headerName: "Category",
       field: "stars",
+      width:130,
       cellRenderer: (params) => {
         return (
           <ReactStars
@@ -149,11 +150,11 @@ function Hotel() {
     {
       headerName: "Destination",
       field: "destination",
-      width: 150,
+      width: 130,
     },
     {
       headerName: "Tarif",
-      width: 70,
+      width: 60,
       sortable: false,
       filter: false,
       cellRenderer: (params) => {
@@ -182,7 +183,7 @@ function Hotel() {
     {
       headerName: "Tarif Valid To",
       field: "date",
-      width: 150,
+      width: 140,
     },
     {
       headerName: "Status",

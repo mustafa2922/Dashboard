@@ -11,38 +11,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import {
-  Unstable_NumberInput as BaseNumberInput,
-  numberInputClasses,
-} from "@mui/base/Unstable_NumberInput";
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import { styled } from "@mui/system";
-import './ActivityPrice.css'
+import { MobileDatePicker } from "@mui/x-date-pickers";
+import "./ActivityPrice.css";
 
-const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
-  return (
-    <BaseNumberInput
-      slots={{
-        root: StyledInputRoot,
-        input: StyledInputElement,
-        incrementButton: StyledButton,
-        decrementButton: StyledButton,
-      }}
-      slotProps={{
-        incrementButton: {
-          children: "▴",
-        },
-        decrementButton: {
-          children: "▾",
-        },
-      }}
-      {...props}
-      ref={ref}
-    />
-  );
-});
-
-let data = [
+const data = [
   {
     From: "2024-03-19",
     To: "2024-03-21",
@@ -174,7 +146,6 @@ function ActivityPrice() {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [gridApi, setGridApi] = useState(null);
-  const [value, setValue] = React.useState(null);
 
   const [stat, setStat] = useState("");
 
@@ -190,15 +161,15 @@ function ActivityPrice() {
     {
       headerName: "Adult",
       field: "Single",
-      width: 100,
+      width: 200,
     },
     {
       headerName: "Child",
       field: "Double",
-      width: 100,
+      width: 200,
     },
     {
-      width: 50,
+      width: 70,
       sortable: false,
       filter: false,
       cellRenderer: (params) => {
@@ -231,7 +202,7 @@ function ActivityPrice() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 124,
+    width: 410,
     tooltipField: "name",
   };
 
@@ -240,7 +211,7 @@ function ActivityPrice() {
   return (
     <div className="h-full">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
-        <div className="font-bold"> {name} - Tariff </div>
+        <div className="font-bold"> {name} - Price </div>
         <div className="flex justify-center items-center gap-3 h-full">
           <input
             value={search}
@@ -258,7 +229,7 @@ function ActivityPrice() {
             }}
             className="border border-slate-300 h-[80%] bg-[#1d3f5a] text-white text-sm rounded-md px-2 "
           >
-            <span className="sm:block hidden">Add Tariff</span>{" "}
+            <span className="sm:block hidden">Add Price</span>{" "}
             <span className="sm:hidden flex items-center justify-center">
               <AddRoundedIcon />
             </span>
@@ -289,7 +260,7 @@ function ActivityPrice() {
           >
             <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[70%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
-                <div className="font-bold text-lg"> {stat} Tariff </div>
+                <div className="font-bold text-lg"> {stat} Price </div>
                 <div className="cursor-pointer" onClick={handleClose}>
                   <CloseIcon />
                 </div>
@@ -315,19 +286,11 @@ function ActivityPrice() {
                 </div>
                 <div className="flex flex-col w-[48%]">
                   <div className=" w-full">
-                    <NumberInput
-                      placeholder="Adult"
-                      value={value}
-                      onChange={(event, val) => setValue(val)}
-                    />
+                    <input placeholder="Adults " className="p-2 border border-[#c4c4c4] w-full rounded-sm focus:outline-none hover:border-black" type="number" />
                   </div>
 
                   <div className="mt-4 w-full">
-                    <NumberInput
-                      placeholder="Child"
-                      value={value}
-                      onChange={(event, val) => setValue(val)}
-                    />
+                    <input placeholder="Childrens" className="p-2 border border-[#c4c4c4] w-full rounded-sm focus:outline-none hover:border-black" type="number" />
                   </div>
 
                   <div className="mt-4 flex justify-between items-center">
@@ -357,134 +320,3 @@ function ActivityPrice() {
 }
 
 export default ActivityPrice;
-
-const blue = {
-  100: "#DAECFF",
-  200: "#80BFFF",
-  400: "#3399FF",
-  500: "#007FFF",
-  600: "#0072E5",
-};
-
-const grey = {
-  50: "#F3F6F9",
-  100: "#E5EAF2",
-  200: "#DAE2ED",
-  300: "#C7D0DD",
-  400: "#B0B8C4",
-  500: "#9DA8B7",
-  600: "#6B7A90",
-  700: "#434D5B",
-  800: "#303740",
-  900: "#1C2025",
-};
-
-const StyledInputRoot = styled("div")(
-  ({ theme }) => `
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-weight: 400;
-    border-radius: 8px;
-    color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
-    background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
-    border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
-    box-shadow: 0px 2px 2px ${
-      theme.palette.mode === "dark" ? grey[900] : grey[50]
-    };
-    display: grid;
-    grid-template-columns: 1fr 19px;
-    grid-template-rows: 1fr 1fr;
-    overflow: hidden;
-    column-gap: 8px;
-    padding: 4px;
-  
-    &.${numberInputClasses.focused} {
-      border-color: ${blue[400]};
-    }
-
-    
-  `
-);
-
-const StyledInputElement = styled("input")(
-  ({ theme }) => `
-    font-size: 0.875rem;
-    font-family: inherit;
-    font-weight: 400;
-    line-height: 1.5;
-    grid-column: 1/2;
-    grid-row: 1/3;
-    color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
-    background: inherit;
-    border: none;
-    border-radius: inherit;
-    padding: 8px 12px;
-    outline: 0;
-  `
-);
-
-const StyledButton = styled("button")(
-  ({ theme }) => `
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
-    appearance: none;
-    padding: 0;
-    width: 19px;
-    height: 19px;
-    font-family: system-ui, sans-serif;
-    font-size: 0.875rem;
-    line-height: 1;
-    box-sizing: border-box;
-    background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
-    border: 0;
-    color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
-    transition-property: all;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 120ms;
-  
-    &:hover {
-      background: ${theme.palette.mode === "dark" ? grey[800] : grey[50]};
-      border-color: ${theme.palette.mode === "dark" ? grey[600] : grey[300]};
-      cursor: pointer;
-    }
-  
-    &.${numberInputClasses.incrementButton} {
-      grid-column: 2/3;
-      grid-row: 1/2;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-      border: 1px solid;
-      border-bottom: 0;
-      &:hover {
-        cursor: pointer;
-        background: ${blue[400]};
-        color: ${grey[50]};
-      }
-  
-    border-color: ${theme.palette.mode === "dark" ? grey[800] : grey[200]};
-    background: ${theme.palette.mode === "dark" ? grey[900] : grey[50]};
-    color: ${theme.palette.mode === "dark" ? grey[200] : grey[900]};
-    }
-  
-    &.${numberInputClasses.decrementButton} {
-      grid-column: 2/3;
-      grid-row: 2/3;
-      border-bottom-left-radius: 4px;
-      border-bottom-right-radius: 4px;
-      border: 1px solid;
-      &:hover {
-        cursor: pointer;
-        background: ${blue[400]};
-        color: ${grey[50]};
-      }
-  
-    border-color: ${theme.palette.mode === "dark" ? grey[800] : grey[200]};
-    background: ${theme.palette.mode === "dark" ? grey[900] : grey[50]};
-    color: ${theme.palette.mode === "dark" ? grey[200] : grey[900]};
-    }
-    & .arrow {
-      transform: translateY(-1px);
-    }
-  `
-);

@@ -124,7 +124,7 @@ function Activity() {
     {
       headerName: "Name",
       field: "name",
-      width: 390,
+      width: 470,
       cellRenderer: (params) => {
         return (
           <div className="flex  items-center gap-3">
@@ -148,7 +148,7 @@ function Activity() {
     },
     {
       headerName: "Price",
-      width: 100,
+      width: 70,
       sortable: false,
       filter: false,
       cellRenderer: (params) => {
@@ -173,7 +173,7 @@ function Activity() {
     {
       headerName: "Status",
       field: "status",
-      width: 150,
+      width: 100,
       cellStyle: { display: "flex", alignItems: "center" },
       cellRenderer: (params) => {
         return (
