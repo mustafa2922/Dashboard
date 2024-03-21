@@ -23,7 +23,7 @@ export default function DefaultSetting() {
             cursor: 'pointer',
             backgroundColor: '#4557fe',
             color: '#fff',
-            padding: '1rem 3rem',
+            padding: '0.5rem',
             boxShadow: 'none',
             borderRadius: '0.5rem',
             '&:hover': {

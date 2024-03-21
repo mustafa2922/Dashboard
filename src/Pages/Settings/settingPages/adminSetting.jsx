@@ -12,7 +12,8 @@ import EmailIcon from "@mui/icons-material/Email";
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import DashboardHeader from "../../../Components/DashboardHeader";
-import { Routes, Route, Link } from "react-router-dom";
+import CommuteIcon from '@mui/icons-material/Commute';
+import { Link } from "react-router-dom";
 import "./adminSetting.css";
 
 export default function AdminSetting() {
@@ -53,14 +54,14 @@ export default function AdminSetting() {
           Hotel
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/activity"}>
-          <StadiumIcon fontSize="large" />
-          Activity
+        <Link className="w-[48%] md:w-[30%]" to={"/driver"}>
+          <CommuteIcon fontSize="large" />
+          Driver
         </Link>
 
         <Link className="w-[48%] md:w-[30%]" to={"/transfer"}>
           <DirectionsCarIcon fontSize="large" />
-          Transfer
+          Transfers
         </Link>
 
         <Link className="w-[48%] md:w-[30%]" to={"/dayItinerary"}>

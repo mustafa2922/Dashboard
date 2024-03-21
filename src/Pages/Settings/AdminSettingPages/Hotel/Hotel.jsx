@@ -122,7 +122,7 @@ function Hotel() {
   const handleClose = () => setOpen(false);
   const [gridApi, setGridApi] = useState(null);
   const [value, setValue] = useState();
-  const [selectFile, setSelectFile] = useState("Select an image file");
+  const [selectFile, setSelectFile] = useState("Select hotel image");
 
   const [stat, setStat] = useState("");
 
@@ -203,7 +203,7 @@ function Hotel() {
           <div className="flex items-center justify-center w-full h-full">
             <div
               className={`flex items-center justify-center w-14 ${
-                params.value === "Active".toLocaleLowerCase()
+                params.value.toLocaleLowerCase() === "Active".toLocaleLowerCase()
                   ? "bg-green-700"
                   : "bg-[#f9392f]"
               }  text-white rounded-md h-[70%]`}

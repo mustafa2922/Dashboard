@@ -1,14 +1,14 @@
 .admin-heading2 {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 500;
   margin: 0;
 }
 
 .heading-text {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   margin: 0;
   padding-block: 0.5rem;
-  border-bottom: 1px dashed #aaa;
+  border-bottom: 1px dashed #656565;
 }
 
 .button-grid {
@@ -19,7 +19,7 @@
 }
 
 .button-grid svg {
-  color: #4557fe;
+  color: #001aff;
 }
 
 .button-grid > a {
@@ -29,10 +29,10 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .button-grid > a:hover,
 .button-grid > a:active {
-  background-color: #eee;
+  background-color: #e8e8e8;
 }

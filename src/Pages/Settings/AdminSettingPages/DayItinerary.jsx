@@ -123,7 +123,7 @@ function DayItinerary() {
     {
       headerName: "Name",
       field: "name",
-      width: 680,
+      flex:1.5,
       cellStyle: { display: "flex", alignItems: "center" },
       cellRenderer: (params) => {
         return (
@@ -149,26 +149,26 @@ function DayItinerary() {
     {
       headerName: "Detail",
       field: "destination",
-      width: 150,
       cellStyle: { display: "flex", alignItems: "center" },
     },
 
     {
       headerName: "Status",
       field: "status",
-      width: 90,
-      cellStyle: { display: "flex", alignItems: "center" },
+      flex: 0.6,
       cellRenderer: (params) => {
         return (
-          <div className="flex items-center justify-center w-full h-9">
+          <div className="flex items-center justify-center w-full h-10">
             <div
               className={`flex items-center justify-center w-14 ${
-                params.value === "Active".toLocaleLowerCase()
+                params.value.toLocaleLowerCase() ===
+                "Active".toLocaleLowerCase()
                   ? "bg-green-700"
                   : "bg-[#f9392f]"
               }  text-white rounded-md h-[70%]`}
             >
-              {params.value}
+              {params.value[0].toUpperCase()}
+              {params.value.substring(1)}
             </div>
           </div>
         );
@@ -177,7 +177,6 @@ function DayItinerary() {
     {
       headerName: "By",
       field: "by",
-      width: 180,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-start gap-2 w-full h-full">
@@ -192,13 +191,12 @@ function DayItinerary() {
     {
       headerName: "Date",
       field: "date",
-      width: 140,
       cellStyle: { display: "flex", alignItems: "center" },
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex: 0.3,
       cellRenderer: (params) => {
         return (
           <div
@@ -237,7 +235,7 @@ function DayItinerary() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 191,
+    flex: 1,
     tooltipField: "name",
   };
 
@@ -280,10 +278,9 @@ function DayItinerary() {
         </div>
       </div>
 
-      <div className="h-full w-full">
+      <div className="h-full w-full overflow-x-scroll">
         <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
+          className="ag-theme-quartz h-full w-[1400px] lg:w-full"
         >
           <AgGridReact
             onGridReady={onGridReady}
@@ -302,7 +299,7 @@ function DayItinerary() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[70%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[60%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Day Itinerary </div>
                 <div className="cursor-pointer" onClick={handleClose}>
@@ -334,6 +331,7 @@ function DayItinerary() {
                     />
                   </div>
                 </div>
+                
                 <div className="flex flex-col w-[48%]">
                   <div className=" w-full">
                     <TextField
@@ -350,23 +348,26 @@ function DayItinerary() {
                     <option value="inactive">inactive</option>
                   </select>
 
-                  <div className="mt-4 flex justify-between items-center">
-                    <div className=" w-[49%] rounded-md h-10  ">
-                      <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
-                        Save
-                      </button>
-                    </div>
-
-                    <div
-                      onClick={handleClose}
-                      className=" w-[48%] rounded-md h-10"
-                    >
-                      <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
                 </div>
+                
+              </div>
+              
+              <div className="mt-4 flex justify-between items-center">
+
+                <div onClick={handleClose} className=" w-[48%] rounded-md h-10">
+                  <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
+                    Cancel
+                  </button>
+                </div>
+
+                <div className=" w-[48%] rounded-md h-10  ">
+                  <button className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]">
+                    Save
+                  </button>
+                </div>
+
+
+
               </div>
             </div>
           </Modal>

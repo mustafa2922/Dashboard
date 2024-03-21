@@ -238,19 +238,22 @@ function Destinations() {
                 </div>
 
                 <div className="flex w-full justify-between items-center">
-                  <div className="mt-4 w-[48%] rounded-md h-10  ">
-                    <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
-                      Save
-                    </button>
-                  </div>
+
                   <div
                     onClick={handleClose}
                     className="mt-4 w-[48%] rounded-md h-10"
                   >
-                    <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
+                    <button className="hover:bg-[#c22626] w-full rounded-md  bg-[#e51d27] text-white  h-full flex items-center justify-center">
                       Cancel
                     </button>
                   </div>
+
+                  <div className="mt-4 w-[48%] rounded-md h-10  ">
+                    <button className="hover:bg-[#1a8d42] w-full rounded-md h-full flex items-center justify-center text-white bg-[#04AA6D]">
+                      Save
+                    </button>
+                  </div>
+          
                 </div>
               </div>
             </div>

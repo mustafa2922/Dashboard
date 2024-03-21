@@ -146,7 +146,6 @@ function HotelPrice() {
   const [stat, setStat] = useState("");
 
   const [column, setColumn] = useState([
-
     {
       headerName: "Room Type",
       field: "RoomType",
@@ -158,47 +157,44 @@ function HotelPrice() {
     {
       headerName: "Single",
       field: "Single",
-      width:100
+      flex: 0.9,
     },
     {
       headerName: "Double",
       field: "Double",
-      width:100
+      flex: 0.9,
     },
     {
       headerName: "Triple",
       field: "Triple",
-      width:100
+      flex: 0.9,
     },
     {
       headerName: "Quad",
       field: "Quad",
-      width:90
+      flex: 0.9,
     },
     {
       headerName: "CWB",
       field: "CWB",
-      width:90
+      flex: 0.9,
     },
     {
       headerName: "CNB (Above 5 yrs)",
       field: "CNB",
-      width:170
     },
     {
       headerName: "CNB (Below 5 yrs)",
       field: "CNB",
-      width:170
     },
     {
       headerName: "INF (Below 3 yrs)",
       field: "CNB",
-      width:170
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex: 0.4,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -229,7 +225,7 @@ function HotelPrice() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 124,
+    flex: 1,
     tooltipField: "name",
   };
 
@@ -263,10 +259,7 @@ function HotelPrice() {
       </div>
 
       <div className="h-full w-full">
-        <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
-        >
+        <div className="ag-theme-quartz w-[1800px] lg:w-full h-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -292,8 +285,6 @@ function HotelPrice() {
               </div>
               <div className="flex justify-between w-full mt-4 h-[90%]">
                 <div className="flex flex-col w-[48%]">
-
-
                   <div className="px-1 text-basemt-4 w-full">Room Type</div>
 
                   <select className="px-2 focus:outline-none mt-1 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
@@ -303,7 +294,7 @@ function HotelPrice() {
                     <option value="4">4 Star</option>
                     <option value="5">5 Star</option>
                   </select>
-                  
+
                   <div className="px-1 text-base mt-4 w-full">Meal Plan</div>
 
                   <select className="px-2 focus:outline-none mt-1 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
@@ -377,43 +368,38 @@ function HotelPrice() {
                     </div>
                   </div>
 
-                  <div className="mt-4 flex items-center justify-between w-full">
-                    <div className=" w-[48%]">
-                      <TextField
-                        id="outlined-basic"
-                        size="small"
-                        label="CNB (above 5 yrs)"
-                        variant="outlined"
-                        sx={{ width: "100%" }}
-                      />
-                    </div>
-                    <div className="w-[48%]">
-                      <TextField
-                        id="outlined-basic"
-                        size="small"
-                        label="CNB (below 5 yrs)"
-                        variant="outlined"
-                        sx={{ width: "100%" }}
-                      />
-                    </div>
+                  <div className="mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="CNB (above 5 yrs)"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
                   </div>
-
-                  <div className="mt-4 flex justify-between items-center">
-                    <div className=" w-[49%] rounded-md h-10  ">
-                      <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
-                        Save
-                      </button>
-                    </div>
-
-                    <div
-                      onClick={handleClose}
-                      className=" w-[48%] rounded-md h-10"
-                    >
-                      <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
-                        Cancel
-                      </button>
-                    </div>
+                  <div className="mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="CNB (below 5 yrs)"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
                   </div>
+                </div>
+              </div>
+
+              <div className="mt-4 flex justify-between items-center">
+                <div onClick={handleClose} className=" w-[48%] rounded-md h-10">
+                  <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
+                    Cancel
+                  </button>
+                </div>
+
+                <div className=" w-[48%] rounded-md h-10  ">
+                  <button className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]">
+                    Save
+                  </button>
                 </div>
               </div>
             </div>

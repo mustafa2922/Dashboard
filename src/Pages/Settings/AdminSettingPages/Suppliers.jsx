@@ -12,11 +12,10 @@ import TextField from "@mui/material/TextField";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 
-
 const data = [
   {
     id: "12EF34RC1",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "15-03-2024",
     company: "Snowmen Tours",
     fname: "Jhon",
@@ -28,7 +27,7 @@ const data = [
   },
   {
     id: "98AB76YZ3",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "16-03-2024",
     company: "Adventure Seekers",
     fname: "Emma",
@@ -40,7 +39,7 @@ const data = [
   },
   {
     id: "45CD67FG8",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "17-03-2024",
     company: "Global Explorers",
     fname: "Michael",
@@ -52,7 +51,7 @@ const data = [
   },
   {
     id: "23GH89IJ5",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "18-03-2024",
     company: "Wanderlust Adventures",
     fname: "Sophia",
@@ -64,7 +63,7 @@ const data = [
   },
   {
     id: "67KL12MN0",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "19-03-2024",
     company: "Excursion Experts",
     fname: "William",
@@ -76,7 +75,7 @@ const data = [
   },
   {
     id: "34OP56QR7",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "20-03-2024",
     company: "Voyage Ventures",
     fname: "Olivia",
@@ -88,7 +87,7 @@ const data = [
   },
   {
     id: "89ST23UV4",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "21-03-2024",
     company: "Journey Journeys",
     fname: "James",
@@ -100,7 +99,7 @@ const data = [
   },
   {
     id: "12WX34YZ5",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "22-03-2024",
     company: "Discovery Destinations",
     fname: "Ava",
@@ -112,7 +111,7 @@ const data = [
   },
   {
     id: "56CD78EF9",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "23-03-2024",
     company: "Odyssey Outings",
     fname: "Noah",
@@ -124,7 +123,7 @@ const data = [
   },
   {
     id: "78GH90IJ1",
-    by: "TravBiz.com",
+    by: "JaffarSaleem.com",
     date: "24-03-2024",
     company: "Roaming Routes",
     fname: "Isabella",
@@ -164,7 +163,6 @@ function Suppliers() {
     {
       headerName: "Mobile",
       field: "mobile",
-      width: 140,
     },
     {
       headerName: "Location",
@@ -173,6 +171,7 @@ function Suppliers() {
     {
       headerName: "By",
       field: "by",
+      flex: 1.2,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-start gap-2 w-full h-full">
@@ -187,18 +186,18 @@ function Suppliers() {
     {
       headerName: "Date",
       field: "date",
-      width: 150,
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex: 0.3,
       cellRenderer: (params) => {
         return (
           <div
             onClick={() => {
               setOpen(true);
-              setStat("Edit");            }}
+              setStat("Edit");
+            }}
             className="flex items-center justify-center w-full h-full"
           >
             <EditNoteIcon
@@ -230,8 +229,8 @@ function Suppliers() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 191,
     tooltipField: "name",
+    flex: 1,
   };
 
   return (
@@ -275,8 +274,7 @@ function Suppliers() {
 
       <div className="h-full w-full">
         <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
+          className="ag-theme-quartz w-[1500px] h-full lg:w-full"
         >
           <AgGridReact
             onGridReady={onGridReady}
@@ -294,7 +292,7 @@ function Suppliers() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[60%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[65%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Supplier </div>
                 <div className="cursor-pointer" onClick={handleClose}>
@@ -317,7 +315,7 @@ function Suppliers() {
                       size="small"
                       label="First Name"
                       variant="outlined"
-                      sx={{width:'100%'}}
+                      sx={{ width: "100%" }}
                     />
                   </div>
 
@@ -327,7 +325,7 @@ function Suppliers() {
                       size="small"
                       label="Last Name"
                       variant="outlined"
-                      sx={{width:'100%'}}
+                      sx={{ width: "100%" }}
                     />
                   </div>
 
@@ -340,8 +338,9 @@ function Suppliers() {
                       variant="outlined"
                     />
                   </div>
-
-                  <div className="mt-4">
+                </div>
+                <div className="w-[48%]">
+                  <div className="">
                     <PhoneInput
                       international
                       value={value}
@@ -350,10 +349,7 @@ function Suppliers() {
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
                   </div>
-  
-                </div>
-                <div className="w-[48%]">
-                  <div className="w-full">
+                  <div className="mt-4 w-full">
                     <TextField
                       fullWidth
                       id="outlined-basic"
@@ -382,21 +378,20 @@ function Suppliers() {
                       variant="outlined"
                     />
                   </div>
+                </div>
+              </div>
 
-                  <div className="mt-4 w-full rounded-md h-10  ">
-                    <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
-                      Save
-                    </button>
-                  </div>
+              <div className="mt-4 flex justify-between items-center">
+                <div onClick={handleClose} className=" w-[48%] rounded-md h-10">
+                  <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
+                    Cancel
+                  </button>
+                </div>
 
-                  <div
-                    onClick={handleClose}
-                    className="mt-4 w-full rounded-md h-10"
-                  >
-                    <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
-                      Cancel
-                    </button>
-                  </div>
+                <div className=" w-[48%] rounded-md h-10  ">
+                  <button className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]">
+                    Save
+                  </button>
                 </div>
               </div>
             </div>

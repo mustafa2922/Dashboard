@@ -107,12 +107,12 @@ function MealPlan() {
     {
       headerName: "Name",
       field: "mealPlan",
-      flex:1.3,
+      flex: 1.3,
     },
     {
       headerName: "Status",
       field: "status",
-      flex:0.5,
+      flex: 0.5,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -147,12 +147,12 @@ function MealPlan() {
     {
       headerName: "Updated On",
       field: "date",
-      flex:0.7,
+      flex: 0.7,
     },
     {
       sortable: false,
       filter: false,
-      flex:0.2,
+      flex: 0.2,
       cellRenderer: (params) => {
         return (
           <div
@@ -235,9 +235,7 @@ function MealPlan() {
       </div>
 
       <div className="h-full w-full overflow-x-scroll ">
-        <div
-          className="ag-theme-quartz h-full w-[800px] md:w-full"
-        >
+        <div className="ag-theme-quartz h-full w-[800px] md:w-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -276,20 +274,19 @@ function MealPlan() {
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
-
-                <div className="flex w-full items-center justify-between">
-                  <div className="mt-6 w-[48%] rounded-md h-10  ">
-                    <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
-                      Save
+                <div className="mt-4 flex justify-between items-center">
+                  <div
+                    onClick={handleClose}
+                    className=" w-[48%] rounded-md h-10"
+                  >
+                    <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
+                      Cancel
                     </button>
                   </div>
 
-                  <div
-                    onClick={handleClose}
-                    className="mt-4 w-[48%] rounded-md h-10"
-                  >
-                    <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
-                      Cancel
+                  <div className=" w-[48%] rounded-md h-10  ">
+                    <button className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]">
+                      Save
                     </button>
                   </div>
                 </div>

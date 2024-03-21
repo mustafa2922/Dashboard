@@ -115,18 +115,17 @@ function Transfer() {
     {
       headerName: "Vehicle",
       field: "name",
-      width: 400,
     },
     {
       headerName: "Passenger Capacity",
       field: "passengerCapacity",
-      width: 240,
+      flex: 0.9,
     },
 
     {
       headerName: "Updated By",
       field: "by",
-      width: 300,
+
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-start gap-2 w-full h-full">
@@ -141,12 +140,11 @@ function Transfer() {
     {
       headerName: "Updated On",
       field: "date",
-      width: 300,
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex: 0.3,
       cellRenderer: (params) => {
         return (
           <div
@@ -185,7 +183,7 @@ function Transfer() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 191,
+    flex: 1,
     tooltipField: "name",
   };
 
@@ -228,11 +226,8 @@ function Transfer() {
         </div>
       </div>
 
-      <div className="h-full w-full">
-        <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
-        >
+      <div className="h-full w-full overflow-x-scroll">
+        <div className="ag-theme-quartz h-full lg:w-full w-[1000px]">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -266,29 +261,24 @@ function Transfer() {
                     sx={{ width: "100%" }}
                   />
                 </div>
-                <div className=" mt-4 w-full">
-                  <TextField
-                    id="outlined-basic"
-                    size="small"
-                    label="Passenger Capacity"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
+                <div className="mt-4 w-full">
+                  <input
+                    type="number"
+                    className="focus:outline-none w-full border border-[#b9b9b9] h-10 px-2 rounded-md p-1 text-black"
+                    placeholder="Passanger Capacity"
                   />
                 </div>
-                
-      
-                <div className="mt-6 w-full rounded-md h-10  ">
-                  <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
-                    Save
+              </div>
+              <div className="mt-4 flex justify-between items-center">
+                <div onClick={handleClose} className=" w-[48%] rounded-md h-10">
+                  <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
+                    Cancel
                   </button>
                 </div>
 
-                <div
-                  onClick={handleClose}
-                  className="mt-4 w-full rounded-md h-10"
-                >
-                  <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
-                    Cancel
+                <div className=" w-[48%] rounded-md h-10  ">
+                  <button className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]">
+                    Save
                   </button>
                 </div>
               </div>
