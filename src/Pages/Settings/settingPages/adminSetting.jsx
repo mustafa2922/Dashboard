@@ -14,23 +14,10 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import DashboardHeader from "../../../Components/DashboardHeader";
 import { Routes, Route, Link } from "react-router-dom";
 import "./adminSetting.css";
-import Suppliers from "../AdminSettingPages/Suppliers";
-import Destinations from "../AdminSettingPages/Destinations";
-import RoomType from "../AdminSettingPages/RoomType";
-import MealPlan from "../AdminSettingPages/MealPlan";
-import Hotel from "../AdminSettingPages/Hotel/Hotel";
-import Activity from "../AdminSettingPages/Activity/Activity";
-import Transfer from "../AdminSettingPages/Transfer";
-import DayItinerary from "../AdminSettingPages/DayItinerary";
-import LeadSource from "../AdminSettingPages/LeadSource";
-import PackageTheme from "../AdminSettingPages/PackageTheme";
-import MailSetting from "../AdminSettingPages/MailSetting";
-import WeatherSetting from "../AdminSettingPages/WeatherSetting";
-import Currency from "../AdminSettingPages/Currency";
 
 export default function AdminSetting() {
   return (
-    <main>
+    <main className="w-full h-full" >
       <DashboardHeader title="Admin Setting" />
 
       <h2 className="admin-heading2">System Masters</h2>
@@ -39,67 +26,68 @@ export default function AdminSetting() {
         transfers, activities.
       </p>
 
-      <section className="button-grid">
-        <Link to={"/suppliers"}>
+      <section className="button-grid flex flex-wrap">
+
+        <Link className="w-[48%] md:w-[30%]" to={"/suppliers"}>
           <SupervisedUserCircleIcon fontSize="large" />
           Suppliers
         </Link>
 
-        <Link to={"/destinations"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/destinations"}>
           <FlagIcon fontSize="large" />
           Destinations
         </Link>
 
-        <Link to={"/roomType"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/roomType"}>
           <BedIcon fontSize="large" />
           Room type
         </Link>
 
-        <Link to={"/mealPlan"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/mealPlan"}>
           <StorefrontIcon fontSize="large" />
           Meal plan
         </Link>
 
-        <Link to={"/hotel"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/hotel"}>
           <HotelIcon fontSize="large" />
           Hotel
         </Link>
 
-        <Link to={"/activity"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/activity"}>
           <StadiumIcon fontSize="large" />
           Activity
         </Link>
 
-        <Link to={"/transfer"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/transfer"}>
           <DirectionsCarIcon fontSize="large" />
           Transfer
         </Link>
 
-        <Link to={"/dayItinerary"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/dayItinerary"}>
           <ContentPasteIcon fontSize="large" />
           Day itinerary
         </Link>
 
-        <Link to={"/leadSource"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/leadSource"}>
           <LeaderboardIcon fontSize="large" />
           Lead source
         </Link>
 
-        <Link to={"/packageTheme"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/packageTheme"}>
           <BackupTableIcon fontSize="large" />
           Package theme
         </Link>
 
-        <Link to={"/mailSetting"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/mailSetting"}>
           <EmailIcon fontSize="large" />
           Mail setting
         </Link>
-        <Link to={"/weatherSetting"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/weatherSetting"}>
           <ThunderstormIcon fontSize="large" />
           Weather setting
         </Link>
 
-        <Link to={"/currency"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/currency"}>
           <AttachMoneyIcon fontSize="large" />
           Currency
         </Link>

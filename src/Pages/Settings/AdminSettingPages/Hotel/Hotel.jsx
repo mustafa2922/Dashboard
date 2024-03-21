@@ -128,13 +128,23 @@ function Hotel() {
 
   const [column, setColumn] = useState([
     {
+      headerName: "Sr.",
+      field: "serialNumber",
+      sortable: false,
+      flex: 0.5,
+      filter: false,
+      cellRenderer: (params) => {
+        return params.rowIndex + 1;
+      },
+    },
+    {
       headerName: "Name",
       field: "name",
     },
     {
       headerName: "Category",
       field: "stars",
-      width:130,
+      flex: 1.3,
       cellRenderer: (params) => {
         return (
           <ReactStars
@@ -150,13 +160,13 @@ function Hotel() {
     {
       headerName: "Destination",
       field: "destination",
-      width: 130,
+      flex: 1.1,
     },
     {
       headerName: "Tarif",
-      width: 60,
       sortable: false,
       filter: false,
+      flex: 0.7,
       cellRenderer: (params) => {
         return (
           <div
@@ -178,17 +188,16 @@ function Hotel() {
     {
       headerName: "Tarif Valid From",
       field: "date",
-      width: 150,
+      flex: 1.3,
     },
     {
       headerName: "Tarif Valid To",
       field: "date",
-      width: 140,
+      flex: 1.2,
     },
     {
       headerName: "Status",
       field: "status",
-      width: 100,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -199,7 +208,8 @@ function Hotel() {
                   : "bg-[#f9392f]"
               }  text-white rounded-md h-[70%]`}
             >
-              {params.value}
+              {params.value[0].toUpperCase()}
+              {params.value.substring(1)}
             </div>
           </div>
         );
@@ -207,6 +217,7 @@ function Hotel() {
     },
     {
       headerName: "Updated By",
+      flex: 2,
       field: "by",
       cellRenderer: (params) => {
         return (
@@ -222,12 +233,11 @@ function Hotel() {
     {
       headerName: "Updated On",
       field: "date",
-      width: 150,
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex: 0.4,
       cellRenderer: (params) => {
         return (
           <div
@@ -266,7 +276,7 @@ function Hotel() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 191,
+    flex: 1,
     tooltipField: "name",
   };
 
@@ -318,11 +328,8 @@ function Hotel() {
         </div>
       </div>
 
-      <div className="h-full w-full">
-        <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
-        >
+      <div className="h-full w-full overflow-x-scroll">
+        <div className="ag-theme-quartz h-full w-[1700px] lg:w-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -357,14 +364,44 @@ function Hotel() {
                       sx={{ width: "100%" }}
                     />
                   </div>
-                  <div className="px-1 mt-2 text-sm " >Categoty</div>
-                  <select className="px-2 focus:outline-none mt-1 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                  <div className="px-1 mt-2 text-sm ">Categoty</div>
+                  <select className="px-2 focus:outline-none mt-1 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-sm">
                     <option value="1">1 Star</option>
                     <option value="2">2 Star</option>
                     <option value="3">3 Star</option>
                     <option value="4">4 Star</option>
                     <option value="5">5 Star</option>
                   </select>
+
+                  <div className=" mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Destination"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+
+                  <div className=" mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Hotel Address"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+
+                  <div className="mt-4">
+                    <PhoneInput
+                      international
+                      value={value}
+                      onChange={setValue}
+                      placeholder="Hotel Contact No"
+                      className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                    />
+                  </div>
 
                   <div className="mt-4 w-full">
                     <Textarea
@@ -378,17 +415,8 @@ function Hotel() {
                       }}
                     />
                   </div>
-                  <div className=" mt-4 w-full">
-                    <TextField
-                      id="outlined-basic"
-                      size="small"
-                      label="Hotel Address"
-                      variant="outlined"
-                      sx={{ width: "100%" }}
-                    />
-                  </div>
 
-                  <div className="border border-slate-300 rounded-md p-2 mt-4 w-full">
+                  <div className="border border-slate-300 rounded-md p-3 mt-4 w-full">
                     <Input
                       id="file-input"
                       type="file"
@@ -402,11 +430,14 @@ function Hotel() {
                           Select Files
                         </Button>
                       </label>
-                      <div className="hidden md:block overflow-x-auto"> {selectFile} </div>
+                      <div className="hidden md:block overflow-x-auto">
+                        {selectFile}
+                      </div>
                     </div>
                   </div>
-
-                  <div className="mt-4 custom-date-picker">
+                </div>
+                <div className="flex flex-col w-[48%]">
+                  <div className="custom-date-picker">
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <MobileDatePicker
                         label="Tarif Valid From"
@@ -422,9 +453,18 @@ function Hotel() {
                       />
                     </LocalizationProvider>
                   </div>
-                </div>
-                <div className="flex flex-col w-[48%]">
-                  <div className="">
+
+                  <div className="mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Contact Person"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+
+                  <div className="mt-4">
                     <PhoneInput
                       international
                       value={value}
@@ -442,15 +482,6 @@ function Hotel() {
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
                   </div>
-                  <div className="mt-4 w-full">
-                    <TextField
-                      id="outlined-basic"
-                      size="small"
-                      label="Contact Person"
-                      variant="outlined"
-                      sx={{ width: "100%" }}
-                    />
-                  </div>
                   <div className=" mt-4 w-full">
                     <TextField
                       id="outlined-basic"
@@ -460,57 +491,40 @@ function Hotel() {
                       sx={{ width: "100%" }}
                     />
                   </div>
-                  <div className="mt-4">
-                    <PhoneInput
-                      international
-                      value={value}
-                      onChange={setValue}
-                      placeholder="Hotel Contact No"
-                      className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                  <div className=" mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Website Link"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
                     />
                   </div>
                   <select className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
                     <option value="active">active</option>
                     <option value="inactive">inactive</option>
                   </select>
-                  <div className="flex justify-between items-center">
-                    <div className=" mt-4 w-[48%]">
-                      <TextField
-                        id="outlined-basic"
-                        size="small"
-                        label="Website Link"
-                        variant="outlined"
-                        sx={{ width: "100%" }}
-                      />
-                    </div>
-                    <div className=" mt-4 w-[48%]">
-                      <TextField
-                        id="outlined-basic"
-                        size="small"
-                        label="Destination"
-                        variant="outlined"
-                        sx={{ width: "100%" }}
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-4 flex justify-between items-center">
-                    <div className=" w-[49%] rounded-md h-10  ">
-                      <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
-                        Save
-                      </button>
-                    </div>
-
-                    <div
-                      onClick={handleClose}
-                      className=" w-[48%] rounded-md h-10"
-                    >
-                      <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
                 </div>
               </div>
+
+              <div className="mt-4 flex justify-between items-center">
+
+                <div onClick={handleClose} className=" w-[48%] rounded-md h-10">
+                  <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
+                    Cancel
+                  </button>
+                </div>
+
+                <div className=" w-[48%] rounded-md h-10  ">
+                  <button className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]">
+                    Save
+                  </button>
+                </div>
+
+
+
+              </div>
+
             </div>
           </Modal>
         </div>

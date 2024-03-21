@@ -10,7 +10,6 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TextField from "@mui/material/TextField";
 
-
 const data = [
   {
     id: "12EF34RC1",
@@ -96,12 +95,23 @@ function RoomType() {
 
   const [column, setColumn] = useState([
     {
+      headerName: "Sr.",
+      field: "serialNumber",
+      flex: 0.24,
+      sortable: false,
+      filter: false,
+      cellRenderer: (params) => {
+        return params.rowIndex + 1;
+      },
+    },
+    {
       headerName: "Name",
+      flex: 1,
       field: "name",
-      width: 710,
     },
     {
       headerName: "Status",
+      flex: 0.42,
       field: "status",
       cellRenderer: (params) => {
         return (
@@ -113,7 +123,8 @@ function RoomType() {
                   : "bg-[#f9392f]"
               }  text-white rounded-md h-[70%]`}
             >
-              {params.value}
+              {params.value[0].toUpperCase()}
+              {params.value.substring(1)}
             </div>
           </div>
         );
@@ -121,6 +132,7 @@ function RoomType() {
     },
     {
       headerName: "Updated By",
+      flex: 0.9,
       field: "by",
       cellRenderer: (params) => {
         return (
@@ -135,11 +147,11 @@ function RoomType() {
     },
     {
       headerName: "Updated On",
+      flex: 0.7,
       field: "date",
-      width: 150,
     },
     {
-      width: 50,
+      flex: 0.22,
       sortable: false,
       filter: false,
       cellRenderer: (params) => {
@@ -180,7 +192,7 @@ function RoomType() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 191,
+    flex: 1,
     tooltipField: "name",
   };
 
@@ -223,11 +235,8 @@ function RoomType() {
         </div>
       </div>
 
-      <div className="h-full w-full">
-        <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
-        >
+      <div className="h-full w-full overflow-x-scroll">
+        <div className="ag-theme-quartz h-full w-[800px] md:w-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -252,7 +261,6 @@ function RoomType() {
                 </div>
               </div>
               <div className="flex flex-col justify-between mt-4 h-[90%]">
-
                 <div className=" mt-4 w-full">
                   <TextField
                     id="outlined-basic"
@@ -268,19 +276,22 @@ function RoomType() {
                   <option value="inactive">Inactive</option>
                 </select>
 
-                <div className="mt-6 w-full rounded-md h-10  ">
-                  <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
-                    Save
-                  </button>
-                </div>
+                <div className="flex w-full items-center justify-between">
+                  <div className="mt-6 w-[48%] rounded-md h-10  ">
+                    <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
+                      Save
+                    </button>
+                  </div>
 
-                <div
-                  onClick={handleClose}
-                  className="mt-4 w-full rounded-md h-10"
-                >
-                  <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
-                    Cancel
-                  </button>
+                  <div
+                    onClick={handleClose}
+                    className="mt-4 w-[48%] rounded-md h-10"
+                  >
+                    <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
+                      Cancel
+                    </button>
+                  </div>
+
                 </div>
               </div>
             </div>

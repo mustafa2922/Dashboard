@@ -55,11 +55,11 @@ const App = () => {
     return (
       <div className="main h-screen w-full">
         <Navbar sendDataToApp={getStatusFromSideBar} />
-        <div className="wrapper flex h-[92vh]">
+        <div className="wrapper flex h-[92.5vh]">
           <div
             className={`sideBar-Wrapper md:block ${
               show ? "hidden" : ""
-            } w-[4rem] md:static absolute z-10 h-full bg-[#12344d] text-white`}
+            } w-[4rem] md:static absolute z-20 h-full bg-[#12344d] text-white`}
           >
             <SideBar />
           </div>

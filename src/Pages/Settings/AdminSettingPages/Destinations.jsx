@@ -9,8 +9,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TextField from "@mui/material/TextField";
-import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
 
 const data = [
   {
@@ -87,6 +85,16 @@ function Destinations() {
 
   const [column, setColumn] = useState([
     {
+      headerName: "Sr.",
+      field: "serialNumber",
+      flex: 0.24,
+      sortable: false,
+      filter: false,
+      cellRenderer: (params) => {
+        return params.rowIndex + 1;
+      },
+    },
+    {
       headerName: "Destination Name",
       field: "location",
     },
@@ -109,7 +117,7 @@ function Destinations() {
       field: "date",
     },
     {
-      width: 50,
+      flex: 0.18,
       sortable: false,
       filter: false,
       cellRenderer: (params) => {
@@ -150,7 +158,7 @@ function Destinations() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 415,
+    flex: 1,
     tooltipField: "name",
   };
 
@@ -193,11 +201,8 @@ function Destinations() {
         </div>
       </div>
 
-      <div className="h-full w-full">
-        <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
-        >
+      <div className="h-full w-full barDesign overflow-x-scroll ">
+        <div className="ag-theme-quartz w-[800px] md:w-full h-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -232,19 +237,20 @@ function Destinations() {
                   />
                 </div>
 
-                <div className="mt-4 w-full rounded-md h-10  ">
-                  <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
-                    Save
-                  </button>
-                </div>
-
-                <div
-                  onClick={handleClose}
-                  className="mt-4 w-full rounded-md h-10"
-                >
-                  <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
-                    Cancel
-                  </button>
+                <div className="flex w-full justify-between items-center">
+                  <div className="mt-4 w-[48%] rounded-md h-10  ">
+                    <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
+                      Save
+                    </button>
+                  </div>
+                  <div
+                    onClick={handleClose}
+                    className="mt-4 w-[48%] rounded-md h-10"
+                  >
+                    <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
+                      Cancel
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

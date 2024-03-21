@@ -95,13 +95,24 @@ function MealPlan() {
 
   const [column, setColumn] = useState([
     {
+      headerName: "Sr.",
+      field: "serialNumber",
+      flex: 0.28,
+      sortable: false,
+      filter: false,
+      cellRenderer: (params) => {
+        return params.rowIndex + 1;
+      },
+    },
+    {
       headerName: "Name",
       field: "mealPlan",
-      width: 710,
+      flex:1.3,
     },
     {
       headerName: "Status",
       field: "status",
+      flex:0.5,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -112,7 +123,8 @@ function MealPlan() {
                   : "bg-[#f9392f]"
               }  text-white rounded-md h-[70%]`}
             >
-              {params.value}
+              {params.value[0].toUpperCase()}
+              {params.value.substring(1)}
             </div>
           </div>
         );
@@ -135,12 +147,12 @@ function MealPlan() {
     {
       headerName: "Updated On",
       field: "date",
-      width: 150,
+      flex:0.7,
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex:0.2,
       cellRenderer: (params) => {
         return (
           <div
@@ -179,7 +191,7 @@ function MealPlan() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 191,
+    flex: 1,
     tooltipField: "name",
   };
 
@@ -222,10 +234,9 @@ function MealPlan() {
         </div>
       </div>
 
-      <div className="h-full w-full">
+      <div className="h-full w-full overflow-x-scroll ">
         <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
+          className="ag-theme-quartz h-full w-[800px] md:w-full"
         >
           <AgGridReact
             onGridReady={onGridReady}
@@ -266,19 +277,21 @@ function MealPlan() {
                   <option value="inactive">Inactive</option>
                 </select>
 
-                <div className="mt-6 w-full rounded-md h-10  ">
-                  <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
-                    Save
-                  </button>
-                </div>
+                <div className="flex w-full items-center justify-between">
+                  <div className="mt-6 w-[48%] rounded-md h-10  ">
+                    <button className="hover:bg-[#142b3e] w-full rounded-md h-full flex items-center justify-center text-white bg-[#1d3f5a]">
+                      Save
+                    </button>
+                  </div>
 
-                <div
-                  onClick={handleClose}
-                  className="mt-4 w-full rounded-md h-10"
-                >
-                  <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
-                    Cancel
-                  </button>
+                  <div
+                    onClick={handleClose}
+                    className="mt-4 w-[48%] rounded-md h-10"
+                  >
+                    <button className="hover:bg-[#eeeeee] w-full rounded-md border border-[#b9b9b9] h-full flex items-center justify-center">
+                      Cancel
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
