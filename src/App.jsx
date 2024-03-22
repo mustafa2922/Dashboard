@@ -40,7 +40,6 @@ import PackageTheme from "./Pages/Settings/AdminSettingPages/PackageTheme";
 import MailSetting from "./Pages/Settings/AdminSettingPages/MailSetting";
 import WeatherSetting from "./Pages/Settings/AdminSettingPages/WeatherSetting";
 import Currency from "./Pages/Settings/AdminSettingPages/Currency";
-import HotelPrice from "./Pages/Settings/AdminSettingPages/Hotel/HotelTariff";
 import Driver from "./Pages/Settings/AdminSettingPages/Driver/Driver";
 
 const App = () => {
@@ -113,8 +112,7 @@ const router = createBrowserRouter([
         { path: "/destinations", element: <Destinations /> },
         { path: "/roomType", element: <RoomType /> },
         { path: "/mealPlan", element: <MealPlan /> },
-        { path: "/hotel", element: <Hotel /> },
-        { path: "/hotel/:hotelName", element: <HotelPrice/> },
+        { path: "/accommodation", element: <Hotel /> },
         { path: "/driver", element: <Driver/> },
         { path: "/transfer", element: <Transfer /> },
         { path: "/dayItinerary", element: <DayItinerary /> },

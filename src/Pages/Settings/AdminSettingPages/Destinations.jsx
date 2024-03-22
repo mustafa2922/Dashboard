@@ -201,7 +201,7 @@ function Destinations() {
         </div>
       </div>
 
-      <div className="h-full w-full barDesign overflow-x-scroll ">
+      <div className="h-full w-full barDesign overflow-x-auto ">
         <div className="ag-theme-quartz w-[800px] md:w-full h-full">
           <AgGridReact
             onGridReady={onGridReady}

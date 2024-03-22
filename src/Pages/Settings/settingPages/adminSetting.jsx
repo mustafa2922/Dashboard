@@ -11,7 +11,6 @@ import BackupTableIcon from "@mui/icons-material/BackupTable";
 import EmailIcon from "@mui/icons-material/Email";
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import DashboardHeader from "../../../Components/DashboardHeader";
 import CommuteIcon from '@mui/icons-material/Commute';
 import { Link } from "react-router-dom";
 import "./adminSetting.css";
@@ -19,7 +18,6 @@ import "./adminSetting.css";
 export default function AdminSetting() {
   return (
     <main className="w-full h-full" >
-      <DashboardHeader title="Admin Setting" />
 
       <h2 className="admin-heading2">System Masters</h2>
       <p className="heading-text">
@@ -49,9 +47,9 @@ export default function AdminSetting() {
           Meal plan
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/hotel"}>
+        <Link className="w-[48%] md:w-[30%]" to={"/accommodation"}>
           <HotelIcon fontSize="large" />
-          Hotel
+          Accomodation
         </Link>
 
         <Link className="w-[48%] md:w-[30%]" to={"/driver"}>
@@ -61,7 +59,7 @@ export default function AdminSetting() {
 
         <Link className="w-[48%] md:w-[30%]" to={"/transfer"}>
           <DirectionsCarIcon fontSize="large" />
-          Transfers
+          Vehicle
         </Link>
 
         <Link className="w-[48%] md:w-[30%]" to={"/dayItinerary"}>

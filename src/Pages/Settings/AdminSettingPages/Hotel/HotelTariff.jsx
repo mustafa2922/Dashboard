@@ -4,11 +4,11 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useState } from "react";
 import EditNoteIcon from "@mui/icons-material/EditNote";
-import { useLocation } from "react-router-dom";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@mui/material/TextField";
+import "./HotelTarif.css";
 
 let data = [
   {
@@ -47,96 +47,93 @@ let data = [
     CWB: 100,
     CNB: 50,
   },
-  {
-    From: "2024-06-12",
-    To: "2024-06-17",
-    RoomType: "Standard Room",
-    MealPlan: "Room Only",
-    Single: 80,
-    Double: 120,
-    Triple: 160,
-    Quad: 200,
-    CWB: 40,
-    CNB: 20,
-  },
-  {
-    From: "2024-07-20",
-    To: "2024-07-25",
-    RoomType: "Deluxe Room",
-    MealPlan: "Half Board",
-    Single: 130,
-    Double: 200,
-    Triple: 260,
-    Quad: 320,
-    CWB: 65,
-    CNB: 32.5,
-  },
-  {
-    From: "2024-08-15",
-    To: "2024-08-20",
-    RoomType: "Suite",
-    MealPlan: "Full Board",
-    Single: 220,
-    Double: 350,
-    Triple: 480,
-    Quad: 600,
-    CWB: 110,
-    CNB: 55,
-  },
-  {
-    From: "2024-09-08",
-    To: "2024-09-10",
-    RoomType: "Standard Room",
-    MealPlan: "All Inclusive",
-    Single: 150,
-    Double: 250,
-    Triple: 350,
-    Quad: 450,
-    CWB: 90,
-    CNB: 45,
-  },
-  {
-    From: "2024-10-11",
-    To: "2024-10-16",
-    RoomType: "Deluxe Room",
-    MealPlan: "Room Only",
-    Single: 100,
-    Double: 150,
-    Triple: 200,
-    Quad: 250,
-    CWB: 50,
-    CNB: 25,
-  },
-  {
-    From: "2024-11-22",
-    To: "2024-11-25",
-    RoomType: "Suite",
-    MealPlan: "Half Board",
-    Single: 180,
-    Double: 280,
-    Triple: 380,
-    Quad: 480,
-    CWB: 95,
-    CNB: 47.5,
-  },
-  {
-    From: "2024-12-03",
-    To: "2024-12-07",
-    RoomType: "Standard Room",
-    MealPlan: "Full Board",
-    Single: 140,
-    Double: 210,
-    Triple: 280,
-    Quad: 350,
-    CWB: 70,
-    CNB: 35,
-  },
+  // {
+  //   From: "2024-06-12",
+  //   To: "2024-06-17",
+  //   RoomType: "Standard Room",
+  //   MealPlan: "Room Only",
+  //   Single: 80,
+  //   Double: 120,
+  //   Triple: 160,
+  //   Quad: 200,
+  //   CWB: 40,
+  //   CNB: 20,
+  // },
+  // {
+  //   From: "2024-07-20",
+  //   To: "2024-07-25",
+  //   RoomType: "Deluxe Room",
+  //   MealPlan: "Half Board",
+  //   Single: 130,
+  //   Double: 200,
+  //   Triple: 260,
+  //   Quad: 320,
+  //   CWB: 65,
+  //   CNB: 32.5,
+  // },
+  // {
+  //   From: "2024-08-15",
+  //   To: "2024-08-20",
+  //   RoomType: "Suite",
+  //   MealPlan: "Full Board",
+  //   Single: 220,
+  //   Double: 350,
+  //   Triple: 480,
+  //   Quad: 600,
+  //   CWB: 110,
+  //   CNB: 55,
+  // },
+  // {
+  //   From: "2024-09-08",
+  //   To: "2024-09-10",
+  //   RoomType: "Standard Room",
+  //   MealPlan: "All Inclusive",
+  //   Single: 150,
+  //   Double: 250,
+  //   Triple: 350,
+  //   Quad: 450,
+  //   CWB: 90,
+  //   CNB: 45,
+  // },
+  // {
+  //   From: "2024-10-11",
+  //   To: "2024-10-16",
+  //   RoomType: "Deluxe Room",
+  //   MealPlan: "Room Only",
+  //   Single: 100,
+  //   Double: 150,
+  //   Triple: 200,
+  //   Quad: 250,
+  //   CWB: 50,
+  //   CNB: 25,
+  // },
+  // {
+  //   From: "2024-11-22",
+  //   To: "2024-11-25",
+  //   RoomType: "Suite",
+  //   MealPlan: "Half Board",
+  //   Single: 180,
+  //   Double: 280,
+  //   Triple: 380,
+  //   Quad: 480,
+  //   CWB: 95,
+  //   CNB: 47.5,
+  // },
+  // {
+  //   From: "2024-12-03",
+  //   To: "2024-12-07",
+  //   RoomType: "Standard Room",
+  //   MealPlan: "Full Board",
+  //   Single: 140,
+  //   Double: 210,
+  //   Triple: 280,
+  //   Quad: 350,
+  //   CWB: 70,
+  //   CNB: 35,
+  // },
 ];
 
-function HotelPrice() {
-  const { state } = useLocation();
-  const { id, name } = state;
-
+function HotelPrice({ name, MainSetOpen }) {
   const [search, setSearch] = useState("");
   const [row, setRow] = useState(data);
   const [open, setOpen] = useState(false);
@@ -149,52 +146,57 @@ function HotelPrice() {
     {
       headerName: "Room Type",
       field: "RoomType",
+      flex: 0.6,
     },
     {
       headerName: "Meal Plan",
       field: "MealPlan",
+      flex: 0.6,
     },
     {
       headerName: "Single",
       field: "Single",
-      flex: 0.9,
+      flex: 0.6,
     },
     {
       headerName: "Double",
       field: "Double",
-      flex: 0.9,
+      flex: 0.6,
     },
     {
       headerName: "Triple",
       field: "Triple",
-      flex: 0.9,
+      flex: 0.5,
     },
     {
       headerName: "Quad",
       field: "Quad",
-      flex: 0.9,
+      flex: 0.5,
     },
     {
       headerName: "CWB",
       field: "CWB",
-      flex: 0.9,
+      flex: 0.5,
     },
     {
       headerName: "CNB (Above 5 yrs)",
       field: "CNB",
+      flex: 0.9,
     },
     {
       headerName: "CNB (Below 5 yrs)",
       field: "CNB",
+      flex: 0.9,
     },
     {
       headerName: "INF (Below 3 yrs)",
       field: "CNB",
+      flex: 0.9,
     },
     {
       sortable: false,
       filter: false,
-      flex: 0.4,
+      flex: 0.3,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -231,42 +233,41 @@ function HotelPrice() {
 
   return (
     <div className="h-full">
-      <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
-        <div className="font-bold"> {name} - Tariff </div>
-        <div className="flex justify-center items-center gap-3 h-full">
-          <input
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              quickFilter();
-            }}
-            className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[65%] focus:outline-none focus:border focus:border-black"
-            placeholder="Search by anything...."
-          />
+      <div className="flex justify-between items-center h-16 w-full sm:h-12 sm:flex-row flex-col px-1">
+        <div className="font-bold w-[25%]"> {name} Tariff </div>
+        <div className="flex justify-end items-center w-[75%] gap-3 h-full">
+  
           <button
             onClick={() => {
               setOpen(true);
               setStat("Add");
             }}
-            className="border border-slate-300 h-[80%] bg-[#1d3f5a] text-white text-sm rounded-md px-2 "
+            className="border border-slate-300 h-[60%] bg-[#1d3f5a] text-white text-sm rounded-md px-2 "
           >
             <span className="sm:block hidden">Add Tariff</span>{" "}
             <span className="sm:hidden flex items-center justify-center">
               <AddRoundedIcon />
             </span>
           </button>
+          <div
+            className="border border-red-500 rounded-full bg-red-500 cursor-pointer"
+            onClick={() => {
+              MainSetOpen("tarif"); //handleClose('tarif')
+            }}
+          >
+            <CloseIcon style={{color:'#fff'}} />
+          </div>
         </div>
       </div>
 
-      <div className="h-full w-full">
-        <div className="ag-theme-quartz w-[1800px] lg:w-full h-full">
+      <div className="h-96 mt-2 border-r border-l w-full overflow-x-auto">
+        <div className="ag-theme-quartz w-[1500px] h-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
             rowData={row}
             defaultColDef={defaultColDef}
             enableBrowserTooltips={true}
-            pagination={true}
           />
 
           <Modal

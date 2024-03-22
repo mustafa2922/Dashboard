@@ -226,7 +226,7 @@ function Transfer() {
         </div>
       </div>
 
-      <div className="h-full w-full overflow-x-scroll">
+      <div className="h-full w-full overflow-x-auto">
         <div className="ag-theme-quartz h-full lg:w-full w-[1000px]">
           <AgGridReact
             onGridReady={onGridReady}

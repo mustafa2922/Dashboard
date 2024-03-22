@@ -191,7 +191,7 @@ function MarketingDashboard() {
     {
       headerName: "Template",
       field: "template",
-      width: 280,
+      flex:1.5,
       cellRenderer: (params) => {
         return (
           <div
@@ -217,24 +217,24 @@ function MarketingDashboard() {
     {
       headerName: "Mailing Group",
       field: "mailingGroup",
-      width: 250,
+      flex:1.2
     },
     {
       headerName: "Subscriber",
       field: "subscriber",
-      width: 115,
+      flex:0.9,
       cellStyle: { textAlign: "center" },
     },
     {
       headerName: "Views",
       field: "views",
-      width: 85,
+      flex:0.8,
       cellStyle: { textAlign: "center" },
     },
     {
       headerName: "Status",
       field: "status",
-      width: 140,
+      flex:0.8,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -279,7 +279,7 @@ function MarketingDashboard() {
   const defaultColDef = {
     sortable: true,
     filter: true,
-    width: 191,
+    flex:1,
     tooltipField: "name",
   };
 
@@ -441,10 +441,9 @@ function MarketingDashboard() {
           </Link>
         </div>
       </div>
-      <div className="mt-8 h-full w-full">
+      <div className="mt-8 h-full w-full overflow-x-auto">
         <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
+          className="ag-theme-quartz h-full w-[1100px] lg:w-full"
         >
           <AgGridReact
             onGridReady={onGridReady}

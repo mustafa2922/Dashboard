@@ -133,12 +133,12 @@ function LandingPages() {
     {
       headerName: "ID",
       field: "id",
-      width: 110,
+      flex:0.8,
     },
     {
       headerName: "Template Name",
       field: "templateName",
-      width: 210,
+      flex:1.2
     },
     {
       headerName: "Banner Heading",
@@ -157,17 +157,21 @@ function LandingPages() {
       field: "status",
       sortable: false,
       filter: false,
-      width: 100,
+      flex:0.8,
       cellStyle: { display: "flex", alignItems: "center" },
       cellRenderer: (params) => {
         return (
-          <div className="flex items-center justify-center w-full h-10">
+          <div className="flex items-center justify-center w-full h-11">
             <div
               className={`flex items-center justify-center w-14 ${
-                params.value === "Active" ? "bg-green-700" : "bg-[#f9392f]"
+                params.value.toLocaleLowerCase() ===
+                "Active".toLocaleLowerCase()
+                  ? "bg-green-700"
+                  : "bg-[#f9392f]"
               }  text-white rounded-md h-[70%]`}
             >
-              {params.value}
+              {params.value[0].toUpperCase()}
+              {params.value.substring(1)}
             </div>
           </div>
         );
@@ -186,9 +190,9 @@ function LandingPages() {
       },
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex: 0.3,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -203,13 +207,13 @@ function LandingPages() {
       },
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex: 0.3,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
-            <Link to={'/landingPages/create'} >
+            <Link to={"/landingPages/create"}>
               <EditNoteIcon
                 className="hover:bg-black hover:text-white rounded-full border p-1 border-black"
                 style={{ fontSize: "25px" }}
@@ -234,7 +238,7 @@ function LandingPages() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 191,
+    flex: 1,
     tooltipField: "name",
   };
   return (
@@ -251,20 +255,20 @@ function LandingPages() {
             className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[60%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."
           />
-          <Link to={'/landingPages/create'}>
-          <button className="border border-slate-300 h-9 bg-[#1d3f5a] text-white text-xs rounded-md px-2 ">
-            <span className="sm:block hidden">Create Page</span>{" "}
-            <span className="sm:hidden block">
-              <PersonAddAltIcon />
-            </span>
-          </button></Link>
+          <Link to={"/landingPages/create"}>
+            <button className="border border-slate-300 h-9 bg-[#1d3f5a] text-white text-xs rounded-md px-2 ">
+              <span className="sm:block hidden">Create Page</span>{" "}
+              <span className="sm:hidden block">
+                <PersonAddAltIcon />
+              </span>
+            </button>
+          </Link>
         </div>
       </div>
 
-      <div className="h-full w-full">
+      <div className="h-full w-full overflow-x-auto">
         <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
+          className="ag-theme-quartz lg:w-full h-full w-[1400px]"
         >
           <AgGridReact
             onGridReady={onGridReady}

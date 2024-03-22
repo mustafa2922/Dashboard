@@ -559,7 +559,7 @@ function Driver() {
                       <TextField
                         id="outlined-basic"
                         size="small"
-                        label="Model"
+                        label="Vehicle Model"
                         variant="outlined"
                         sx={{ width: "100%" }}
                       />
@@ -568,7 +568,7 @@ function Driver() {
                       <TextField
                         id="outlined-basic"
                         size="small"
-                        label="Color"
+                        label="Vehicle Color"
                         variant="outlined"
                         sx={{ width: "100%" }}
                       />

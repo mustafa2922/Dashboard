@@ -20,13 +20,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import "./Hotel.css";
+import HotelPrice from "./HotelTariff";
 
 const data = [
   {
     id: "12EF34RC1",
     by: "JaffarSaleem.com",
-    date: "15-03-2024",
+    dateFrom: "15-03-2024",
+    dateTo: "18-03-2024",
     name: "Premium Delux",
+    type: "Premium Delux",
     stars: 2,
     destination: "New York",
     status: "active",
@@ -34,8 +37,10 @@ const data = [
   {
     id: "98AB76YZ3",
     by: "JaffarSaleem.com",
-    date: "16-03-2024",
+    dateFrom: "19-03-2024",
+    dateTo: "22-03-2024",
     name: "Luxury Suite",
+    type: "Luxury Suite",
     stars: 4,
     destination: "London",
     status: "inactive",
@@ -43,8 +48,10 @@ const data = [
   {
     id: "45CD67FG8",
     by: "JaffarSaleem.com",
-    date: "17-03-2024",
+    dateFrom: "23-03-2024",
+    dateTo: "26-03-2024",
     name: "Executive Room",
+    type: "Executive Room",
     stars: 3,
     destination: "Paris",
     status: "active",
@@ -52,8 +59,10 @@ const data = [
   {
     id: "23GH89IJ5",
     by: "JaffarSaleem.com",
-    date: "18-03-2024",
+    dateFrom: "27-03-2024",
+    dateTo: "30-03-2024",
     name: "Standard Twin",
+    type: "Standard Twin",
     stars: 5,
     destination: "Tokyo",
     status: "inactive",
@@ -61,8 +70,10 @@ const data = [
   {
     id: "67KL12MN0",
     by: "JaffarSaleem.com",
-    date: "19-03-2024",
+    dateFrom: "31-03-2024",
+    dateTo: "03-04-2024",
     name: "Family Villa",
+    type: "Family Villa",
     stars: 1,
     destination: "Dubai",
     status: "active",
@@ -70,8 +81,10 @@ const data = [
   {
     id: "34OP56QR7",
     by: "JaffarSaleem.com",
-    date: "20-03-2024",
+    dateFrom: "04-04-2024",
+    dateTo: "07-04-2024",
     name: "Ocean View Suite",
+    type: "Ocean View Suite",
     stars: 4,
     destination: "Sydney",
     status: "inactive",
@@ -79,8 +92,10 @@ const data = [
   {
     id: "89ST23UV4",
     by: "JaffarSaleem.com",
-    date: "21-03-2024",
+    dateFrom: "08-04-2024",
+    dateTo: "11-04-2024",
     name: "Penthouse Loft",
+    type: "Penthouse Loft",
     stars: 3,
     destination: "Rome",
     status: "active",
@@ -88,8 +103,10 @@ const data = [
   {
     id: "12WX34YZ5",
     by: "JaffarSaleem.com",
-    date: "22-03-2024",
+    dateFrom: "12-04-2024",
+    dateTo: "15-04-2024",
     name: "Honeymoon Retreat",
+    type: "Honeymoon Retreat",
     stars: 2,
     destination: "Berlin",
     status: "inactive",
@@ -97,8 +114,10 @@ const data = [
   {
     id: "56CD78EF9",
     by: "JaffarSaleem.com",
-    date: "23-03-2024",
+    dateFrom: "16-04-2024",
+    dateTo: "19-04-2024",
     name: "Mountain Chalet",
+    type: "Mountain Chalet",
     stars: 5,
     destination: "Moscow",
     status: "active",
@@ -106,8 +125,10 @@ const data = [
   {
     id: "78GH90IJ1",
     by: "JaffarSaleem.com",
-    date: "24-03-2024",
+    dateFrom: "20-04-2024",
+    dateTo: "23-04-2024",
     name: "Beach Bungalow",
+    type: "Beach Bungalow",
     stars: 3,
     destination: "Singapore",
     status: "inactive",
@@ -115,11 +136,18 @@ const data = [
 ];
 
 function Hotel() {
-  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [row, setRow] = useState(data);
   const [open, setOpen] = useState(false);
-  const handleClose = () => setOpen(false);
+  const [tarifOpen, setTarifOpen] = useState(false);
+  const [hotelName, sethotelName] = useState("");
+  const handleClose = (name) => {
+    if (name === "modal") {
+      setOpen(false);
+    } else if (name === "tarif") {
+      setTarifOpen(false);
+    }
+  };
   const [gridApi, setGridApi] = useState(null);
   const [value, setValue] = useState();
   const [selectFile, setSelectFile] = useState("Select hotel image");
@@ -140,6 +168,10 @@ function Hotel() {
     {
       headerName: "Name",
       field: "name",
+    },
+    {
+      headerName: "Type",
+      field: "type",
     },
     {
       headerName: "Category",
@@ -171,9 +203,8 @@ function Hotel() {
         return (
           <div
             onClick={() => {
-              navigate(`/hotel/${params.data.name.replace(/\s/g, "")}Tarif`, {
-                state: { id: params.data.id, name: params.data.name },
-              });
+              setTarifOpen(true);
+              sethotelName(params.data.name);
             }}
             className="flex items-center justify-center w-full h-full"
           >
@@ -187,13 +218,56 @@ function Hotel() {
     },
     {
       headerName: "Tarif Valid From",
-      field: "date",
+      field: "dateFrom",
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      cellRenderer: (params) => {
+        return (
+          <div
+            className={`flex items-center justify-center w-full h-6 text-white font-bold rounded-md ${
+              dayjs(params.value, "DD-MM-YYYY").isBefore(dayjs(), "day")
+                ? "bg-red-500"
+                : "bg-green-500"
+            } `}
+          >
+            {params.value}
+          </div>
+        );
+      },
       flex: 1.3,
     },
     {
       headerName: "Tarif Valid To",
-      field: "date",
+      field: "dateTo",
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      cellRenderer: (params) => {
+        return (
+          <div
+            className={`flex items-center justify-center w-full h-6 text-white font-bold rounded-md ${
+              dayjs(params.value, "DD-MM-YYYY").isBefore(dayjs(), "day")
+                ? "bg-red-500"
+                : "bg-green-500"
+            } `}
+          >
+            {params.value}
+          </div>
+        );
+      },
       flex: 1.2,
+    },
+    {
+      headerName: "Bank Details",
+      field: "",
+      cellRenderer: (params) => {
+        return <div>View</div>;
+      },
     },
     {
       headerName: "Status",
@@ -203,10 +277,11 @@ function Hotel() {
           <div className="flex items-center justify-center w-full h-full">
             <div
               className={`flex items-center justify-center w-14 ${
-                params.value.toLocaleLowerCase() === "Active".toLocaleLowerCase()
-                  ? "bg-green-700"
-                  : "bg-[#f9392f]"
-              }  text-white rounded-md h-[70%]`}
+                params.value.toLocaleLowerCase() ===
+                "Active".toLocaleLowerCase()
+                  ? "bg-green-500"
+                  : "bg-red-500"
+              }  text-white font-bold rounded-md h-7 w-full`}
             >
               {params.value[0].toUpperCase()}
               {params.value.substring(1)}
@@ -232,7 +307,7 @@ function Hotel() {
     },
     {
       headerName: "Updated On",
-      field: "date",
+      field: "dateTo",
     },
     {
       sortable: false,
@@ -292,7 +367,7 @@ function Hotel() {
   return (
     <div className="h-full">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
-        <div className="font-bold"> Hotel </div>
+        <div className="font-bold"> Accomodation </div>
         <div className="flex justify-center items-center gap-3 h-full">
           <button
             onClick={() => {
@@ -328,8 +403,8 @@ function Hotel() {
         </div>
       </div>
 
-      <div className="h-full w-full overflow-x-scroll">
-        <div className="ag-theme-quartz h-full w-[1700px] lg:w-full">
+      <div className="h-full w-full overflow-x-auto">
+        <div className="ag-theme-quartz h-full min-[1900px]:w-[100%] w-[1800px]">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -342,14 +417,21 @@ function Hotel() {
           <Modal
             keepMounted
             open={open}
-            onClose={handleClose}
+            onClose={() => {
+              handleClose("modal");
+            }}
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
             <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[70%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Hotel </div>
-                <div className="cursor-pointer" onClick={handleClose}>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    handleClose("modal");
+                  }}
+                >
                   <CloseIcon />
                 </div>
               </div>
@@ -508,8 +590,12 @@ function Hotel() {
               </div>
 
               <div className="mt-4 flex justify-between items-center">
-
-                <div onClick={handleClose} className=" w-[48%] rounded-md h-10">
+                <div
+                  onClick={() => {
+                    handleClose("modal");
+                  }}
+                  className=" w-[48%] rounded-md h-10"
+                >
                   <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
                     Cancel
                   </button>
@@ -520,11 +606,23 @@ function Hotel() {
                     Save
                   </button>
                 </div>
-
-
-
               </div>
+            </div>
+          </Modal>
 
+          <Modal
+            keepMounted
+            open={tarifOpen}
+            onClose={() => {
+              handleClose("tarif");
+            }}
+            aria-labelledby="keep-mounted-modal-title"
+            aria-describedby="keep-mounted-modal-description"
+          >
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[85%] h-fit">
+              <div className="h-[90%] overflow-x-auto">
+                <HotelPrice name={hotelName} MainSetOpen={handleClose} />
+              </div>
             </div>
           </Modal>
         </div>
@@ -534,3 +632,49 @@ function Hotel() {
 }
 
 export default Hotel;
+
+// 1- property Type
+
+// {
+// Hotel
+// Houseboat
+// Guest House
+// Resort
+// Lodge
+// Homestay
+// Motel
+// Cottage
+// Villa
+// Camping
+// }
+
+// view {Bank Detail}
+// Account Name
+// Account No.
+// Bank Name
+// Branch Name
+// IFSCI Code
+
+// tarif edit allingnment
+
+// tarif --> modal
+
+// tariff date if < current date --> red
+
+// Destination --> Drop Down
+
+// driver date if < current date --> red
+
+// details --> height
+
+// day itinary -> title pehlay karna hay
+
+// vehicle details spacing
+
+// vehicle price 1st ---> per day
+
+// driver id card ---> image field
+
+// price validty --> 2 cols from,to
+
+// Mail settings

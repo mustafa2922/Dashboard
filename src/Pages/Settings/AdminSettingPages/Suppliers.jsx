@@ -272,7 +272,7 @@ function Suppliers() {
         </div>
       </div>
 
-      <div className="h-full w-full">
+      <div className="h-full w-full overflow-x-auto">
         <div
           className="ag-theme-quartz w-[1500px] h-full lg:w-full"
         >

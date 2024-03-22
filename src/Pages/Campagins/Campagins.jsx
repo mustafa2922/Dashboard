@@ -118,13 +118,14 @@ function Campagins() {
       headerName: "Name",
       field: "name",
     },
-    { headerName: "Template", field: "template", width: 250 },
-    { headerName: "Clients Group", field: "group", width: 250 },
-    { headerName: "Sent", field: "sent", width: 100 },
-    { headerName: "View", field: "views", width: 100 },
+    { headerName: "Template", field: "template", flex:1.4  },
+    { headerName: "Clients Group", field: "group", },
+    { headerName: "Sent", field: "sent", flex:0.8  },
+    { headerName: "View", field: "views", flex:0.8  },
     {
       headerName: "By",
       field: "by",
+      flex:1.4,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-start gap-2 w-full h-full">
@@ -139,12 +140,11 @@ function Campagins() {
     {
       headerName: "Date",
       field: "date",
-      width: 160,
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex:0.3,
       cellRenderer: (params) => {
         return (
           <div
@@ -184,7 +184,7 @@ function Campagins() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 191,
+    flex:1,
     tooltipField: "name",
   };
   return (
@@ -220,10 +220,9 @@ function Campagins() {
         </div>
       </div>
 
-      <div className="h-full w-full">
+      <div className="h-full w-full overflow-x-auto">
         <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
+          className="ag-theme-quartz h-full w-[1200px] lg:w-full"
         >
           <AgGridReact
             onGridReady={onGridReady}
