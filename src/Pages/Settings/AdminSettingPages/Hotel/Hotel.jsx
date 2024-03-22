@@ -171,7 +171,7 @@ function Hotel() {
         return (
           <div
             onClick={() => {
-              navigate(`/hotel/${params.data.name.replace(/\s/g, "")}`, {
+              navigate(`/hotel/${params.data.name.replace(/\s/g, "")}Tarif`, {
                 state: { id: params.data.id, name: params.data.name },
               });
             }}

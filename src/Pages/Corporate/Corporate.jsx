@@ -9,7 +9,7 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import { Link } from "react-router-dom";
 import "react-phone-number-input/style.css";
 import CustomModal from "../../Components/CustomModal";
-import addCorporate from '../../assets/images/addCorporate.png'
+import addCorporate from "../../assets/images/addCorporate.png";
 
 const data = [
   {
@@ -45,7 +45,7 @@ const data = [
     number: 456123789,
     email: "michaeljohnson@example.com",
     city: "Los Angeles",
-    status: "Active",
+    status: "inactive",
     by: "TravBiz.com",
     rank: "Mrs.",
     gst: "IJKL9012MNOP3456",
@@ -164,12 +164,20 @@ function Corporate() {
       field: "status",
       sortable: false,
       filter: false,
-      width: 100,
+      flex:0.8,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
-            <div className="flex items-center justify-center px-2 bg-green-700 text-white rounded-md h-[70%]">
-              {params.value}
+            <div
+              className={`flex items-center justify-center w-14 ${
+                params.value.toLocaleLowerCase() ===
+                "Active".toLocaleLowerCase()
+                  ? "bg-green-700"
+                  : "bg-[#f9392f]"
+              }  text-white rounded-md h-[70%]`}
+            >
+              {params.value[0].toUpperCase()}
+              {params.value.substring(1)}
             </div>
           </div>
         );
@@ -178,6 +186,7 @@ function Corporate() {
     {
       headerName: "By",
       field: "by",
+      flex:1.5,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-start gap-2 w-full h-full">
@@ -190,9 +199,9 @@ function Corporate() {
       },
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex:0.3,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -207,9 +216,9 @@ function Corporate() {
       },
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex:0.3,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -246,7 +255,7 @@ function Corporate() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: "156%",
+    flex:1,
     tooltipField: "name",
   };
   return (
@@ -286,10 +295,9 @@ function Corporate() {
         </div>
       </div>
 
-      <div className="h-full w-full">
+      <div className="h-full w-full overflow-x-scroll">
         <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
+          className="ag-theme-quartz h-full  w-[1300px] lg:w-full"
         >
           <AgGridReact
             onGridReady={onGridReady}

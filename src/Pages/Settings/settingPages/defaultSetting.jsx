@@ -25,6 +25,7 @@ export default function DefaultSetting() {
             color: '#fff',
             padding: '0.5rem',
             boxShadow: 'none',
+            fontWeight:'bolder',
             borderRadius: '0.5rem',
             '&:hover': {
               backgroundColor: '#7f8aee',

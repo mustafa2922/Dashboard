@@ -9,7 +9,7 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import { Link } from "react-router-dom";
 import "react-phone-number-input/style.css";
 import CustomModal from "../../Components/CustomModal";
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 const data = [
   {
@@ -23,7 +23,7 @@ const data = [
     by: "TravBiz.com",
     rank: "Ms.",
     gst: "ABCD1234EFGH5678",
-    company: "Company A"
+    company: "Company A",
   },
   {
     id: "12EF34RC2",
@@ -36,7 +36,7 @@ const data = [
     by: "TravBiz.com",
     rank: "Prof.",
     gst: "WXYZ5678UVWX1234",
-    company: "Company B"
+    company: "Company B",
   },
   {
     id: "12EF34RC3",
@@ -49,7 +49,7 @@ const data = [
     by: "TravBiz.com",
     rank: "Mrs.",
     gst: "IJKL9012MNOP3456",
-    company: "Company C"
+    company: "Company C",
   },
   {
     id: "12EF34RC4",
@@ -62,7 +62,7 @@ const data = [
     by: "TravBiz.com",
     rank: "Dr.",
     gst: "QRST5678ABCD9012",
-    company: "Company D"
+    company: "Company D",
   },
   {
     id: "12EF34RC5",
@@ -71,11 +71,11 @@ const data = [
     number: 321654987,
     email: "davidlee@example.com",
     city: "San Francisco",
-    status: "Active",
+    status: "inactive",
     by: "TravBiz.com",
     rank: "Mr.",
     gst: "EFGH1234IJKL5678",
-    company: "Company E"
+    company: "Company E",
   },
   {
     id: "12EF34RC6",
@@ -88,7 +88,7 @@ const data = [
     by: "TravBiz.com",
     rank: "Ms.",
     gst: "MNOP9012QRST3456",
-    company: "Company A"
+    company: "Company A",
   },
   {
     id: "12EF34RC7",
@@ -101,7 +101,7 @@ const data = [
     by: "TravBiz.com",
     rank: "Dr.",
     gst: "UVWX3456YZAB7890",
-    company: "Company B"
+    company: "Company B",
   },
   {
     id: "12EF34RC8",
@@ -114,7 +114,7 @@ const data = [
     by: "TravBiz.com",
     rank: "Ms.",
     gst: "BCDE7890FGHI2345",
-    company: "Company C"
+    company: "Company C",
   },
   {
     id: "12EF34RC9",
@@ -127,13 +127,11 @@ const data = [
     by: "TravBiz.com",
     rank: "Prof.",
     gst: "JKLM2345QRST6789",
-    company: "Company D"
+    company: "Company D",
   },
 ];
 
-
 const Agents = () => {
-
   const [search, setSearch] = useState("");
   const [row, setRow] = useState(data);
   const [open, setOpen] = useState(false);
@@ -142,12 +140,12 @@ const Agents = () => {
 
   const [column, setColumn] = useState([
     {
-      headerName:'Company',
-      field:'company'
+      headerName: "Company",
+      field: "company",
     },
     {
-      headerName:'GST',
-      field:'gst'
+      headerName: "GST",
+      field: "gst",
     },
     {
       headerName: "Name",
@@ -166,12 +164,20 @@ const Agents = () => {
       field: "status",
       sortable: false,
       filter: false,
-      width: 100,
+      flex:0.8,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
-            <div className="flex items-center justify-center px-2 bg-green-700 text-white rounded-md h-[70%]">
-              {params.value}
+            <div
+              className={`flex items-center justify-center w-14 ${
+                params.value.toLocaleLowerCase() ===
+                "Active".toLocaleLowerCase()
+                  ? "bg-green-700"
+                  : "bg-[#f9392f]"
+              }  text-white rounded-md h-[70%]`}
+            >
+              {params.value[0].toUpperCase()}
+              {params.value.substring(1)}
             </div>
           </div>
         );
@@ -180,6 +186,7 @@ const Agents = () => {
     {
       headerName: "By",
       field: "by",
+      flex:1.4,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-start gap-2 w-full h-full">
@@ -192,9 +199,9 @@ const Agents = () => {
       },
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex:0.3,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -209,9 +216,9 @@ const Agents = () => {
       },
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex:0.3,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -248,14 +255,13 @@ const Agents = () => {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: '156%',
+    flex: 1,
     tooltipField: "name",
   };
 
   return (
     <div className="h-full">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
-
         <div className="font-bold"> Agents </div>
         <div className="flex justify-center items-center gap-3 h-full">
           <button
@@ -282,15 +288,17 @@ const Agents = () => {
             }}
             className="border border-slate-300 h-[80%] bg-[#1d3f5a] text-white text-sm rounded-md px-2 "
           >
-            <span className="sm:block hidden" >Add Agent</span> <span className="sm:hidden block" ><PersonAddAltIcon /></span>
+            <span className="sm:block hidden">Add Agent</span>{" "}
+            <span className="sm:hidden block">
+              <PersonAddAltIcon />
+            </span>
           </button>
         </div>
       </div>
 
-      <div className="h-full w-full">
+      <div className="h-full w-full overflow-x-scroll">
         <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
+          className="ag-theme-quartz h-full w-[1400px] lg:w-full"
         >
           <AgGridReact
             onGridReady={onGridReady}
@@ -301,7 +309,12 @@ const Agents = () => {
             pagination={true}
           />
 
-          <CustomModal page={'Agent'} status={modalStat} openVal={open} setOpenVal={setOpen} />
+          <CustomModal
+            page={"Agent"}
+            status={modalStat}
+            openVal={open}
+            setOpenVal={setOpen}
+          />
         </div>
       </div>
     </div>

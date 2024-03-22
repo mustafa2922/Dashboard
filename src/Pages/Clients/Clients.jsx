@@ -9,7 +9,7 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import { Link } from "react-router-dom";
 import "react-phone-number-input/style.css";
 import CustomModal from "../../Components/CustomModal";
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 const data = [
   {
@@ -41,7 +41,7 @@ const data = [
     number: 456123789,
     email: "michaeljohnson@example.com",
     city: "Los Angeles",
-    status: "Active",
+    status: "inactive",
     by: "TravBiz.com",
     rank: "Mrs.",
   },
@@ -124,10 +124,10 @@ const Clients = () => {
     {
       headerCheckboxSelection: true,
       checkboxSelection: true,
-      width: 50,
       cellClass: "flex items-center justify-start",
       sortable: false,
       filter: false,
+      flex: 0.3,
     },
     {
       headerName: "Name",
@@ -145,12 +145,21 @@ const Clients = () => {
       headerName: "Status",
       field: "status",
       sortable: false,
+      flex:0.7,
       filter: false,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
-            <div className="flex items-center justify-center px-2 bg-green-700 text-white rounded-md h-[70%]">
-              {params.value}
+            <div
+              className={`flex items-center justify-center w-14 ${
+                params.value.toLocaleLowerCase() ===
+                "Active".toLocaleLowerCase()
+                  ? "bg-green-700"
+                  : "bg-[#f9392f]"
+              }  text-white rounded-md h-[70%]`}
+            >
+              {params.value[0].toUpperCase()}
+              {params.value.substring(1)}
             </div>
           </div>
         );
@@ -159,6 +168,7 @@ const Clients = () => {
     {
       headerName: "By",
       field: "by",
+      flex:1.4,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-start gap-2 w-full h-full">
@@ -171,9 +181,9 @@ const Clients = () => {
       },
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex: 0.3,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -188,9 +198,9 @@ const Clients = () => {
       },
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex: 0.3,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -227,14 +237,13 @@ const Clients = () => {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 191,
+    flex: 1,
     tooltipField: "name",
   };
 
   return (
     <div className="h-full">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
-        
         <div className="font-bold"> Clients </div>
         <div className="flex justify-center items-center gap-3 h-full">
           <button
@@ -261,15 +270,17 @@ const Clients = () => {
             }}
             className="border border-slate-300 h-[80%] bg-[#1d3f5a] text-white text-sm rounded-md px-2 "
           >
-            <span className="sm:block hidden" >Add Client</span> <span className="sm:hidden block" ><PersonAddAltIcon/></span>
+            <span className="sm:block hidden">Add Client</span>{" "}
+            <span className="sm:hidden block">
+              <PersonAddAltIcon />
+            </span>
           </button>
         </div>
       </div>
 
-      <div className="h-full w-full">
+      <div className="h-full w-full overflow-x-scroll ">
         <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
+          className="ag-theme-quartz h-full w-[1000px] lg:w-full"
         >
           <AgGridReact
             onGridReady={onGridReady}
@@ -281,7 +292,12 @@ const Clients = () => {
             rowSelection="multiple"
           />
 
-          <CustomModal page={'Client'} status={modalStat} openVal={open} setOpenVal={setOpen} />
+          <CustomModal
+            page={"Client"}
+            status={modalStat}
+            openVal={open}
+            setOpenVal={setOpen}
+          />
         </div>
       </div>
     </div>
