@@ -135,12 +135,36 @@ const data = [
   },
 ];
 
+const destinations = [
+  "Dubai",
+  "Dehli",
+  "AhmedAbad",
+  "Bombay",
+  "Shinghai",
+  "Karachi",
+  "Lahore",
+  "Chicago",
+  "Patna",
+  "Sirinagar",
+];
+
 function Hotel() {
   const [search, setSearch] = useState("");
   const [row, setRow] = useState(data);
   const [open, setOpen] = useState(false);
   const [tarifOpen, setTarifOpen] = useState(false);
   const [hotelName, sethotelName] = useState("");
+  const [destinationVal, setDestinationVal] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
+
+  const showMatches = (input) => {
+    return destinations.filter((item) => {
+      return item.toLowerCase().includes(input.toLowerCase());
+    });
+  };
+
+  const matchArr = showMatches(destinationVal);
+
   const handleClose = (name) => {
     if (name === "modal") {
       setOpen(false);
@@ -367,7 +391,7 @@ function Hotel() {
   return (
     <div className="h-full">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
-        <div className="font-bold"> Accomodation </div>
+        <div className="font-bold"> Accommodation </div>
         <div className="flex justify-center items-center gap-3 h-full">
           <button
             onClick={() => {
@@ -446,8 +470,14 @@ function Hotel() {
                       sx={{ width: "100%" }}
                     />
                   </div>
-                  <div className="px-1 mt-2 text-sm ">Categoty</div>
-                  <select className="px-2 focus:outline-none mt-1 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-sm">
+
+                  <select
+                    defaultValue={"DEFAULT"}
+                    className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-sm"
+                  >
+                    <option value="DEFAULT" disabled={true}>
+                      Category
+                    </option>
                     <option value="1">1 Star</option>
                     <option value="2">2 Star</option>
                     <option value="3">3 Star</option>
@@ -455,14 +485,35 @@ function Hotel() {
                     <option value="5">5 Star</option>
                   </select>
 
-                  <div className=" mt-4 w-full">
+                  <div className="relative mt-4 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
                       label="Destination"
                       variant="outlined"
                       sx={{ width: "100%" }}
+                      value={destinationVal}
+                      onChange={(e) => {
+                        setDestinationVal(e.target.value);
+                        setShowPicker(true);
+                      }}
                     />
+                    {showPicker && destinationVal && matchArr.length > 0 && (
+                      <ul className="absolute z-10 bg-[#f9f9f9] w-full border rounded-b-lg p-1 border-black">
+                        {matchArr.map((match, index) => (
+                          <li
+                            className="hover:bg-blue-200 cursor-pointer rounded-sm p-1 border-b"
+                            key={index}
+                            onClick={() => {
+                              setDestinationVal(match);
+                              setShowPicker(false);
+                            }}
+                          >
+                            {match}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
 
                   <div className=" mt-4 w-full">
@@ -485,7 +536,7 @@ function Hotel() {
                     />
                   </div>
 
-                  <div className="mt-4 w-full">
+                  <div className="mt-4 w-full h-fit">
                     <Textarea
                       placeholder="Hotel Details"
                       minRows={2}
@@ -494,11 +545,13 @@ function Hotel() {
                         width: "100%",
                         backgroundColor: "#fff",
                         borderColor: "#d3d3d3",
+                        height: "170px",
                       }}
                     />
                   </div>
-
-                  <div className="border border-slate-300 rounded-md p-3 mt-4 w-full">
+                </div>
+                <div className="flex flex-col w-[48%]">
+                  <div className="border border-slate-300 rounded-md p-3 w-full">
                     <Input
                       id="file-input"
                       type="file"
@@ -517,23 +570,24 @@ function Hotel() {
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex flex-col w-[48%]">
-                  <div className="custom-date-picker">
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <MobileDatePicker
-                        label="Tarif Valid From"
-                        defaultValue={dayjs("2022-04-17")}
-                      />
-                    </LocalizationProvider>
-                  </div>
-                  <div className=" mt-4 custom-date-picker">
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <MobileDatePicker
-                        label="Tarif Valid To"
-                        defaultValue={dayjs("2022-04-17")}
-                      />
-                    </LocalizationProvider>
+
+                  <div className="flex mt-4 items-center w-full justify-between">
+                    <div className="custom-date-picker w-[48%]">
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <MobileDatePicker
+                          label="Tarif Valid From"
+                          defaultValue={dayjs("2022-04-17")}
+                        />
+                      </LocalizationProvider>
+                    </div>
+                    <div className="custom-date-picker w-[48%]">
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <MobileDatePicker
+                          label="Tarif Valid To"
+                          defaultValue={dayjs("2022-04-17")}
+                        />
+                      </LocalizationProvider>
+                    </div>
                   </div>
 
                   <div className="mt-4 w-full">
@@ -564,27 +618,35 @@ function Hotel() {
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
                   </div>
-                  <div className=" mt-4 w-full">
-                    <TextField
-                      id="outlined-basic"
-                      size="small"
-                      label="Reservation Email ID"
-                      variant="outlined"
-                      sx={{ width: "100%" }}
-                    />
+                  <div className="w-full flex items-center justify-between" >
+                    <div className=" mt-4 w-[48%]">
+                      <TextField
+                        id="outlined-basic"
+                        size="small"
+                        label="Reservation Email ID"
+                        variant="outlined"
+                        sx={{ width: "100%" }}
+                      />
+                    </div>
+                    <div className=" mt-4 w-[48%]">
+                      <TextField
+                        id="outlined-basic"
+                        size="small"
+                        label="Website Link"
+                        variant="outlined"
+                        sx={{ width: "100%" }}
+                      />
+                    </div>
                   </div>
-                  <div className=" mt-4 w-full">
-                    <TextField
-                      id="outlined-basic"
-                      size="small"
-                      label="Website Link"
-                      variant="outlined"
-                      sx={{ width: "100%" }}
-                    />
-                  </div>
-                  <select className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
-                    <option value="active">active</option>
-                    <option value="inactive">inactive</option>
+                  <select
+                    defaultValue={"DEFAULT"}
+                    className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
+                  >
+                    <option value="DEFAULT" disabled={true}>
+                      Hotel Status
+                    </option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
                   </select>
                 </div>
               </div>

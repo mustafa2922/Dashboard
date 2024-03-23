@@ -32,7 +32,7 @@ const data = [
     pricePerDay: 1500,
     priceArrDep: 1500,
     vehicleFromDate: "02/01/24",
-    vehicleToDate: "02/15/24",
+    vehicleToDate: "02/05/24",
     status: "Active",
     updatedBy: "JaffarSaleem.com",
     updatedOn: "01/15/24",
@@ -47,7 +47,7 @@ const data = [
     pricePerDay: 1300,
     priceArrDep: 1300,
     vehicleFromDate: "03/01/24",
-    vehicleToDate: "03/10/24",
+    vehicleToDate: "03/01/24",
     status: "Active",
     updatedBy: "JaffarSaleem.com",
     updatedOn: "01/20/24",
@@ -62,7 +62,7 @@ const data = [
     pricePerDay: 2000,
     priceArrDep: 2000,
     vehicleFromDate: "04/01/24",
-    vehicleToDate: "04/20/24",
+    vehicleToDate: "04/02/24",
     status: "inactive",
     updatedBy: "JaffarSaleem.com",
     updatedOn: "02/01/24",
@@ -77,7 +77,7 @@ const data = [
     pricePerDay: 1800,
     priceArrDep: 1800,
     vehicleFromDate: "05/01/24",
-    vehicleToDate: "05/12/24",
+    vehicleToDate: "05/02/24",
     status: "Active",
     updatedBy: "JaffarSaleem.com",
     updatedOn: "02/10/24",
@@ -92,7 +92,7 @@ const data = [
     pricePerDay: 2200,
     priceArrDep: 2200,
     vehicleFromDate: "06/01/24",
-    vehicleToDate: "06/18/24",
+    vehicleToDate: "06/01/24",
     status: "inactive",
     updatedBy: "JaffarSaleem.com",
     updatedOn: "02/20/24",
@@ -107,7 +107,7 @@ const data = [
     pricePerDay: 1700,
     priceArrDep: 1700,
     vehicleFromDate: "07/01/24",
-    vehicleToDate: "07/25/24",
+    vehicleToDate: "07/05/24",
     status: "Active",
     updatedBy: "JaffarSaleem.com",
     updatedOn: "03/01/24",
@@ -137,7 +137,7 @@ const data = [
     pricePerDay: 1900,
     priceArrDep: 1900,
     vehicleFromDate: "09/01/24",
-    vehicleToDate: "09/15/24",
+    vehicleToDate: "09/05/24",
     status: "Active",
     updatedBy: "JaffarSaleem.com",
     updatedOn: "03/20/24",
@@ -152,7 +152,7 @@ const data = [
     pricePerDay: 2100,
     priceArrDep: 2100,
     vehicleFromDate: "10/01/24",
-    vehicleToDate: "10/22/24",
+    vehicleToDate: "10/02/24",
     status: "Active",
     updatedBy: "JaffarSaleem.com",
     updatedOn: "04/01/24",
@@ -167,7 +167,7 @@ const data = [
     pricePerDay: 1600,
     priceArrDep: 1600,
     vehicleFromDate: "11/01/24",
-    vehicleToDate: "11/30/24",
+    vehicleToDate: "11/03/24",
     status: "inactive",
     updatedBy: "JaffarSaleem.com",
     updatedOn: "04/10/24",
@@ -193,7 +193,7 @@ function Driver() {
       headerName: "#",
       field: "serialNumber",
       sortable: false,
-      flex: 0.3,
+      flex: 0.4,
       filter: false,
       cellRenderer: (params) => {
         return params.rowIndex + 1;
@@ -201,12 +201,12 @@ function Driver() {
     },
     {
       headerName: "Driver Name",
-      field:'name',
-      flex: 1.7,
+      field: "name",
+      flex: 2.5,
       cellRenderer: (params) => {
         return (
           <div className="flex w-full items-center justify-between h-full p-1">
-            <div className="h-full w-[48%] flex items-center ">
+            <div className="h-full leading-4 w-[49%] whitespace-pre-wrap flex items-center ">
               {" "}
               {params.data.name}{" "}
             </div>
@@ -224,11 +224,11 @@ function Driver() {
     {
       headerName: "Mobile",
       field: "mobile",
-      flex: 0.8,
+      flex: 1.2,
     },
     {
       headerName: "Vehicle Details",
-      flex: 2.8,
+      flex: 3,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-between p-1 h-full w-full">
@@ -236,25 +236,25 @@ function Driver() {
               <div className="text-sm">
                 Vehicle Mark :
                 <span className="text-black font-bold">
-                  {params.data.vehicleMark}
+                  {` ` + params.data.vehicleMark}
                 </span>
               </div>
               <div className="text-sm mt-[-1px]">
                 Vehicle No :
                 <span className="text-black font-bold">
-                  {params.data.vehicleNo}
+                  {` ` + params.data.vehicleNo}
                 </span>
               </div>
               <div className="text-sm mt-[-1px]">
                 Vehicle Model :
                 <span className="text-black font-bold">
-                  {params.data.vehicleModel}
+                  {` ` + params.data.vehicleModel}
                 </span>
               </div>
               <div className="text-sm mt-[-1px]">
                 Vehicle Color :
                 <span className="text-black font-bold">
-                  {params.data.vehicleColor}
+                  {` ` + params.data.vehicleColor}
                 </span>
               </div>
             </div>
@@ -267,7 +267,7 @@ function Driver() {
     },
     {
       headerName: "Price",
-      flex: 2,
+      flex: 2.5,
       cellRenderer: (params) => {
         return (
           <div className="flex flex-col items-start justify-center w-full h-full">
@@ -288,23 +288,37 @@ function Driver() {
       },
     },
     {
-      headerName: "Price Validity",
-      flex: 2.5,
+      headerName: "Price Validity (Per-Day)",
+      flex: 2,
+      field:'vehicleFromDate',
       cellRenderer: (params) => {
         return (
-          <div className="flex flex-col items-start justify-center w-full h-full">
-            <div className="text-sm mt-[-1px]">
-              {`Vehicle Price (Arrival/Departure) : `}
-              <span className="text-black font-bold">
-                {params.data.vehicleFromDate}
-              </span>
-            </div>
-            <div className="text-sm mt-[-1px]">
-              {`Vehicle Price (Arrival/Departure) : `}
-              <span className="text-black font-bold">
-                {params.data.vehicleToDate}
-              </span>
-            </div>
+          <div
+            className={`flex items-center justify-center w-full h-6 text-white font-bold rounded-md ${
+              dayjs(params.value, "DD/MM/YY").isBefore(dayjs(), "day")
+                ? "bg-red-500"
+                : "bg-green-500"
+            } `}
+          >
+            {params.value}
+          </div>
+        );
+      },
+    },
+    {
+      headerName: "Price Validity (Arrival/Departure)",
+      flex: 2.5,
+      field:'vehicleToDate',
+      cellRenderer: (params) => {
+        return (
+          <div
+            className={`flex items-center justify-center w-full h-6 text-white font-bold rounded-md ${
+              dayjs(params.value, "DD/MM/YY").isBefore(dayjs(), "day")
+                ? "bg-red-500"
+                : "bg-green-500"
+            } `}
+          >
+            {params.value}
           </div>
         );
       },
@@ -334,7 +348,7 @@ function Driver() {
     {
       headerName: "Updated By",
       field: "updatedBy",
-      flex: 1.2,
+      flex: 1.8,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-start gap-2 w-full h-full">
@@ -349,11 +363,12 @@ function Driver() {
     {
       headerName: "Updated On",
       field: "updatedOn",
+      flex: 1.2,
     },
     {
       sortable: false,
       filter: false,
-      flex: 0.3,
+      flex: 0.5,
       cellRenderer: (params) => {
         return (
           <div
@@ -683,8 +698,6 @@ function Driver() {
                   </button>
                 </div>
               </div>
-
-
             </div>
           </Modal>
         </div>

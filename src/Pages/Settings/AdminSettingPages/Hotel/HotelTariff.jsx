@@ -47,90 +47,90 @@ let data = [
     CWB: 100,
     CNB: 50,
   },
-  // {
-  //   From: "2024-06-12",
-  //   To: "2024-06-17",
-  //   RoomType: "Standard Room",
-  //   MealPlan: "Room Only",
-  //   Single: 80,
-  //   Double: 120,
-  //   Triple: 160,
-  //   Quad: 200,
-  //   CWB: 40,
-  //   CNB: 20,
-  // },
-  // {
-  //   From: "2024-07-20",
-  //   To: "2024-07-25",
-  //   RoomType: "Deluxe Room",
-  //   MealPlan: "Half Board",
-  //   Single: 130,
-  //   Double: 200,
-  //   Triple: 260,
-  //   Quad: 320,
-  //   CWB: 65,
-  //   CNB: 32.5,
-  // },
-  // {
-  //   From: "2024-08-15",
-  //   To: "2024-08-20",
-  //   RoomType: "Suite",
-  //   MealPlan: "Full Board",
-  //   Single: 220,
-  //   Double: 350,
-  //   Triple: 480,
-  //   Quad: 600,
-  //   CWB: 110,
-  //   CNB: 55,
-  // },
-  // {
-  //   From: "2024-09-08",
-  //   To: "2024-09-10",
-  //   RoomType: "Standard Room",
-  //   MealPlan: "All Inclusive",
-  //   Single: 150,
-  //   Double: 250,
-  //   Triple: 350,
-  //   Quad: 450,
-  //   CWB: 90,
-  //   CNB: 45,
-  // },
-  // {
-  //   From: "2024-10-11",
-  //   To: "2024-10-16",
-  //   RoomType: "Deluxe Room",
-  //   MealPlan: "Room Only",
-  //   Single: 100,
-  //   Double: 150,
-  //   Triple: 200,
-  //   Quad: 250,
-  //   CWB: 50,
-  //   CNB: 25,
-  // },
-  // {
-  //   From: "2024-11-22",
-  //   To: "2024-11-25",
-  //   RoomType: "Suite",
-  //   MealPlan: "Half Board",
-  //   Single: 180,
-  //   Double: 280,
-  //   Triple: 380,
-  //   Quad: 480,
-  //   CWB: 95,
-  //   CNB: 47.5,
-  // },
-  // {
-  //   From: "2024-12-03",
-  //   To: "2024-12-07",
-  //   RoomType: "Standard Room",
-  //   MealPlan: "Full Board",
-  //   Single: 140,
-  //   Double: 210,
-  //   Triple: 280,
-  //   Quad: 350,
-  //   CWB: 70,
-  //   CNB: 35,
-  // },
+  {
+    From: "2024-06-12",
+    To: "2024-06-17",
+    RoomType: "Standard Room",
+    MealPlan: "Room Only",
+    Single: 80,
+    Double: 120,
+    Triple: 160,
+    Quad: 200,
+    CWB: 40,
+    CNB: 20,
+  },
+  {
+    From: "2024-07-20",
+    To: "2024-07-25",
+    RoomType: "Deluxe Room",
+    MealPlan: "Half Board",
+    Single: 130,
+    Double: 200,
+    Triple: 260,
+    Quad: 320,
+    CWB: 65,
+    CNB: 32.5,
+  },
+  {
+    From: "2024-08-15",
+    To: "2024-08-20",
+    RoomType: "Suite",
+    MealPlan: "Full Board",
+    Single: 220,
+    Double: 350,
+    Triple: 480,
+    Quad: 600,
+    CWB: 110,
+    CNB: 55,
+  },
+  {
+    From: "2024-09-08",
+    To: "2024-09-10",
+    RoomType: "Standard Room",
+    MealPlan: "All Inclusive",
+    Single: 150,
+    Double: 250,
+    Triple: 350,
+    Quad: 450,
+    CWB: 90,
+    CNB: 45,
+  },
+  {
+    From: "2024-10-11",
+    To: "2024-10-16",
+    RoomType: "Deluxe Room",
+    MealPlan: "Room Only",
+    Single: 100,
+    Double: 150,
+    Triple: 200,
+    Quad: 250,
+    CWB: 50,
+    CNB: 25,
+  },
+  {
+    From: "2024-11-22",
+    To: "2024-11-25",
+    RoomType: "Suite",
+    MealPlan: "Half Board",
+    Single: 180,
+    Double: 280,
+    Triple: 380,
+    Quad: 480,
+    CWB: 95,
+    CNB: 47.5,
+  },
+  {
+    From: "2024-12-03",
+    To: "2024-12-07",
+    RoomType: "Standard Room",
+    MealPlan: "Full Board",
+    Single: 140,
+    Double: 210,
+    Triple: 280,
+    Quad: 350,
+    CWB: 70,
+    CNB: 35,
+  },
 ];
 
 function HotelPrice({ name, MainSetOpen }) {
@@ -151,52 +151,52 @@ function HotelPrice({ name, MainSetOpen }) {
     {
       headerName: "Meal Plan",
       field: "MealPlan",
-      flex: 0.6,
+      flex: 0.4,
     },
     {
       headerName: "Single",
       field: "Single",
-      flex: 0.6,
+      flex: 0.4,
     },
     {
       headerName: "Double",
       field: "Double",
-      flex: 0.6,
+      flex: 0.4,
     },
     {
       headerName: "Triple",
       field: "Triple",
-      flex: 0.5,
+      flex: 0.4,
     },
     {
       headerName: "Quad",
       field: "Quad",
-      flex: 0.5,
+      flex: 0.4,
     },
     {
       headerName: "CWB",
       field: "CWB",
-      flex: 0.5,
+      flex: 0.4,
     },
     {
       headerName: "CNB (Above 5 yrs)",
       field: "CNB",
-      flex: 0.9,
+      flex: 0.7,
     },
     {
       headerName: "CNB (Below 5 yrs)",
       field: "CNB",
-      flex: 0.9,
+      flex: 0.7,
     },
     {
       headerName: "INF (Below 3 yrs)",
       field: "CNB",
-      flex: 0.9,
+      flex: 0.7,
     },
     {
       sortable: false,
       filter: false,
-      flex: 0.3,
+      flex: 0.2,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -236,7 +236,6 @@ function HotelPrice({ name, MainSetOpen }) {
       <div className="flex justify-between items-center h-16 w-full sm:h-12 sm:flex-row flex-col px-1">
         <div className="font-bold w-[25%]"> {name} Tariff </div>
         <div className="flex justify-end items-center w-[75%] gap-3 h-full">
-  
           <button
             onClick={() => {
               setOpen(true);
@@ -252,10 +251,10 @@ function HotelPrice({ name, MainSetOpen }) {
           <div
             className="border border-red-500 rounded-full bg-red-500 cursor-pointer"
             onClick={() => {
-              MainSetOpen("tarif"); //handleClose('tarif')
+              MainSetOpen("tarif"); 
             }}
           >
-            <CloseIcon style={{color:'#fff'}} />
+            <CloseIcon style={{ color: "#fff" }} />
           </div>
         </div>
       </div>
@@ -286,9 +285,11 @@ function HotelPrice({ name, MainSetOpen }) {
               </div>
               <div className="flex justify-between w-full mt-4 h-[90%]">
                 <div className="flex flex-col w-[48%]">
-                  <div className="px-1 text-basemt-4 w-full">Room Type</div>
-
-                  <select className="px-2 focus:outline-none mt-1 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                  <select className="px-2 focus:outline-none mt-2 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                    <option value="" disabled={true}>
+                      {" "}
+                      Room Types{" "}
+                    </option>
                     <option value="1">1 Star</option>
                     <option value="2">2 Star</option>
                     <option value="3">3 Star</option>
@@ -296,38 +297,18 @@ function HotelPrice({ name, MainSetOpen }) {
                     <option value="5">5 Star</option>
                   </select>
 
-                  <div className="px-1 text-base mt-4 w-full">Meal Plan</div>
-
-                  <select className="px-2 focus:outline-none mt-1 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                  <select className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                    <option value="" disabled={true}>
+                      {" "}
+                      Meal Types{" "}
+                    </option>
                     <option value="1">1 Star</option>
                     <option value="2">2 Star</option>
                     <option value="3">3 Star</option>
                     <option value="4">4 Star</option>
                     <option value="5">5 Star</option>
                   </select>
-                  <div className="mt-6 flex items-center justify-between w-full">
-                    <div className=" w-[48%]">
-                      <TextField
-                        id="outlined-basic"
-                        size="small"
-                        label="CWB"
-                        variant="outlined"
-                        sx={{ width: "100%" }}
-                      />
-                    </div>
-                    <div className="w-[48%]">
-                      <TextField
-                        id="outlined-basic"
-                        size="small"
-                        label="INF (below 3 yrs)"
-                        variant="outlined"
-                        sx={{ width: "100%" }}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col w-[48%]">
-                  <div className="mt-2 flex items-center justify-between w-full">
+                  <div className="mt-4 flex items-center justify-between w-full">
                     <div className=" w-[48%]">
                       <TextField
                         id="outlined-basic"
@@ -335,6 +316,7 @@ function HotelPrice({ name, MainSetOpen }) {
                         label="Single"
                         variant="outlined"
                         sx={{ width: "100%" }}
+                        type="number"
                       />
                     </div>
                     <div className="w-[48%]">
@@ -344,6 +326,7 @@ function HotelPrice({ name, MainSetOpen }) {
                         label="Double"
                         variant="outlined"
                         sx={{ width: "100%" }}
+                        type="number"
                       />
                     </div>
                   </div>
@@ -356,6 +339,7 @@ function HotelPrice({ name, MainSetOpen }) {
                         label="Triple"
                         variant="outlined"
                         sx={{ width: "100%" }}
+                        type="number"
                       />
                     </div>
                     <div className="w-[48%]">
@@ -365,19 +349,33 @@ function HotelPrice({ name, MainSetOpen }) {
                         label="Quad"
                         variant="outlined"
                         sx={{ width: "100%" }}
+                        type="number"
                       />
                     </div>
                   </div>
-
-                  <div className="mt-4 w-full">
+                </div>
+                <div className="flex flex-col w-[48%]">
+                  <div className="mt-2 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="CWB"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                      type="number"
+                    />
+                  </div>
+                  <div className="w-full mt-4">
                     <TextField
                       id="outlined-basic"
                       size="small"
                       label="CNB (above 5 yrs)"
                       variant="outlined"
                       sx={{ width: "100%" }}
+                      type="number"
                     />
                   </div>
+
                   <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
@@ -385,6 +383,17 @@ function HotelPrice({ name, MainSetOpen }) {
                       label="CNB (below 5 yrs)"
                       variant="outlined"
                       sx={{ width: "100%" }}
+                      type="number"
+                    />
+                  </div>
+                  <div className="mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="INF (below 3 yrs)"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                      type="number"
                     />
                   </div>
                 </div>
