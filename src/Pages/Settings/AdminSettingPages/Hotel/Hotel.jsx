@@ -14,7 +14,6 @@ import NorthEastIcon from "@mui/icons-material/NorthEast";
 import Textarea from "@mui/joy/Textarea";
 import { Button, Input } from "@mui/material";
 import PhoneInput from "react-phone-number-input";
-import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -156,6 +155,7 @@ function Hotel() {
   const [hotelName, sethotelName] = useState("");
   const [destinationVal, setDestinationVal] = useState("");
   const [showPicker, setShowPicker] = useState(false);
+  const [bankOpen, setBankOpen] = useState(false);
 
   const showMatches = (input) => {
     return destinations.filter((item) => {
@@ -170,6 +170,8 @@ function Hotel() {
       setOpen(false);
     } else if (name === "tarif") {
       setTarifOpen(false);
+    } else if (name === "bank") {
+      setBankOpen(false);
     }
   };
   const [gridApi, setGridApi] = useState(null);
@@ -289,8 +291,23 @@ function Hotel() {
     {
       headerName: "Bank Details",
       field: "",
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
       cellRenderer: (params) => {
-        return <div>View</div>;
+        return (
+          <div
+            onClick={() => {
+              sethotelName(params.data.name);
+              setBankOpen(true);
+            }}
+            className="underline cursor-pointer font-bold"
+          >
+            View
+          </div>
+        );
       },
     },
     {
@@ -367,7 +384,7 @@ function Hotel() {
     }
   };
 
-  const quickFilter = () => {
+  const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
   };
 
@@ -405,7 +422,7 @@ function Hotel() {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-              quickFilter();
+              quickFilter(e.target.value);
             }}
             className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."
@@ -540,28 +557,32 @@ function Hotel() {
                     <Textarea
                       placeholder="Hotel Details"
                       minRows={2}
-                      maxRows={2}
+                      maxRows={5}
                       sx={{
                         width: "100%",
                         backgroundColor: "#fff",
                         borderColor: "#d3d3d3",
-                        height: "170px",
+                        height: "152px",
                       }}
                     />
                   </div>
                 </div>
                 <div className="flex flex-col w-[48%]">
-                  <div className="border border-slate-300 rounded-md p-3 w-full">
+                  <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-full">
                     <Input
                       id="file-input"
                       type="file"
                       inputProps={{ multiple: true }}
-                      onChange={handleFileSelect}
+                      onChange={(e) => handleFileSelect}
                       style={{ display: "none" }}
                     />
                     <div className="flex items-center gap-3">
                       <label htmlFor="file-input">
-                        <Button variant="outlined" component="span">
+                        <Button
+                          variant="outlined"
+                          component="span"
+                          sx={{ height: "30px", fontSize: "10px" }}
+                        >
                           Select Files
                         </Button>
                       </label>
@@ -618,7 +639,7 @@ function Hotel() {
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
                   </div>
-                  <div className="w-full flex items-center justify-between" >
+                  <div className="w-full flex items-center justify-between">
                     <div className=" mt-4 w-[48%]">
                       <TextField
                         id="outlined-basic"
@@ -647,6 +668,25 @@ function Hotel() {
                     </option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
+                  </select>
+
+                  <select
+                    defaultValue={"DEFAULT"}
+                    className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
+                  >
+                    <option value="DEFAULT" disabled={true}>
+                      Property Type
+                    </option>
+                    <option value="Hotel">Hotel</option>
+                    <option value="Houseboat">Houseboat</option>
+                    <option value="Guest House">Guest House</option>
+                    <option value="Resort">Resort</option>
+                    <option value="Lodge">Lodge</option>
+                    <option value="Homestay">Homestay</option>
+                    <option value="Motel">Motel</option>
+                    <option value="Cottage">Cottage</option>
+                    <option value="Villa">Villa</option>
+                    <option value="Camping">Camping</option>
                   </select>
                 </div>
               </div>
@@ -682,8 +722,151 @@ function Hotel() {
             aria-describedby="keep-mounted-modal-description"
           >
             <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[85%] h-fit">
-              <div className="h-[90%] overflow-x-auto">
+              <div className="h-full overflow-x-auto">
                 <HotelPrice name={hotelName} MainSetOpen={handleClose} />
+              </div>
+            </div>
+          </Modal>
+
+          <Modal
+            keepMounted
+            open={bankOpen}
+            onClose={() => {
+              handleClose("bank");
+            }}
+            aria-labelledby="keep-mounted-modal-title"
+            aria-describedby="keep-mounted-modal-description"
+          >
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[70%] h-fit">
+              <div className="flex justify-between text-3xl items-center px-1">
+                <div className="font-bold text-lg">
+                  {" "}
+                  {hotelName} Bank Details
+                </div>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    handleClose("bank");
+                  }}
+                >
+                  <CloseIcon />
+                </div>
+              </div>
+              <div className="flex justify-between items-center mt-2">
+                <div className="flex flex-col px-1 w-[49%]">
+                  <div className="font-bold   text-black ">Bank 1</div>
+                  <div className="mt-2 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Account Name"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Account No"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Bank Name"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Branch Name"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="IFSCI Code"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col w-[49%]">
+                  <div className="font-bold   text-black ">Bank 2</div>
+                  <div className="mt-2 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Account Name"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Account No"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Bank Name"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Branch Name"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="IFSCI Code"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 flex justify-between items-center">
+                <div
+                  onClick={() => {
+                    handleClose("bank");
+                  }}
+                  className=" w-[49%] rounded-md h-10"
+                >
+                  <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
+                    Cancel
+                  </button>
+                </div>
+
+                <div className=" w-[49%] rounded-md h-10  ">
+                  <button className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]">
+                    Save
+                  </button>
+                </div>
               </div>
             </div>
           </Modal>

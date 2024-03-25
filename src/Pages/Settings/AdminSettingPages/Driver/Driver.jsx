@@ -19,6 +19,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { Button, Input } from "@mui/material";
 import { PatternFormat } from "react-number-format";
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import "./Driver.css";
 
 const data = [
@@ -272,15 +273,15 @@ function Driver() {
         return (
           <div className="flex flex-col items-start justify-center w-full h-full">
             <div className="text-sm mt-[-1px]">
-              {`Vehicle Price (Per Day) :`}
+              {`Vehicle Price (AC) :`}
               <span className="text-black font-bold">
-                {params.data.pricePerDay}
+                {` `+ params.data.pricePerDay}
               </span>
             </div>
             <div className="text-sm mt-[-1px]">
-              {`Vehicle Price (Arrival/Departure) : `}
+              {`Vehicle Price (Non - AC) : `}
               <span className="text-black font-bold">
-                {params.data.priceArrDep}
+                {` `+ params.data.priceArrDep}
               </span>
             </div>
           </div>
@@ -288,7 +289,7 @@ function Driver() {
       },
     },
     {
-      headerName: "Price Validity (Per-Day)",
+      headerName: "Price Validity (AC)",
       flex: 2,
       field:'vehicleFromDate',
       cellRenderer: (params) => {
@@ -306,8 +307,8 @@ function Driver() {
       },
     },
     {
-      headerName: "Price Validity (Arrival/Departure)",
-      flex: 2.5,
+      headerName: "Price Validity (Non - AC)",
+      flex: 2,
       field:'vehicleToDate',
       cellRenderer: (params) => {
         return (
@@ -326,17 +327,17 @@ function Driver() {
     {
       headerName: "Status",
       field: "status",
-      flex: 0.8,
+      flex: 1.5,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-10">
             <div
-              className={`flex items-center justify-center w-14 ${
-                params.value.toLocaleLowerCase() ===
-                "Active".toLocaleLowerCase()
-                  ? "bg-green-700"
-                  : "bg-[#f9392f]"
-              }  text-white rounded-md h-[70%]`}
+              className={`flex items-center justify-center w-14 px-10 ${
+                params.value.toLowerCase() ===
+                "Active".toLowerCase()
+                  ? "bg-green-500"
+                  : "bg-red-500"
+              }  text-white font-bold rounded-md h-[70%]`}
             >
               {params.value[0].toUpperCase()}
               {params.value.substring(1)}
@@ -408,7 +409,7 @@ function Driver() {
     }
   };
 
-  const quickFilter = () => {
+  const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
   };
 
@@ -441,7 +442,7 @@ function Driver() {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-              quickFilter();
+              quickFilter(e.target.value);
             }}
             className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."
@@ -540,8 +541,8 @@ function Driver() {
                     />
                   </div>
 
-                  <div className="px-1 mt-4 text-sm ">Vehicle Mark</div>
-                  <select className="px-2 text-slate-600 focus:outline-none mt-1 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-sm">
+                  <select defaultValue={'DEFAULT'} className="px-2 mt-4 text-slate-600 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-sm">
+                    <option value="DEFAULT" disabled={true}>Vehicle Mark</option>
                     <option value="1">Toyota Camry</option>
                     <option value="2">Ford Mustang</option>
                     <option value="3">Hyundai Sonata</option>
@@ -586,6 +587,29 @@ function Driver() {
                         label="Vehicle Color"
                         variant="outlined"
                         sx={{ width: "100%" }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex w-full mt-4 justify-between items-center">
+                    <div className=" w-[49%]">
+                      <TextField
+                        id="outlined-basic"
+                        size="small"
+                        label={<> <CurrencyRupeeIcon/>Vehicle Price (AC)</>}
+                        variant="outlined"
+                        sx={{ width: "100%" }}
+                        type="number"
+                      />
+                    </div>
+                    <div className=" w-[49%]">
+                      <TextField
+                        id="outlined-basic"
+                        size="small"
+                        label={<> <CurrencyRupeeIcon/>Vehicle Price (Non AC)</>}
+                        variant="outlined"
+                        sx={{ width: "100%", }}
+                        type='number'
                       />
                     </div>
                   </div>
@@ -678,7 +702,8 @@ function Driver() {
                     </div>
                   </div>
 
-                  <select className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                  <select defaultValue={"DEFAULT"} className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                    <option value="DEFAULT" disabled={true}>Status</option>
                     <option value="active">active</option>
                     <option value="inactive">inactive</option>
                   </select>

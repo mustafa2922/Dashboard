@@ -102,7 +102,7 @@ function PackageTheme() {
       headerName: "Name",
       field: "name",
       cellStyle: { display: "flex", alignItems: "center" },
-      width: 810,
+      flex:2,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center gap-2">
@@ -121,7 +121,7 @@ function PackageTheme() {
     {
       headerName: "Status",
       field: "status",
-      width: 90,
+      flex:0.5,
       cellStyle: { display: "flex", alignItems: "center" },
       cellRenderer: (params) => {
         return (
@@ -142,6 +142,7 @@ function PackageTheme() {
     {
       headerName: "Updated By",
       field: "by",
+      flex:1.3,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-start gap-2 w-full h-full">
@@ -156,13 +157,12 @@ function PackageTheme() {
     {
       headerName: "Updated On",
       field: "date",
-      width: 150,
       cellStyle: { display: "flex", alignItems: "center" },
     },
     {
-      width: 50,
       sortable: false,
       filter: false,
+      flex:0.2,
       cellRenderer: (params) => {
         return (
           <div
@@ -202,7 +202,7 @@ function PackageTheme() {
     }
   };
 
-  const quickFilter = () => {
+  const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
   };
 
@@ -210,7 +210,7 @@ function PackageTheme() {
     sortable: true,
     filter: true,
     cellStyle: { borderRight: "1px solid #d9d9db" },
-    width: 191,
+    flx:1,
     tooltipField: "name",
   };
 
@@ -231,7 +231,7 @@ function PackageTheme() {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-              quickFilter();
+              quickFilter(e.target.value);
             }}
             className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."
@@ -253,10 +253,9 @@ function PackageTheme() {
         </div>
       </div>
 
-      <div className="h-full w-full">
+      <div className="h-full w-full overflow-x-auto">
         <div
-          className="ag-theme-quartz"
-          style={{ height: "100%", width: "100%" }}
+          className="ag-theme-quartz h-full w-[1200px] lg:w-full"
         >
           <AgGridReact
             onGridReady={onGridReady}

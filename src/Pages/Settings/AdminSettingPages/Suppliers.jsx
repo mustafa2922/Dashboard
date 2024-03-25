@@ -221,7 +221,7 @@ function Suppliers() {
     }
   };
 
-  const quickFilter = () => {
+  const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
   };
 
@@ -250,7 +250,7 @@ function Suppliers() {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-              quickFilter();
+              quickFilter(e.target.value);
             }}
             className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."

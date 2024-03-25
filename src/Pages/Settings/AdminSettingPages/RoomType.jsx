@@ -184,7 +184,7 @@ function RoomType() {
     }
   };
 
-  const quickFilter = () => {
+  const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
   };
 
@@ -213,7 +213,7 @@ function RoomType() {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-              quickFilter();
+              quickFilter(e.target.value);
             }}
             className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."
@@ -260,7 +260,7 @@ function RoomType() {
                   <CloseIcon />
                 </div>
               </div>
-              <div className="flex flex-col justify-between mt-4 h-[90%]">
+              <div className="flex flex-col justify-between mt-2 h-[90%]">
                 <div className=" mt-4 w-full">
                   <TextField
                     id="outlined-basic"
@@ -271,7 +271,8 @@ function RoomType() {
                   />
                 </div>
 
-                <select className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                <select defaultValue={'DEFAULT'} className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                  <option value="DEFAULT" disabled={true} >Status</option>
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>

@@ -89,7 +89,6 @@ function MealPlan() {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [gridApi, setGridApi] = useState(null);
-  const [value, setValue] = useState();
 
   const [stat, setStat] = useState("");
 
@@ -183,7 +182,7 @@ function MealPlan() {
     }
   };
 
-  const quickFilter = () => {
+  const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
   };
 
@@ -212,7 +211,7 @@ function MealPlan() {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-              quickFilter();
+              quickFilter(e.target.value);
             }}
             className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."
@@ -270,8 +269,9 @@ function MealPlan() {
                   />
                 </div>
 
-                <select className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
-                  <option value="active">Active</option>
+                <select defaultValue={'DEFAULT'} className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                  <option  value="DEFAULT" disabled={true}>Status</option> 
+                  <option  value="active">Active</option> 
                   <option value="inactive">Inactive</option>
                 </select>
                 <div className="mt-4 flex justify-between items-center">

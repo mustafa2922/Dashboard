@@ -79,7 +79,6 @@ function Destinations() {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [gridApi, setGridApi] = useState(null);
-  const [value, setValue] = useState();
 
   const [stat, setStat] = useState("");
 
@@ -150,7 +149,7 @@ function Destinations() {
     }
   };
 
-  const quickFilter = () => {
+  const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
   };
 
@@ -179,7 +178,7 @@ function Destinations() {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-              quickFilter();
+              quickFilter(e.target.value);
             }}
             className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."

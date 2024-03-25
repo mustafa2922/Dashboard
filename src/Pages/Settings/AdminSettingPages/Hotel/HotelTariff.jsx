@@ -243,15 +243,15 @@ function HotelPrice({ name, MainSetOpen }) {
             }}
             className="border border-slate-300 h-[60%] bg-[#1d3f5a] text-white text-sm rounded-md px-2 "
           >
-            <span className="sm:block hidden">Add Tariff</span>{" "}
+            <span className="sm:block px-2 hidden">Add Tariff</span>
             <span className="sm:hidden flex items-center justify-center">
               <AddRoundedIcon />
             </span>
           </button>
           <div
-            className="border border-red-500 rounded-full bg-red-500 cursor-pointer"
+            className=" border broder-[#1d3f5a] px-1 rounded-md bg-[#1d3f5a] cursor-pointer"
             onClick={() => {
-              MainSetOpen("tarif"); 
+              MainSetOpen("tarif");
             }}
           >
             <CloseIcon style={{ color: "#fff" }} />
@@ -260,7 +260,7 @@ function HotelPrice({ name, MainSetOpen }) {
       </div>
 
       <div className="h-96 mt-2 border-r border-l w-full overflow-x-auto">
-        <div className="ag-theme-quartz w-[1500px] h-full">
+        <div className="ag-theme-quartz  min-[1900px]:w-[100%] w-[1800px] h-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -285,10 +285,9 @@ function HotelPrice({ name, MainSetOpen }) {
               </div>
               <div className="flex justify-between w-full mt-4 h-[90%]">
                 <div className="flex flex-col w-[48%]">
-                  <select className="px-2 focus:outline-none mt-2 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
-                    <option value="" disabled={true}>
-                      {" "}
-                      Room Types{" "}
+                  <select defaultValue={'DEFAULT'} className="px-2 focus:outline-none mt-2 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                    <option value="DEFAULT" disabled={true}>
+                      Room Types
                     </option>
                     <option value="1">1 Star</option>
                     <option value="2">2 Star</option>
@@ -297,10 +296,9 @@ function HotelPrice({ name, MainSetOpen }) {
                     <option value="5">5 Star</option>
                   </select>
 
-                  <select className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
-                    <option value="" disabled={true}>
-                      {" "}
-                      Meal Types{" "}
+                  <select defaultValue={'DEFAULT'} className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                    <option value="DEFAULT" disabled={true}>
+                      Meal Types
                     </option>
                     <option value="1">1 Star</option>
                     <option value="2">2 Star</option>

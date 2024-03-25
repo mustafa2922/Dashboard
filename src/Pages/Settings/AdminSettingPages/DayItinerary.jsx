@@ -106,9 +106,24 @@ const data = [
   },
 ];
 
+const destinations = [
+  "Dubai",
+  "Dehli",
+  "AhmedAbad",
+  "Bombay",
+  "Shinghai",
+  "Karachi",
+  "Lahore",
+  "Chicago",
+  "Patna",
+  "Sirinagar",
+];
+
 function DayItinerary() {
   const [search, setSearch] = useState("");
   const [row, setRow] = useState(data);
+  const [destinationVal, setDestinationVal] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
   const [open, setOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);
@@ -117,17 +132,26 @@ function DayItinerary() {
   const [gridApi, setGridApi] = useState(null);
   const [Editopen, setEditOpen] = useState(false);
 
+  const showMatches = (input) => {
+    return destinations.filter((item) => {
+      return item.toLowerCase().includes(input.toLowerCase());
+    });
+  };
+
+  const matchArr = showMatches(destinationVal);
+
   const [stat, setStat] = useState("");
 
   const [column, setColumn] = useState([
     {
       headerName: "Name",
       field: "name",
-      flex:1.5,
+      flex: 1.5,
       cellStyle: { display: "flex", alignItems: "center" },
       cellRenderer: (params) => {
         return (
           <div className="flex  items-center gap-3">
+            
             <div className=" w-16 h-full">
               <div className="group relative">
                 <div
@@ -156,6 +180,7 @@ function DayItinerary() {
       headerName: "Status",
       field: "status",
       flex: 0.6,
+      cellStyle:{display:'flex',alignItems:"center",justifyContent:"center"},
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-10">
@@ -227,7 +252,7 @@ function DayItinerary() {
     }
   };
 
-  const quickFilter = () => {
+  const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
   };
 
@@ -256,7 +281,7 @@ function DayItinerary() {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-              quickFilter();
+              quickFilter(e.target.value);
             }}
             className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."
@@ -279,9 +304,7 @@ function DayItinerary() {
       </div>
 
       <div className="h-full w-full overflow-x-scroll">
-        <div
-          className="ag-theme-quartz h-full w-[1400px] lg:w-full"
-        >
+        <div className="ag-theme-quartz h-full w-[1400px] lg:w-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -308,32 +331,38 @@ function DayItinerary() {
               </div>
               <div className="flex justify-between w-full mt-4 h-[90%]">
                 <div className="flex flex-col w-[48%]">
-                  <div className=" w-full">
+                  <div className="relative w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      label="Destintion"
+                      label="Destination"
                       variant="outlined"
                       sx={{ width: "100%" }}
+                      value={destinationVal}
+                      onChange={(e) => {
+                        setDestinationVal(e.target.value);
+                        setShowPicker(true);
+                      }}
                     />
+                    {showPicker && destinationVal && matchArr.length > 0 && (
+                      <ul className="absolute z-10 bg-[#f9f9f9] w-full border rounded-b-lg p-1 border-black">
+                        {matchArr.map((match, index) => (
+                          <li
+                            className="hover:bg-blue-200 cursor-pointer rounded-sm p-1 border-b"
+                            key={index}
+                            onClick={() => {
+                              setDestinationVal(match);
+                              setShowPicker(false);
+                            }}
+                          >
+                            {match}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
 
                   <div className="mt-4 w-full">
-                    <Textarea
-                      placeholder="Details"
-                      minRows={2}
-                      maxRows={2}
-                      sx={{
-                        width: "100%",
-                        backgroundColor: "#fff",
-                        borderColor: "#d3d3d3",
-                      }}
-                    />
-                  </div>
-                </div>
-                
-                <div className="flex flex-col w-[48%]">
-                  <div className=" w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
@@ -343,17 +372,36 @@ function DayItinerary() {
                     />
                   </div>
 
-                  <select className="px-2 focus:outline-none mt-5 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
-                    <option value="active">active</option>
-                    <option value="inactive">inactive</option>
+                  <select
+                    defaultValue={"DEFAULT"}
+                    className="px-2 focus:outline-none mt-5 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
+                  >
+                    <option value="DEFAULT" disabled>
+                      Status
+                    </option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
                   </select>
-
                 </div>
-                
-              </div>
-              
-              <div className="mt-4 flex justify-between items-center">
 
+                <div className="flex flex-col w-[48%]">
+                  <div className=" w-full">
+                    <Textarea
+                      placeholder="Details"
+                      minRows={2}
+                      maxRows={2}
+                      sx={{
+                        width: "100%",
+                        backgroundColor: "#fff",
+                        borderColor: "#d3d3d3",
+                        height: "155px",
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 flex justify-between items-center">
                 <div onClick={handleClose} className=" w-[48%] rounded-md h-10">
                   <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
                     Cancel
@@ -365,9 +413,6 @@ function DayItinerary() {
                     Save
                   </button>
                 </div>
-
-
-
               </div>
             </div>
           </Modal>
