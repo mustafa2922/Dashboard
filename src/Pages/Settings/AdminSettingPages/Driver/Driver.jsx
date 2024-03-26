@@ -12,8 +12,8 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TextField from "@mui/material/TextField";
 import dummyDriver from "../../../../assets/images/dummyDriver.png";
 import PhoneInput from "react-phone-number-input";
-import dummyCar from "../../../../assets/images/dummyCar.png";
 import dayjs from "dayjs";
+import ImageModal from "../../../../Components/imageModal";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
@@ -181,9 +181,16 @@ function Driver() {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [gridApi, setGridApi] = useState(null);
-  const [driverPhoto, setDriverPhoto] = useState("Select driver image");
-  const [vehiclePhoto, setVehiclePhoto] = useState("Select vehicle image");
-  const [licenseCopy, setLicenseCopy] = useState("Select license copy");
+
+  const [driverPhoto, setDriverPhoto] = useState("");
+  const [vehiclePhoto, setVehiclePhoto] = useState("");
+  const [licenseCopy, setLicenseCopy] = useState("");
+  const [idCardImg, setIdCardImg] = useState("");
+
+  const [driverImgModal, setDriverImgModal] = useState(false);
+  const [vehicleImgModal, setVehicleImgModal] = useState(false);
+  const [LicenseCopyModal, setLicenseCopyModal] = useState(false);
+  const [IdCardModal, setIdCardModal] = useState(false);
 
   const [value, setValue] = useState();
 
@@ -195,9 +202,9 @@ function Driver() {
       field: "serialNumber",
       sortable: false,
       filter: false,
-      flex:0.45,
+      flex: 0.45,
       cellRenderer: (params) => {
-        return <div className="ml-[-10px]" >{params.rowIndex + 1}</div>;
+        return <div className="ml-[-10px]">{params.rowIndex + 1}</div>;
       },
       cellStyle: {
         display: "flex",
@@ -295,13 +302,16 @@ function Driver() {
     {
       headerName: "Price Valid From",
       flex: 1.75,
-      filter:false,
+      filter: false,
       field: "vehicleFromDate",
       cellRenderer: (params) => {
         return (
           <div
             className={`flex items-center justify-center w-full h-6 text-white font-bold rounded-md ${
-              dayjs(params.data.vehicleToDate, "DD/MM/YY").isBefore(dayjs(), "day")
+              dayjs(params.data.vehicleToDate, "DD/MM/YY").isBefore(
+                dayjs(),
+                "day"
+              )
                 ? "bg-red-500"
                 : "bg-green-500"
             } `}
@@ -313,7 +323,7 @@ function Driver() {
     },
     {
       headerName: "Price Valid To",
-      filter:false,
+      filter: false,
       flex: 1.5,
       field: "vehicleToDate",
       cellRenderer: (params) => {
@@ -333,8 +343,8 @@ function Driver() {
     {
       headerName: "Status",
       field: "status",
-      flex:1.1,
-      filter:false,
+      flex: 1.1,
+      filter: false,
       cellRenderer: (params) => {
         return (
           <div className=" flex items-center justify-center w-full h-10">
@@ -363,7 +373,7 @@ function Driver() {
             <div className="p-1 rounded-full border border-black h-6 w-6 flex items-center justify-center">
               {params.value[0]}
             </div>
-            <div className="w-1" >{params.value}</div>
+            <div className="w-1">{params.value}</div>
           </div>
         );
       },
@@ -397,12 +407,27 @@ function Driver() {
     },
   ]);
 
-  const handleFileSelect = (event, func) => {
+  const handleFileSelect = (event, str) => {
     const file = event.target.files[0];
     if (file) {
-      func(file.name);
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (str === "driver") {
+          setDriverPhoto(reader.result)
+        }
+        if (str === "id") {
+          setIdCardImg(reader.result)
+        }
+        if (str === 'vehicle') {
+          setVehiclePhoto(reader.result)
+        }
+        if (str === 'liscense') {
+          setLicenseCopy(reader.result)
+        }
+      };
+      reader.readAsDataURL(file);
     } else {
-      func(null);
+      func("");
     }
   };
 
@@ -659,98 +684,163 @@ function Driver() {
                     </div>
                   </div>
 
-                  <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 mt-4 w-full">
-                    <Input
-                      id="file-input"
-                      type="file"
-                      inputProps={{ multiple: true }}
-                      onChange={(e) => handleFileSelect(e, setDriverPhoto)}
-                      style={{ display: "none" }}
-                    />
-                    <div className="flex items-center gap-3">
-                      <label htmlFor="file-input">
-                        <Button
-                          variant="outlined"
-                          component="span"
-                          sx={{ height: "30px", fontSize: "10px" }}
-                        >
-                          Select Files
-                        </Button>
-                      </label>
-                      <div className="hidden md:block overflow-x-auto">
-                        {driverPhoto}
+                  <div className=" flex items-center mt-4 w-full justify-between">
+                    <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
+                      <Input
+                        id="file-input"
+                        type="file"
+                        inputProps={{ multiple: true }}
+                        onChange={(e) => handleFileSelect(e,'id')}
+                        style={{ display: "none" }}
+                      />
+                      <div className="flex items-center gap-3">
+                        <label htmlFor="file-input">
+                          <Button
+                            variant="outlined"
+                            component="span"
+                            sx={{ height: "30px", fontSize: "10px" }}
+                          >
+                            Select Files
+                          </Button>
+                        </label>
+                        <div className="hidden md:block overflow-x-auto">
+                          {idCardImg === "" ? `Driver Id Card Image` : "Selected  "}
+                        </div>
                       </div>
                     </div>
+                    <button
+                      onClick={() => {
+                        setIdCardModal(true);
+                      }}
+                      className="border border-slate-300 rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                    >
+                      View
+                    </button>
+                    <ImageModal
+                      setState={setIdCardModal}
+                      state={IdCardModal}
+                      image={idCardImg}
+                    />
                   </div>
-                  <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 mt-4 w-full">
-                    <Input
-                      id="file-input"
-                      type="file"
-                      inputProps={{ multiple: true }}
-                      onChange={(e) => handleFileSelect(e, setDriverPhoto)}
-                      style={{ display: "none" }}
-                    />
-                    <div className="flex items-center gap-3">
-                      <label htmlFor="file-input">
-                        <Button
-                          variant="outlined"
-                          component="span"
-                          sx={{ height: "30px", fontSize: "10px" }}
-                        >
-                          Select Files
-                        </Button>
-                      </label>
-                      <div className="hidden md:block overflow-x-auto">
-                        {driverPhoto}
+                  <div className=" flex items-center mt-4 w-full justify-between">
+                    <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
+                      <Input
+                        id="file-input"
+                        type="file"
+                        inputProps={{ multiple: true }}
+                        onChange={(e) => handleFileSelect(e,'vehicle')}
+                        style={{ display: "none" }}
+                      />
+                      <div className="flex items-center gap-3">
+                        <label htmlFor="file-input">
+                          <Button
+                            variant="outlined"
+                            component="span"
+                            sx={{ height: "30px", fontSize: "10px" }}
+                          >
+                            Select Files
+                          </Button>
+                        </label>
+                        <div className="hidden md:block overflow-x-auto">
+                          {vehiclePhoto === ""
+                            ? `Select Vehicle Image`
+                            : "Selected  "}
+                        </div>
                       </div>
                     </div>
+                    <button
+                      onClick={() => {
+                        setVehicleImgModal(true);
+                      }}
+                      className="border border-slate-300 rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                    >
+                      View
+                    </button>
+                    <ImageModal
+                      setState={setVehicleImgModal}
+                      state={vehicleImgModal}
+                      image={vehiclePhoto}
+                    />
                   </div>
-
-                  <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 mt-4 w-full">
-                    <Input
-                      id="file-input"
-                      type="file"
-                      inputProps={{ multiple: true }}
-                      onChange={(e) => handleFileSelect(e, setVehiclePhoto)}
-                      style={{ display: "none" }}
-                    />
-                    <div className="flex items-center gap-3">
-                      <label htmlFor="file-input">
-                        <Button
-                          variant="outlined"
-                          component="span"
-                          sx={{ height: "30px", fontSize: "10px" }}
-                        >
-                          Select Files
-                        </Button>
-                      </label>
-                      <div className="hidden md:block overflow-x-auto">
-                        {vehiclePhoto}
+                  <div className=" flex items-center mt-4 w-full justify-between">
+                    <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
+                      <Input
+                        id="file-input"
+                        type="file"
+                        inputProps={{ multiple: true }}
+                        onChange={(e) => handleFileSelect(e,'driver')}
+                        style={{ display: "none" }}
+                      />
+                      <div className="flex items-center gap-3">
+                        <label htmlFor="file-input">
+                          <Button
+                            variant="outlined"
+                            component="span"
+                            sx={{ height: "30px", fontSize: "10px" }}
+                          >
+                            Select Files
+                          </Button>
+                        </label>
+                        <div className="hidden md:block overflow-x-auto">
+                          {driverPhoto === ""
+                            ? `Select Driver Image`
+                            : "Selected  "}
+                        </div>
                       </div>
                     </div>
+                    <button
+                      onClick={() => {
+                        setDriverImgModal(true);
+                      }}
+                      className="border border-slate-300 rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                    >
+                      View
+                    </button>
+                    <ImageModal
+                      setState={setDriverImgModal}
+                      state={driverImgModal}
+                      image={driverPhoto}
+                    />
                   </div>
-                  <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 mt-4 w-full">
-                    <Input
-                      id="file-input"
-                      type="file"
-                      inputProps={{ multiple: true }}
-                      onChange={(e) => handleFileSelect(e, setLicenseCopy)}
-                      style={{ display: "none" }}
-                    />
-                    <div className="flex items-center gap-3">
-                      <label htmlFor="file-input">
-                        <Button
-                          variant="outlined"
-                          component="span"
-                          sx={{ height: "30px", fontSize: "10px" }}
-                        >
-                          Select Files
-                        </Button>
-                      </label>
-                      <div className="hidden md:block overflow-x-auto">
-                        {licenseCopy}
+                  <div className=" flex items-center mt-4 w-full justify-between">
+                    <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
+                      <Input
+                        id="file-input"
+                        type="file"
+                        inputProps={{ multiple: true }}
+                        onChange={(e) => handleFileSelect(e,'liscense')}
+                        style={{ display: "none" }}
+                      />
+                      <div className="flex items-center gap-3">
+                        <label htmlFor="file-input">
+                          <Button
+                            variant="outlined"
+                            component="span"
+                            sx={{ height: "30px", fontSize: "10px" }}
+                          >
+                            Select Files
+                          </Button>
+                        </label>
+                        <div className="hidden md:block overflow-x-auto">
+                          {licenseCopy === ""
+                            ? `Select Liscense Copy`
+                            : "Selected  "}
+                        </div>
                       </div>
                     </div>
+                    <button
+                      onClick={() => {
+                        setLicenseCopyModal(true);
+                      }}
+                      className="border border-slate-300 rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                    >
+                      View
+                    </button>
+                    <ImageModal
+                      setState={setLicenseCopyModal}
+                      state={LicenseCopyModal}
+                      image={licenseCopy}
+                    />
                   </div>
 
                   <select

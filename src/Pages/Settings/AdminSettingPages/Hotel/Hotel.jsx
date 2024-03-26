@@ -175,6 +175,7 @@ function Hotel() {
       setTarifOpen(false);
     } else if (name === "bank") {
       setBankOpen(false);
+      setAble(true);
     }
   };
   const [gridApi, setGridApi] = useState(null);
@@ -407,7 +408,6 @@ function Hotel() {
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
-    console.log("file --> ", file);
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
