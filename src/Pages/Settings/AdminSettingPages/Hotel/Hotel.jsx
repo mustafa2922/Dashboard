@@ -20,6 +20,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import "./Hotel.css";
 import HotelPrice from "./HotelTariff";
+import ImageModal from "../../../../Components/imageModal";
 
 const data = [
   {
@@ -156,6 +157,8 @@ function Hotel() {
   const [destinationVal, setDestinationVal] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const [bankOpen, setBankOpen] = useState(false);
+  const [able, setAble] = useState(true);
+  const [imgModal, setImgModal] = useState(false);
 
   const showMatches = (input) => {
     return destinations.filter((item) => {
@@ -176,33 +179,35 @@ function Hotel() {
   };
   const [gridApi, setGridApi] = useState(null);
   const [value, setValue] = useState();
-  const [selectFile, setSelectFile] = useState("Select hotel image");
+  const [hotelImage, setHotelImage] = useState("");
 
   const [stat, setStat] = useState("");
 
   const [column, setColumn] = useState([
     {
-      headerName: "Sr.",
+      headerName: "#",
       field: "serialNumber",
       sortable: false,
-      flex: 0.5,
+      flex: 0.35,
       filter: false,
       cellRenderer: (params) => {
-        return params.rowIndex + 1;
+        return <div className="ml-[-10px]">{params.rowIndex + 1}</div>;
       },
     },
     {
       headerName: "Name",
       field: "name",
+      flex: 0.88,
     },
     {
       headerName: "Type",
       field: "type",
+      flex: 0.8,
     },
     {
       headerName: "Category",
       field: "stars",
-      flex: 1.3,
+      flex: 1.18,
       cellRenderer: (params) => {
         return (
           <ReactStars
@@ -218,13 +223,13 @@ function Hotel() {
     {
       headerName: "Destination",
       field: "destination",
-      flex: 1.1,
+      flex: 1.22,
     },
     {
       headerName: "Tarif",
       sortable: false,
       filter: false,
-      flex: 0.7,
+      flex: 0.6,
       cellRenderer: (params) => {
         return (
           <div
@@ -254,7 +259,7 @@ function Hotel() {
         return (
           <div
             className={`flex items-center justify-center w-full h-6 text-white font-bold rounded-md ${
-              dayjs(params.value, "DD-MM-YYYY").isBefore(dayjs(), "day")
+              dayjs(params.data.dateTo, "DD-MM-YYYY").isBefore(dayjs(), "day")
                 ? "bg-red-500"
                 : "bg-green-500"
             } `}
@@ -263,7 +268,7 @@ function Hotel() {
           </div>
         );
       },
-      flex: 1.3,
+      flex: 1.4,
     },
     {
       headerName: "Tarif Valid To",
@@ -290,6 +295,8 @@ function Hotel() {
     },
     {
       headerName: "Bank Details",
+      sortable: false,
+      filter: false,
       field: "",
       cellStyle: {
         display: "flex",
@@ -313,6 +320,7 @@ function Hotel() {
     {
       headerName: "Status",
       field: "status",
+      flex: 0.9,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -333,7 +341,7 @@ function Hotel() {
     },
     {
       headerName: "Updated By",
-      flex: 2,
+      flex: 1.6,
       field: "by",
       cellRenderer: (params) => {
         return (
@@ -341,7 +349,7 @@ function Hotel() {
             <div className="p-1 rounded-full border border-black h-6 w-6 flex items-center justify-center">
               {params.value[0]}
             </div>
-            <div>{params.value}</div>
+            <div className="w-2">{params.value}</div>
           </div>
         );
       },
@@ -349,11 +357,12 @@ function Hotel() {
     {
       headerName: "Updated On",
       field: "dateTo",
+      flex: 1.25,
     },
     {
       sortable: false,
       filter: false,
-      flex: 0.4,
+      flex: 0.3,
       cellRenderer: (params) => {
         return (
           <div
@@ -398,10 +407,15 @@ function Hotel() {
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
+    console.log("file --> ", file);
     if (file) {
-      setSelectFile(file.name);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setHotelImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     } else {
-      setSelectFile(null);
+      setHotelImage("");
     }
   };
 
@@ -409,7 +423,7 @@ function Hotel() {
     <div className="h-full">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
         <div className="font-bold"> Accommodation </div>
-        <div className="flex justify-center items-center gap-3 h-full">
+        <div className="flex justify-center  sm:w-[65%] md:w-[55%] lg:w-[43%]  w-[90%] items-center gap-3 h-full">
           <button
             onClick={() => {
               ExportData();
@@ -424,18 +438,18 @@ function Hotel() {
               setSearch(e.target.value);
               quickFilter(e.target.value);
             }}
-            className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
+            className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[60%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."
           />
-          <div className="h-[80%]">
+          <div className="w-[40%] h-[80%]">
             <button
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
               }}
-              className="border border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
+              className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
-              <span className="sm:block hidden">Add Hotel</span>
+              <span className="sm:block hidden">Add Accommodation</span>
               <span className="sm:hidden block">
                 <AddRoundedIcon />
               </span>
@@ -445,7 +459,7 @@ function Hotel() {
       </div>
 
       <div className="h-full w-full overflow-x-auto">
-        <div className="ag-theme-quartz h-full min-[1900px]:w-[100%] w-[1800px]">
+        <div className="ag-theme-quartz h-full xl:w-full  w-[1800px]">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -464,7 +478,7 @@ function Hotel() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[70%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] lg:w-[70%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Hotel </div>
                 <div
@@ -478,11 +492,29 @@ function Hotel() {
               </div>
               <div className="flex justify-between w-full mt-4 h-[90%]">
                 <div className="flex flex-col w-[48%]">
-                  <div className=" w-full">
+                  <select
+                    defaultValue={"DEFAULT"}
+                    className="px-2 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
+                  >
+                    <option value="DEFAULT" disabled={true}>
+                      Property Type
+                    </option>
+                    <option value="Hotel">Hotel</option>
+                    <option value="Houseboat">Houseboat</option>
+                    <option value="Guest House">Guest House</option>
+                    <option value="Resort">Resort</option>
+                    <option value="Lodge">Lodge</option>
+                    <option value="Homestay">Homestay</option>
+                    <option value="Motel">Motel</option>
+                    <option value="Cottage">Cottage</option>
+                    <option value="Villa">Villa</option>
+                    <option value="Camping">Camping</option>
+                  </select>
+                  <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      label="Hotel Name"
+                      label="Accommodation Name"
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -537,7 +569,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      label="Hotel Address"
+                      label="Accommodation Address"
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -548,48 +580,66 @@ function Hotel() {
                       international
                       value={value}
                       onChange={setValue}
-                      placeholder="Hotel Contact No"
+                      placeholder="Accommodation Contact No"
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
                   </div>
 
                   <div className="mt-4 w-full h-fit">
                     <Textarea
-                      placeholder="Hotel Details"
+                      placeholder="Accommodation Details"
                       minRows={2}
                       maxRows={5}
                       sx={{
                         width: "100%",
                         backgroundColor: "#fff",
                         borderColor: "#d3d3d3",
-                        height: "152px",
+                        height: "130px",
                       }}
                     />
                   </div>
                 </div>
                 <div className="flex flex-col w-[48%]">
-                  <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-full">
-                    <Input
-                      id="file-input"
-                      type="file"
-                      inputProps={{ multiple: true }}
-                      onChange={(e) => handleFileSelect}
-                      style={{ display: "none" }}
-                    />
-                    <div className="flex items-center gap-3">
-                      <label htmlFor="file-input">
-                        <Button
-                          variant="outlined"
-                          component="span"
-                          sx={{ height: "30px", fontSize: "10px" }}
-                        >
-                          Select Files
-                        </Button>
-                      </label>
-                      <div className="hidden md:block overflow-x-auto">
-                        {selectFile}
+                  <div className=" flex items-center w-full justify-between">
+                    <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
+                      <Input
+                        id="file-input"
+                        type="file"
+                        inputProps={{ multiple: true }}
+                        onChange={(e) => handleFileSelect(e)}
+                        style={{ display: "none" }}
+                      />
+                      <div className="flex items-center gap-3">
+                        <label htmlFor="file-input">
+                          <Button
+                            variant="outlined"
+                            component="span"
+                            sx={{ height: "30px", fontSize: "10px" }}
+                          >
+                            Select Files
+                          </Button>
+                        </label>
+                        <div className="hidden md:block overflow-x-auto">
+                          {hotelImage === ""
+                            ? `Select Hotel Image`
+                            : 'Selected  '}
+                        </div>
                       </div>
                     </div>
+                    <button
+                      onClick={() => {
+                        setImgModal(true);
+                        console.log(hotelImage);
+                      }}
+                      className="border border-slate-300 rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                    >
+                      View
+                    </button>
+                    <ImageModal
+                      setState={setImgModal}
+                      state={imgModal}
+                      image={hotelImage}
+                    />
                   </div>
 
                   <div className="flex mt-4 items-center w-full justify-between">
@@ -635,7 +685,7 @@ function Hotel() {
                       international
                       value={value}
                       onChange={setValue}
-                      placeholder="Mobile No 2"
+                      placeholder="Alternative No"
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
                   </div>
@@ -664,29 +714,10 @@ function Hotel() {
                     className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                   >
                     <option value="DEFAULT" disabled={true}>
-                      Hotel Status
+                      Accommodation Status
                     </option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
-                  </select>
-
-                  <select
-                    defaultValue={"DEFAULT"}
-                    className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
-                  >
-                    <option value="DEFAULT" disabled={true}>
-                      Property Type
-                    </option>
-                    <option value="Hotel">Hotel</option>
-                    <option value="Houseboat">Houseboat</option>
-                    <option value="Guest House">Guest House</option>
-                    <option value="Resort">Resort</option>
-                    <option value="Lodge">Lodge</option>
-                    <option value="Homestay">Homestay</option>
-                    <option value="Motel">Motel</option>
-                    <option value="Cottage">Cottage</option>
-                    <option value="Villa">Villa</option>
-                    <option value="Camping">Camping</option>
                   </select>
                 </div>
               </div>
@@ -759,6 +790,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      disabled={able}
                       label="Account Name"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -768,6 +800,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      disabled={able}
                       label="Account No"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -777,6 +810,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      disabled={able}
                       label="Bank Name"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -787,6 +821,7 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Branch Name"
+                      disabled={able}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -796,6 +831,7 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="IFSCI Code"
+                      disabled={able}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -808,6 +844,7 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Account Name"
+                      disabled={able}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -816,6 +853,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      disabled={able}
                       label="Account No"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -826,6 +864,7 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Bank Name"
+                      disabled={able}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -834,6 +873,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      disabled={able}
                       label="Branch Name"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -844,6 +884,7 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="IFSCI Code"
+                      disabled={able}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -863,8 +904,17 @@ function Hotel() {
                 </div>
 
                 <div className=" w-[49%] rounded-md h-10  ">
-                  <button className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]">
-                    Save
+                  <button
+                    onClick={() => {
+                      setAble(false);
+                    }}
+                    className={`w-full rounded-md h-full flex ${
+                      able
+                        ? "hover:bg-blue-900 bg-blue-700"
+                        : "hover:bg-green-900 bg-green-700"
+                    }  items-center justify-center text-white `}
+                  >
+                    {able ? "Edit" : "Save"}
                   </button>
                 </div>
               </div>

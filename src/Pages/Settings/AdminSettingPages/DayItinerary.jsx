@@ -144,6 +144,16 @@ function DayItinerary() {
 
   const [column, setColumn] = useState([
     {
+      headerName: "#",
+      field: "serialNumber",
+      sortable: false,
+      flex: 0.2,
+      filter: false,
+      cellRenderer: (params) => {
+        return <div className="ml-[-10px]" >{params.rowIndex + 1}</div>;
+      },
+    },
+    {
       headerName: "Name",
       field: "name",
       flex: 1.5,
@@ -151,7 +161,6 @@ function DayItinerary() {
       cellRenderer: (params) => {
         return (
           <div className="flex  items-center gap-3">
-            
             <div className=" w-16 h-full">
               <div className="group relative">
                 <div
@@ -180,7 +189,11 @@ function DayItinerary() {
       headerName: "Status",
       field: "status",
       flex: 0.6,
-      cellStyle:{display:'flex',alignItems:"center",justifyContent:"center"},
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-10">
@@ -208,7 +221,7 @@ function DayItinerary() {
             <div className="p-1 rounded-full border border-black h-6 w-6 flex items-center justify-center">
               {params.value[0]}
             </div>
-            <div>{params.value}</div>
+            <div className="w-0" >{params.value}</div>
           </div>
         );
       },
@@ -268,7 +281,7 @@ function DayItinerary() {
     <div className="h-full">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
         <div className="font-bold"> Day Itinerary </div>
-        <div className="flex justify-center items-center gap-3 h-full">
+        <div className="flex justify-center  sm:w-[65%] md:w-[55%] lg:w-[45%]  w-[90%] items-center gap-3 h-full">
           <button
             onClick={() => {
               ExportData();
@@ -283,16 +296,16 @@ function DayItinerary() {
               setSearch(e.target.value);
               quickFilter(e.target.value);
             }}
-            className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
+            className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[75%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."
           />
-          <div className="h-[80%]">
+          <div className="w-[25%] h-[80%]">
             <button
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
               }}
-              className="border border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
+              className="border w-full border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
               <span className="sm:block hidden">Add Itinerary</span>
               <span className="sm:hidden block">

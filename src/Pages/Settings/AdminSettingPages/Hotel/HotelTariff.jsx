@@ -84,57 +84,21 @@ let data = [
     CNB: 55,
   },
   {
-    From: "2024-09-08",
-    To: "2024-09-10",
-    RoomType: "Standard Room",
-    MealPlan: "All Inclusive",
-    Single: 150,
-    Double: 250,
-    Triple: 350,
-    Quad: 450,
-    CWB: 90,
-    CNB: 45,
-  },
-  {
-    From: "2024-10-11",
-    To: "2024-10-16",
-    RoomType: "Deluxe Room",
-    MealPlan: "Room Only",
-    Single: 100,
-    Double: 150,
-    Triple: 200,
-    Quad: 250,
-    CWB: 50,
-    CNB: 25,
-  },
-  {
-    From: "2024-11-22",
-    To: "2024-11-25",
+    From: "2024-08-15",
+    To: "2024-08-20",
     RoomType: "Suite",
-    MealPlan: "Half Board",
-    Single: 180,
-    Double: 280,
-    Triple: 380,
-    Quad: 480,
-    CWB: 95,
-    CNB: 47.5,
-  },
-  {
-    From: "2024-12-03",
-    To: "2024-12-07",
-    RoomType: "Standard Room",
     MealPlan: "Full Board",
-    Single: 140,
-    Double: 210,
-    Triple: 280,
-    Quad: 350,
-    CWB: 70,
-    CNB: 35,
+    Single: 220,
+    Double: 350,
+    Triple: 480,
+    Quad: 600,
+    CWB: 110,
+    CNB: 55,
   },
+ 
 ];
 
 function HotelPrice({ name, MainSetOpen }) {
-  const [search, setSearch] = useState("");
   const [row, setRow] = useState(data);
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
@@ -146,12 +110,12 @@ function HotelPrice({ name, MainSetOpen }) {
     {
       headerName: "Room Type",
       field: "RoomType",
-      flex: 0.6,
+      flex: 0.55,
     },
     {
       headerName: "Meal Plan",
       field: "MealPlan",
-      flex: 0.4,
+      flex: 0.5,
     },
     {
       headerName: "Single",
@@ -161,7 +125,7 @@ function HotelPrice({ name, MainSetOpen }) {
     {
       headerName: "Double",
       field: "Double",
-      flex: 0.4,
+      flex: 0.45,
     },
     {
       headerName: "Triple",
@@ -171,25 +135,28 @@ function HotelPrice({ name, MainSetOpen }) {
     {
       headerName: "Quad",
       field: "Quad",
-      flex: 0.4,
+      flex: 0.35,
     },
     {
       headerName: "CWB",
       field: "CWB",
-      flex: 0.4,
+      flex: 0.35,
     },
     {
       headerName: "CNB (Above 5 yrs)",
+      filter:false,
       field: "CNB",
       flex: 0.7,
     },
     {
       headerName: "CNB (Below 5 yrs)",
+      filter:false,
       field: "CNB",
       flex: 0.7,
     },
     {
       headerName: "INF (Below 3 yrs)",
+      filter:false,
       field: "CNB",
       flex: 0.7,
     },
@@ -217,10 +184,6 @@ function HotelPrice({ name, MainSetOpen }) {
   const onGridReady = (params) => {
     setGridApi(params.api);
     setRow(data);
-  };
-
-  const quickFilter = () => {
-    gridApi.setGridOption("quickFilterText", search);
   };
 
   const defaultColDef = {
@@ -260,7 +223,7 @@ function HotelPrice({ name, MainSetOpen }) {
       </div>
 
       <div className="h-96 mt-2 border-r border-l w-full overflow-x-auto">
-        <div className="ag-theme-quartz  min-[1900px]:w-[100%] w-[1800px] h-full">
+        <div className="ag-theme-quartz  xl:w-[100%] w-[1800px] h-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}

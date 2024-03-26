@@ -13,3 +13,7 @@
 .PhoneInputInput{
   outline: none;
 }
+
+.ag-header-cell{
+  padding-left: 0.4rem !important;
+}

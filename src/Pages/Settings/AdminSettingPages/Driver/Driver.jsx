@@ -19,7 +19,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { Button, Input } from "@mui/material";
 import { PatternFormat } from "react-number-format";
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import "./Driver.css";
 
 const data = [
@@ -131,7 +131,7 @@ const data = [
   {
     name: "Olivia Rodriguez",
     mobile: 444444444,
-    vehicleMark: "Mercedes-Benz E-Class",
+    vehicleMark: "Mercedes-Benz",
     vehicleNo: "IL3456",
     vehicleModel: 2022,
     vehicleColor: "Silver",
@@ -194,20 +194,25 @@ function Driver() {
       headerName: "#",
       field: "serialNumber",
       sortable: false,
-      flex: 0.4,
       filter: false,
+      flex:0.45,
       cellRenderer: (params) => {
-        return params.rowIndex + 1;
+        return <div className="ml-[-10px]" >{params.rowIndex + 1}</div>;
+      },
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
       },
     },
     {
       headerName: "Driver Name",
       field: "name",
-      flex: 2.5,
+      flex: 3.2,
+      filter: false,
       cellRenderer: (params) => {
         return (
-          <div className="flex w-full items-center justify-between h-full p-1">
-            <div className="h-full leading-4 w-[49%] whitespace-pre-wrap flex items-center ">
+          <div className="ml-[-10px] flex w-full items-center justify-between h-full p-1">
+            <div className="h-full leading-4 w-[40%] whitespace-pre-wrap flex items-center ">
               {" "}
               {params.data.name}{" "}
             </div>
@@ -225,63 +230,62 @@ function Driver() {
     {
       headerName: "Mobile",
       field: "mobile",
-      flex: 1.2,
+      flex: 1.35,
     },
     {
       headerName: "Vehicle Details",
-      flex: 3,
+      filter: false,
+      flex: 2.5,
       cellRenderer: (params) => {
         return (
-          <div className="flex items-center justify-between p-1 h-full w-full">
-            <div className="w-[68%] items-start justify-center h-[95%] flex flex-col">
-              <div className="text-sm">
-                Vehicle Mark :
+          <div className="ml-[-10px] flex items-center justify-between p-1 h-full w-full">
+            <div className="w-full items-start justify-center h-[95%] flex flex-col">
+              <div className="text-sm ">
+                Mark :
                 <span className="text-black font-bold">
                   {` ` + params.data.vehicleMark}
                 </span>
               </div>
               <div className="text-sm mt-[-1px]">
-                Vehicle No :
+                No :
                 <span className="text-black font-bold">
                   {` ` + params.data.vehicleNo}
                 </span>
               </div>
               <div className="text-sm mt-[-1px]">
-                Vehicle Model :
+                Model :
                 <span className="text-black font-bold">
                   {` ` + params.data.vehicleModel}
                 </span>
               </div>
               <div className="text-sm mt-[-1px]">
-                Vehicle Color :
+                Color :
                 <span className="text-black font-bold">
                   {` ` + params.data.vehicleColor}
                 </span>
               </div>
             </div>
-            <div className="w-[28%] h-[90%]">
-              <img className="w-full h-full object-contain" src={dummyCar} />
-            </div>
           </div>
         );
       },
     },
     {
-      headerName: "Price",
-      flex: 2.5,
+      headerName: "Vehicle Price",
+      filter: false,
+      flex: 1.85,
       cellRenderer: (params) => {
         return (
-          <div className="flex flex-col items-start justify-center w-full h-full">
+          <div className="ml-[-10px] flex flex-col items-start justify-center w-full h-full">
             <div className="text-sm mt-[-1px]">
-              {`Vehicle Price (AC) :`}
+              {`(AC) : `}
               <span className="text-black font-bold">
-                {` `+ params.data.pricePerDay}
+                {`₹` + params.data.pricePerDay}
               </span>
             </div>
             <div className="text-sm mt-[-1px]">
-              {`Vehicle Price (Non - AC) : `}
+              {`(Non - AC) : `}
               <span className="text-black font-bold">
-                {` `+ params.data.priceArrDep}
+                {`₹` + params.data.priceArrDep}
               </span>
             </div>
           </div>
@@ -289,14 +293,15 @@ function Driver() {
       },
     },
     {
-      headerName: "Price Validity (AC)",
-      flex: 2,
-      field:'vehicleFromDate',
+      headerName: "Price Valid From",
+      flex: 1.75,
+      filter:false,
+      field: "vehicleFromDate",
       cellRenderer: (params) => {
         return (
           <div
             className={`flex items-center justify-center w-full h-6 text-white font-bold rounded-md ${
-              dayjs(params.value, "DD/MM/YY").isBefore(dayjs(), "day")
+              dayjs(params.data.vehicleToDate, "DD/MM/YY").isBefore(dayjs(), "day")
                 ? "bg-red-500"
                 : "bg-green-500"
             } `}
@@ -307,9 +312,10 @@ function Driver() {
       },
     },
     {
-      headerName: "Price Validity (Non - AC)",
-      flex: 2,
-      field:'vehicleToDate',
+      headerName: "Price Valid To",
+      filter:false,
+      flex: 1.5,
+      field: "vehicleToDate",
       cellRenderer: (params) => {
         return (
           <div
@@ -327,14 +333,14 @@ function Driver() {
     {
       headerName: "Status",
       field: "status",
-      flex: 1.5,
+      flex:1.1,
+      filter:false,
       cellRenderer: (params) => {
         return (
-          <div className="flex items-center justify-center w-full h-10">
+          <div className=" flex items-center justify-center w-full h-10">
             <div
-              className={`flex items-center justify-center w-14 px-10 ${
-                params.value.toLowerCase() ===
-                "Active".toLowerCase()
+              className={`flex items-center justify-center w-full px-7 ${
+                params.value.toLowerCase() === "Active".toLowerCase()
                   ? "bg-green-500"
                   : "bg-red-500"
               }  text-white font-bold rounded-md h-[70%]`}
@@ -349,27 +355,29 @@ function Driver() {
     {
       headerName: "Updated By",
       field: "updatedBy",
-      flex: 1.8,
+      filter: false,
+      flex: 2.2,
       cellRenderer: (params) => {
         return (
-          <div className="flex items-center justify-start gap-2 w-full h-full">
+          <div className="ml-[-10px] flex items-center justify-start gap-2 w-full h-full">
             <div className="p-1 rounded-full border border-black h-6 w-6 flex items-center justify-center">
               {params.value[0]}
             </div>
-            <div>{params.value}</div>
+            <div className="w-1" >{params.value}</div>
           </div>
         );
       },
     },
     {
       headerName: "Updated On",
+      filter: false,
       field: "updatedOn",
       flex: 1.2,
     },
     {
       sortable: false,
       filter: false,
-      flex: 0.5,
+      flex: 0.6,
       cellRenderer: (params) => {
         return (
           <div
@@ -429,7 +437,7 @@ function Driver() {
     <div className="h-full">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
         <div className="font-bold"> Drivers </div>
-        <div className="flex justify-center items-center gap-3 h-full">
+        <div className="flex justify-center sm:w-[65%] md:w-[55%] lg:w-[45%]  w-[90%] items-center gap-3 h-full">
           <button
             onClick={() => {
               ExportData();
@@ -444,16 +452,16 @@ function Driver() {
               setSearch(e.target.value);
               quickFilter(e.target.value);
             }}
-            className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
-            placeholder="Search by anything...."
+            className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[70%] focus:outline-none focus:border focus:border-black"
+            placeholder="Search by name..."
           />
-          <div className="h-[80%]">
+          <div className="w-[30%] h-[80%]">
             <button
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
               }}
-              className="border border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
+              className="border w-full border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
               <span className="sm:block hidden">Add Driver</span>
               <span className="sm:hidden block">
@@ -465,7 +473,7 @@ function Driver() {
       </div>
 
       <div className="h-full w-full overflow-x-auto">
-        <div className="ag-theme-quartz h-full min-[1900px]:w-[100%] w-[2000px]">
+        <div className="ag-theme-quartz h-full xl:w-[100%] w-[2000px]">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -541,8 +549,13 @@ function Driver() {
                     />
                   </div>
 
-                  <select defaultValue={'DEFAULT'} className="px-2 mt-4 text-slate-600 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-sm">
-                    <option value="DEFAULT" disabled={true}>Vehicle Mark</option>
+                  <select
+                    defaultValue={"DEFAULT"}
+                    className="px-2 mt-4 text-slate-600 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-sm"
+                  >
+                    <option value="DEFAULT" disabled={true}>
+                      Vehicle Mark
+                    </option>
                     <option value="1">Toyota Camry</option>
                     <option value="2">Ford Mustang</option>
                     <option value="3">Hyundai Sonata</option>
@@ -596,7 +609,13 @@ function Driver() {
                       <TextField
                         id="outlined-basic"
                         size="small"
-                        label={<> <CurrencyRupeeIcon/>Vehicle Price (AC)</>}
+                        label={
+                          <>
+                            {" "}
+                            <CurrencyRupeeIcon />
+                            Vehicle Price (AC)
+                          </>
+                        }
                         variant="outlined"
                         sx={{ width: "100%" }}
                         type="number"
@@ -606,30 +625,38 @@ function Driver() {
                       <TextField
                         id="outlined-basic"
                         size="small"
-                        label={<> <CurrencyRupeeIcon/>Vehicle Price (Non AC)</>}
+                        label={
+                          <>
+                            {" "}
+                            <CurrencyRupeeIcon />
+                            Vehicle Price (Non AC)
+                          </>
+                        }
                         variant="outlined"
-                        sx={{ width: "100%", }}
-                        type='number'
+                        sx={{ width: "100%" }}
+                        type="number"
                       />
                     </div>
                   </div>
 
-                  <div className="mt-4 w-full custom-date-picker">
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <MobileDatePicker
-                        label="Price Valid From"
-                        defaultValue={dayjs("2022-04-17")}
-                      />
-                    </LocalizationProvider>
-                  </div>
+                  <div className="flex justify-between items-center w-full">
+                    <div className="mt-4 w-[48%] custom-date-picker">
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <MobileDatePicker
+                          label="Price Valid From"
+                          defaultValue={dayjs("2022-04-17")}
+                        />
+                      </LocalizationProvider>
+                    </div>
 
-                  <div className="mt-4 w-full custom-date-picker">
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <MobileDatePicker
-                        label="Price Valid To"
-                        defaultValue={dayjs("2022-04-17")}
-                      />
-                    </LocalizationProvider>
+                    <div className="mt-4 w-[48%] custom-date-picker">
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <MobileDatePicker
+                          label="Price Valid To"
+                          defaultValue={dayjs("2022-04-17")}
+                        />
+                      </LocalizationProvider>
+                    </div>
                   </div>
 
                   <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 mt-4 w-full">
@@ -655,6 +682,30 @@ function Driver() {
                       </div>
                     </div>
                   </div>
+                  <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 mt-4 w-full">
+                    <Input
+                      id="file-input"
+                      type="file"
+                      inputProps={{ multiple: true }}
+                      onChange={(e) => handleFileSelect(e, setDriverPhoto)}
+                      style={{ display: "none" }}
+                    />
+                    <div className="flex items-center gap-3">
+                      <label htmlFor="file-input">
+                        <Button
+                          variant="outlined"
+                          component="span"
+                          sx={{ height: "30px", fontSize: "10px" }}
+                        >
+                          Select Files
+                        </Button>
+                      </label>
+                      <div className="hidden md:block overflow-x-auto">
+                        {driverPhoto}
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 mt-4 w-full">
                     <Input
                       id="file-input"
@@ -702,8 +753,13 @@ function Driver() {
                     </div>
                   </div>
 
-                  <select defaultValue={"DEFAULT"} className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
-                    <option value="DEFAULT" disabled={true}>Status</option>
+                  <select
+                    defaultValue={"DEFAULT"}
+                    className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
+                  >
+                    <option value="DEFAULT" disabled={true}>
+                      Status
+                    </option>
                     <option value="active">active</option>
                     <option value="inactive">inactive</option>
                   </select>

@@ -84,13 +84,13 @@ function Destinations() {
 
   const [column, setColumn] = useState([
     {
-      headerName: "Sr.",
+      headerName: "#",
       field: "serialNumber",
-      flex: 0.24,
+      flex: 0.1,
       sortable: false,
       filter: false,
       cellRenderer: (params) => {
-        return params.rowIndex + 1;
+        return <div className="ml-[-10px]" >{params.rowIndex + 1}</div>;
       },
     },
     {
@@ -165,7 +165,7 @@ function Destinations() {
     <div className="h-full">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
         <div className="font-bold"> Destinations </div>
-        <div className="flex justify-center items-center gap-3 h-full">
+        <div className="flex justify-center  sm:w-[75%] md:w-[65%] lg:w-[45%]  w-[90%] items-center gap-3 h-full">
           <button
             onClick={() => {
               ExportData();
@@ -180,16 +180,16 @@ function Destinations() {
               setSearch(e.target.value);
               quickFilter(e.target.value);
             }}
-            className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
+            className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[70%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."
           />
-          <div className="h-[80%]">
+          <div className="w-[30%] h-[80%]">
             <button
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
               }}
-              className="border border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
+              className="border w-full border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
               <span className="sm:block hidden">Add Destination</span>
               <span className="sm:hidden block">
