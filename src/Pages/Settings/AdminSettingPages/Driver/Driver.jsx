@@ -413,15 +413,19 @@ function Driver() {
       const reader = new FileReader();
       reader.onload = () => {
         if (str === "driver") {
+          console.log('---driver---')
           setDriverPhoto(reader.result)
         }
         if (str === "id") {
+          console.log('---id---')
           setIdCardImg(reader.result)
         }
         if (str === 'vehicle') {
+          console.log('---vehicle---')
           setVehiclePhoto(reader.result)
         }
         if (str === 'liscense') {
+          console.log('---liscense---')
           setLicenseCopy(reader.result)
         }
       };
@@ -687,14 +691,14 @@ function Driver() {
                   <div className=" flex items-center mt-4 w-full justify-between">
                     <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
                       <Input
-                        id="file-input"
+                        id="file-input1"
                         type="file"
                         inputProps={{ multiple: true }}
                         onChange={(e) => handleFileSelect(e,'id')}
                         style={{ display: "none" }}
                       />
                       <div className="flex items-center gap-3">
-                        <label htmlFor="file-input">
+                        <label htmlFor="file-input1">
                           <Button
                             variant="outlined"
                             component="span"
@@ -703,8 +707,8 @@ function Driver() {
                             Select Files
                           </Button>
                         </label>
-                        <div className="hidden md:block overflow-x-auto">
-                          {idCardImg === "" ? `Driver Id Card Image` : "Selected  "}
+                        <div className="hidden md:block text-xs overflow-x-auto">
+                          {idCardImg === "" ? `Driver Id Card` : "Selected  "}
                         </div>
                       </div>
                     </div>
@@ -712,7 +716,7 @@ function Driver() {
                       onClick={() => {
                         setIdCardModal(true);
                       }}
-                      className="border border-slate-300 rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                      className="border border-slate-300 rounded-md text-xs flex items-center justify-center w-[15%] underline cursor-pointer h-10"
                     >
                       View
                     </button>
@@ -725,14 +729,14 @@ function Driver() {
                   <div className=" flex items-center mt-4 w-full justify-between">
                     <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
                       <Input
-                        id="file-input"
+                        id="file-input2"
                         type="file"
                         inputProps={{ multiple: true }}
                         onChange={(e) => handleFileSelect(e,'vehicle')}
                         style={{ display: "none" }}
                       />
                       <div className="flex items-center gap-3">
-                        <label htmlFor="file-input">
+                        <label htmlFor="file-input2">
                           <Button
                             variant="outlined"
                             component="span"
@@ -741,9 +745,9 @@ function Driver() {
                             Select Files
                           </Button>
                         </label>
-                        <div className="hidden md:block overflow-x-auto">
+                        <div className="hidden md:block  text-xs overflow-x-auto">
                           {vehiclePhoto === ""
-                            ? `Select Vehicle Image`
+                            ? `Vehicle Image`
                             : "Selected  "}
                         </div>
                       </div>
@@ -752,7 +756,7 @@ function Driver() {
                       onClick={() => {
                         setVehicleImgModal(true);
                       }}
-                      className="border border-slate-300 rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                      className="border border-slate-300 rounded-md text-xs flex items-center justify-center w-[15%] underline cursor-pointer h-10"
                     >
                       View
                     </button>
@@ -765,14 +769,14 @@ function Driver() {
                   <div className=" flex items-center mt-4 w-full justify-between">
                     <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
                       <Input
-                        id="file-input"
+                        id="file-input3"
                         type="file"
                         inputProps={{ multiple: true }}
                         onChange={(e) => handleFileSelect(e,'driver')}
                         style={{ display: "none" }}
                       />
                       <div className="flex items-center gap-3">
-                        <label htmlFor="file-input">
+                        <label htmlFor="file-input3">
                           <Button
                             variant="outlined"
                             component="span"
@@ -781,9 +785,9 @@ function Driver() {
                             Select Files
                           </Button>
                         </label>
-                        <div className="hidden md:block overflow-x-auto">
+                        <div className="hidden md:block  text-xs overflow-x-auto">
                           {driverPhoto === ""
-                            ? `Select Driver Image`
+                            ? `Driver Image`
                             : "Selected  "}
                         </div>
                       </div>
@@ -792,7 +796,7 @@ function Driver() {
                       onClick={() => {
                         setDriverImgModal(true);
                       }}
-                      className="border border-slate-300 rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                      className="border border-slate-300 rounded-md text-xs flex items-center justify-center w-[15%] underline cursor-pointer h-10"
                     >
                       View
                     </button>
@@ -805,14 +809,14 @@ function Driver() {
                   <div className=" flex items-center mt-4 w-full justify-between">
                     <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
                       <Input
-                        id="file-input"
+                        id="file-input4"
                         type="file"
                         inputProps={{ multiple: true }}
                         onChange={(e) => handleFileSelect(e,'liscense')}
                         style={{ display: "none" }}
                       />
                       <div className="flex items-center gap-3">
-                        <label htmlFor="file-input">
+                        <label htmlFor="file-input4">
                           <Button
                             variant="outlined"
                             component="span"
@@ -821,9 +825,9 @@ function Driver() {
                             Select Files
                           </Button>
                         </label>
-                        <div className="hidden md:block overflow-x-auto">
+                        <div className="hidden md:block  text-xs overflow-x-auto">
                           {licenseCopy === ""
-                            ? `Select Liscense Copy`
+                            ? `Liscense Copy`
                             : "Selected  "}
                         </div>
                       </div>
@@ -832,7 +836,7 @@ function Driver() {
                       onClick={() => {
                         setLicenseCopyModal(true);
                       }}
-                      className="border border-slate-300 rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                      className="border border-slate-300 rounded-md text-xs flex items-center justify-center w-[15%] underline cursor-pointer h-10"
                     >
                       View
                     </button>

@@ -16,7 +16,7 @@ function ImageModal({ state, setState , image }) {
       <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] px-2 translate-y-[-50%] bg-white w-[30%] h-fit">
         <div className="flex justify-between items-center h-[10%]">
           <div className="font-bold text-lg">
-            Image Viewer
+            Image Viewer 
           </div>
           <div className="cursor-pointer" onClick={handleClose}>
             <CloseIcon />
