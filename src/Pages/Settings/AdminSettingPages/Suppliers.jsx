@@ -147,6 +147,16 @@ function Suppliers() {
 
   const [column, setColumn] = useState([
     {
+      headerName: "#",
+      field: "serialNumber",
+      flex: 0.28,
+      sortable: false,
+      filter: false,
+      cellRenderer: (params) => {
+        return params.rowIndex + 1;
+      },
+    },
+    {
       headerName: "Company",
       field: "company",
     },

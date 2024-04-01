@@ -41,6 +41,9 @@ import MailSetting from "./Pages/Settings/AdminSettingPages/MailSetting";
 import WeatherSetting from "./Pages/Settings/AdminSettingPages/WeatherSetting";
 import Currency from "./Pages/Settings/AdminSettingPages/Currency";
 import Driver from "./Pages/Settings/AdminSettingPages/Driver/Driver";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const App = () => {
   const Layout = () => {
@@ -53,7 +56,7 @@ const App = () => {
     return (
       <div className="main h-screen w-full">
         <Navbar sendDataToApp={getStatusFromSideBar} />
-        <div className="wrapper flex h-[92vh]">
+        <div className="wrapper flex h-[92.5vh]">
           <div
             className={`sideBar-Wrapper md:block ${
               show ? "hidden" : ""
@@ -62,10 +65,11 @@ const App = () => {
             <SideBar />
           </div>
 
-          <div className="content-Wrapper w-full relative h-full overflow-y-scroll">
+          <div className="content-Wrapper w-full relative h-full overflow-y-hidden">
             <Outlet />
           </div>
         </div>
+        <ToastContainer  autoClose={2000} />
       </div>
     );
   };

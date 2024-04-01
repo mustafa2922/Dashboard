@@ -3,7 +3,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import "react-phone-number-input/style.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import EditNoteIcon from "@mui/icons-material/EditNote";
@@ -21,148 +21,45 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import "./Hotel.css";
 import HotelPrice from "./HotelTariff";
 import ImageModal from "../../../../Components/imageModal";
+import axios from "axios";
 
-const data = [
-  {
-    id: "12EF34RC1",
-    by: "JaffarSaleem.com",
-    dateFrom: "15-03-2024",
-    dateTo: "18-03-2024",
-    name: "Premium Delux",
-    type: "Premium Delux",
-    stars: 2,
-    destination: "New York",
-    status: "active",
-  },
-  {
-    id: "98AB76YZ3",
-    by: "JaffarSaleem.com",
-    dateFrom: "19-03-2024",
-    dateTo: "22-03-2024",
-    name: "Luxury Suite",
-    type: "Luxury Suite",
-    stars: 4,
-    destination: "London",
-    status: "inactive",
-  },
-  {
-    id: "45CD67FG8",
-    by: "JaffarSaleem.com",
-    dateFrom: "23-03-2024",
-    dateTo: "26-03-2024",
-    name: "Executive Room",
-    type: "Executive Room",
-    stars: 3,
-    destination: "Paris",
-    status: "active",
-  },
-  {
-    id: "23GH89IJ5",
-    by: "JaffarSaleem.com",
-    dateFrom: "27-03-2024",
-    dateTo: "30-03-2024",
-    name: "Standard Twin",
-    type: "Standard Twin",
-    stars: 5,
-    destination: "Tokyo",
-    status: "inactive",
-  },
-  {
-    id: "67KL12MN0",
-    by: "JaffarSaleem.com",
-    dateFrom: "31-03-2024",
-    dateTo: "03-04-2024",
-    name: "Family Villa",
-    type: "Family Villa",
-    stars: 1,
-    destination: "Dubai",
-    status: "active",
-  },
-  {
-    id: "34OP56QR7",
-    by: "JaffarSaleem.com",
-    dateFrom: "04-04-2024",
-    dateTo: "07-04-2024",
-    name: "Ocean View Suite",
-    type: "Ocean View Suite",
-    stars: 4,
-    destination: "Sydney",
-    status: "inactive",
-  },
-  {
-    id: "89ST23UV4",
-    by: "JaffarSaleem.com",
-    dateFrom: "08-04-2024",
-    dateTo: "11-04-2024",
-    name: "Penthouse Loft",
-    type: "Penthouse Loft",
-    stars: 3,
-    destination: "Rome",
-    status: "active",
-  },
-  {
-    id: "12WX34YZ5",
-    by: "JaffarSaleem.com",
-    dateFrom: "12-04-2024",
-    dateTo: "15-04-2024",
-    name: "Honeymoon Retreat",
-    type: "Honeymoon Retreat",
-    stars: 2,
-    destination: "Berlin",
-    status: "inactive",
-  },
-  {
-    id: "56CD78EF9",
-    by: "JaffarSaleem.com",
-    dateFrom: "16-04-2024",
-    dateTo: "19-04-2024",
-    name: "Mountain Chalet",
-    type: "Mountain Chalet",
-    stars: 5,
-    destination: "Moscow",
-    status: "active",
-  },
-  {
-    id: "78GH90IJ1",
-    by: "JaffarSaleem.com",
-    dateFrom: "20-04-2024",
-    dateTo: "23-04-2024",
-    name: "Beach Bungalow",
-    type: "Beach Bungalow",
-    stars: 3,
-    destination: "Singapore",
-    status: "inactive",
-  },
-];
-
-const destinations = [
-  "Dubai",
-  "Dehli",
-  "AhmedAbad",
-  "Bombay",
-  "Shinghai",
-  "Karachi",
-  "Lahore",
-  "Chicago",
-  "Patna",
-  "Sirinagar",
-];
+const destinations = [];
 
 function Hotel() {
+  const [hotelFields, setHotelFields] = useState({
+    property_type: "DEFAULT",
+    name: "",
+    category: "DEFAULT",
+    destination_id: "",
+    address: "",
+    contact_no: "",
+    details: "",
+    hotelImage: "",
+    tarif_valid_from: "",
+    tarif_valid_to: "",
+    contact_person: "",
+    mob_no_1: "",
+    mob_no_2: "",
+    reservation_email: "",
+    website_link: "",
+    status: "DEFAULT",
+  });
+
   const [search, setSearch] = useState("");
-  const [row, setRow] = useState(data);
+  const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
   const [tarifOpen, setTarifOpen] = useState(false);
   const [hotelName, sethotelName] = useState("");
-  const [destinationVal, setDestinationVal] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const [bankOpen, setBankOpen] = useState(false);
   const [able, setAble] = useState(true);
   const [imgModal, setImgModal] = useState(false);
+  const [destinationVal, setDestinationVal] = useState("");
+  const [reload, setReload] = useState(false);
 
   const showMatches = (input) => {
     return destinations.filter((item) => {
-      return item.toLowerCase().includes(input.toLowerCase());
+      return item.name.toLowerCase().includes(input.toLowerCase());
     });
   };
 
@@ -178,8 +75,9 @@ function Hotel() {
       setAble(true);
     }
   };
+
   const [gridApi, setGridApi] = useState(null);
-  const [value, setValue] = useState();
+
   const [hotelImage, setHotelImage] = useState("");
 
   const [stat, setStat] = useState("");
@@ -202,12 +100,12 @@ function Hotel() {
     },
     {
       headerName: "Type",
-      field: "type",
+      field: "property_type",
       flex: 0.8,
     },
     {
       headerName: "Category",
-      field: "stars",
+      field: "categodry",
       flex: 1.18,
       cellRenderer: (params) => {
         return (
@@ -223,7 +121,7 @@ function Hotel() {
     },
     {
       headerName: "Destination",
-      field: "destination",
+      field: `destination.name`,
       flex: 1.22,
     },
     {
@@ -250,55 +148,59 @@ function Hotel() {
     },
     {
       headerName: "Tarif Valid From",
-      field: "dateFrom",
+      field: "tarif_valid_from",
       cellStyle: {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
       },
       cellRenderer: (params) => {
+        const formattedDate = dayjs(params.value).format("DD-MM-YYYY");
         return (
           <div
-            className={`flex items-center justify-center w-full h-6 text-white font-bold rounded-md ${
-              dayjs(params.data.dateTo, "DD-MM-YYYY").isBefore(dayjs(), "day")
+            className={`flex items-center justify-center w-28 h-6 text-white font-bold rounded-md ${
+              dayjs(params.data.tarif_valid_to, "DD-MM-YYYY").isBefore(
+                dayjs(),
+                "day"
+              )
                 ? "bg-red-500"
                 : "bg-green-500"
             } `}
           >
-            {params.value}
+            {formattedDate}
           </div>
         );
       },
-      flex: 1.4,
+      flex: 1.35,
     },
     {
       headerName: "Tarif Valid To",
-      field: "dateTo",
+      field: "tarif_valid_to",
       cellStyle: {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
       },
       cellRenderer: (params) => {
+        const formattedDate = dayjs(params.value).format("DD-MM-YYYY");
         return (
           <div
-            className={`flex items-center justify-center w-full h-6 text-white font-bold rounded-md ${
+            className={`flex items-center justify-center w-28 h-6 text-white font-bold rounded-md ${
               dayjs(params.value, "DD-MM-YYYY").isBefore(dayjs(), "day")
                 ? "bg-red-500"
                 : "bg-green-500"
             } `}
           >
-            {params.value}
+            {formattedDate}
           </div>
         );
       },
-      flex: 1.2,
+      flex: 1.18,
     },
     {
       headerName: "Bank Details",
       sortable: false,
       filter: false,
-      field: "",
       cellStyle: {
         display: "flex",
         alignItems: "center",
@@ -317,48 +219,33 @@ function Hotel() {
           </div>
         );
       },
+      flex: 0.83,
     },
     {
       headerName: "Status",
       field: "status",
-      flex: 0.9,
+      flex: 0.7,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
             <div
-              className={`flex items-center justify-center w-14 ${
-                params.value.toLocaleLowerCase() ===
-                "Active".toLocaleLowerCase()
-                  ? "bg-green-500"
-                  : "bg-red-500"
-              }  text-white font-bold rounded-md h-7 w-full`}
+              className={`flex items-center justify-center w-14 px-8 ${
+                params.value === "1" ? "bg-green-600" : "bg-red-600"
+              }  text-white rounded-md h-[70%]`}
             >
-              {params.value[0].toUpperCase()}
-              {params.value.substring(1)}
+              {params.value == "1" ? "Active" : "Inactive"}
             </div>
-          </div>
-        );
-      },
-    },
-    {
-      headerName: "Updated By",
-      flex: 1.6,
-      field: "by",
-      cellRenderer: (params) => {
-        return (
-          <div className="flex items-center justify-start gap-2 w-full h-full">
-            <div className="p-1 rounded-full border border-black h-6 w-6 flex items-center justify-center">
-              {params.value[0]}
-            </div>
-            <div className="w-2">{params.value}</div>
           </div>
         );
       },
     },
     {
       headerName: "Updated On",
-      field: "dateTo",
-      flex: 1.25,
+      field: "updated_at",
+      cellRenderer: (params) => {
+        const formattedDate = dayjs(params.value).format("DD-MM-YYYY");
+        return <div>{formattedDate}</div>;
+      },
     },
     {
       sortable: false,
@@ -383,9 +270,28 @@ function Hotel() {
     },
   ]);
 
+  const handleSave = () => {
+    setAble(false);
+    console.log(hotelFields);
+    axios
+      .post("http://test.seoconsole.net/api/v1/accomodation", hotelFields)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const onGridReady = (params) => {
     setGridApi(params.api);
-    setRow(data);
+  };
+
+  const handleChange = (event) => {
+    return setHotelFields({
+      ...hotelFields,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const ExportData = () => {
@@ -418,6 +324,27 @@ function Hotel() {
       setHotelImage("");
     }
   };
+
+  useEffect(() => {
+    const getData = () => {
+      axios
+        .get("http://test.seoconsole.net/api/v1/accomodation")
+        .then((response) => {
+          setRow(response.data.reverse());
+        });
+    };
+
+    const getDestinations = () => {
+      axios
+        .get("http://test.seoconsole.net/api/v1/destination")
+        .then((response) => {
+          response.data.map((i,v)=>{destinations.push(i)})
+        });
+    };
+
+    getData();
+    getDestinations();
+  }, [reload]);
 
   return (
     <div className="h-full">
@@ -458,8 +385,8 @@ function Hotel() {
         </div>
       </div>
 
-      <div className="h-full w-full overflow-x-auto">
-        <div className="ag-theme-quartz h-full xl:w-full  w-[1800px]">
+      <div className="h-[92%] w-full overflow-x-auto">
+        <div className="ag-theme-quartz h-full xl:w-full  w-[2200px]">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -467,6 +394,7 @@ function Hotel() {
             defaultColDef={defaultColDef}
             enableBrowserTooltips={true}
             pagination={true}
+            paginationPageSize={20}
           />
 
           <Modal
@@ -493,7 +421,11 @@ function Hotel() {
               <div className="flex justify-between w-full mt-4 h-[90%]">
                 <div className="flex flex-col w-[48%]">
                   <select
-                    defaultValue={"DEFAULT"}
+                    value={hotelFields.property_type}
+                    name="property_type"
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
                     className="px-2 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                   >
                     <option value="DEFAULT" disabled={true}>
@@ -515,13 +447,22 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Accommodation Name"
+                      name="name"
+                      value={hotelFields.name}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
                   </div>
 
                   <select
-                    defaultValue={"DEFAULT"}
+                    value={hotelFields.category}
+                    name="category"
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
                     className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-sm"
                   >
                     <option value="DEFAULT" disabled={true}>
@@ -548,17 +489,18 @@ function Hotel() {
                       }}
                     />
                     {showPicker && destinationVal && matchArr.length > 0 && (
-                      <ul className="absolute z-10 bg-[#f9f9f9] w-full border rounded-b-lg p-1 border-black">
+                      <ul className="absolute z-10 bg-[#f9f9f9] h-[100px] overflow-y-auto w-full border rounded-b-lg p-1 border-black">
                         {matchArr.map((match, index) => (
                           <li
                             className="hover:bg-blue-200 cursor-pointer rounded-sm p-1 border-b"
                             key={index}
                             onClick={() => {
-                              setDestinationVal(match);
+                              setDestinationVal(match.name);
+                              setHotelFields({...hotelFields , destination_id:match.id})
                               setShowPicker(false);
                             }}
                           >
-                            {match}
+                            {match.name}
                           </li>
                         ))}
                       </ul>
@@ -569,6 +511,11 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      name="address"
+                      value={hotelFields.address}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
                       label="Accommodation Address"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -578,8 +525,10 @@ function Hotel() {
                   <div className="mt-4">
                     <PhoneInput
                       international
-                      value={value}
-                      onChange={setValue}
+                      value={hotelFields.contact_no}
+                      onChange={(e) => {
+                        setHotelFields({ ...hotelFields, contact_no: e });
+                      }}
                       placeholder="Accommodation Contact No"
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
@@ -590,6 +539,11 @@ function Hotel() {
                       placeholder="Accommodation Details"
                       minRows={2}
                       maxRows={5}
+                      name="details"
+                      value={hotelFields.details}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
                       sx={{
                         width: "100%",
                         backgroundColor: "#fff",
@@ -622,7 +576,7 @@ function Hotel() {
                         <div className="hidden md:block overflow-x-auto">
                           {hotelImage === ""
                             ? `Select Hotel Image`
-                            : 'Selected  '}
+                            : "Selected  "}
                         </div>
                       </div>
                     </div>
@@ -666,7 +620,12 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Contact Person"
+                      name="contact_person"
                       variant="outlined"
+                      value={hotelFields.contact_person}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -674,8 +633,10 @@ function Hotel() {
                   <div className="mt-4">
                     <PhoneInput
                       international
-                      value={value}
-                      onChange={setValue}
+                      value={hotelFields.mob_no_1}
+                      onChange={(e) => {
+                        setHotelFields({ ...hotelFields, mob_no_1: e });
+                      }}
                       placeholder="Mobile No *"
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
@@ -683,8 +644,10 @@ function Hotel() {
                   <div className="mt-4">
                     <PhoneInput
                       international
-                      value={value}
-                      onChange={setValue}
+                      value={hotelFields.mob_no_2}
+                      onChange={(e) => {
+                        setHotelFields({ ...hotelFields, mob_no_2: e });
+                      }}
                       placeholder="Alternative No"
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
@@ -695,6 +658,11 @@ function Hotel() {
                         id="outlined-basic"
                         size="small"
                         label="Reservation Email ID"
+                        name="reservation_email"
+                        value={hotelFields.reservation_email}
+                        onChange={(e) => {
+                          handleChange(e);
+                        }}
                         variant="outlined"
                         sx={{ width: "100%" }}
                       />
@@ -703,6 +671,11 @@ function Hotel() {
                       <TextField
                         id="outlined-basic"
                         size="small"
+                        name="website_link"
+                        value={hotelFields.website_link}
+                        onChange={(e) => {
+                          handleChange(e);
+                        }}
                         label="Website Link"
                         variant="outlined"
                         sx={{ width: "100%" }}
@@ -710,7 +683,9 @@ function Hotel() {
                     </div>
                   </div>
                   <select
-                    defaultValue={"DEFAULT"}
+                    value={hotelFields.status}
+                    name="status"
+                    onChange={(e) => handleChange(e)}
                     className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                   >
                     <option value="DEFAULT" disabled={true}>
@@ -729,13 +704,18 @@ function Hotel() {
                   }}
                   className=" w-[48%] rounded-md h-10"
                 >
-                  <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
+                  <button className="hover:bg-red-900 w-full rounded-md  text-white bg-red-600 h-full flex items-center justify-center">
                     Cancel
                   </button>
                 </div>
 
                 <div className=" w-[48%] rounded-md h-10  ">
-                  <button className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]">
+                  <button
+                    onClick={() => {
+                      handleSave();
+                    }}
+                    className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]"
+                  >
                     Save
                   </button>
                 </div>
