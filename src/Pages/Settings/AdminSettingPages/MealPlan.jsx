@@ -39,7 +39,7 @@ function MealPlan() {
 
   const handleSave = () => {
     if (fields.status === "DEFAULT" || fields.name === "") {
-      toast.error("Please Fill All the Fields Correctly !!");
+      toast.error("Please Fill All the Fields Correctly");
     } else {
       if (stat == "Add") {
         axios
@@ -47,7 +47,7 @@ function MealPlan() {
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
-              toast.success("Meal Plan Added Successfully !!!");
+              toast.success("Meal Plan Added Successfully");
               setOpen(false);
             }
           })
@@ -62,7 +62,7 @@ function MealPlan() {
     axios
       .delete(`http://test.seoconsole.net/api/v1/mealplan/${fields.id}`)
       .then((response) => {
-        toast.success("Meal Plan Deleted Successfully !!!");
+        toast.success("Meal Plan Deleted Successfully");
         setReload(!reload);
         setOpen(false);
       })
@@ -78,7 +78,7 @@ function MealPlan() {
         status: fields.status,
       })
       .then((response) => {
-        toast.success("Meal Plan Updated Successfully !!!");
+        toast.success("Meal Plan Updated Successfully");
         setReload(!reload);
         setClick(true);
         setOpen(false);

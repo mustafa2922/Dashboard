@@ -22,6 +22,9 @@ import "./Hotel.css";
 import HotelPrice from "./HotelTariff";
 import ImageModal from "../../../../Components/imageModal";
 import axios from "axios";
+import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
+import { Field } from "formik";
+import { toast } from "react-toastify";
 
 const destinations = [];
 
@@ -34,7 +37,7 @@ function Hotel() {
     address: "",
     contact_no: "",
     details: "",
-    hotelImage: "",
+    // hotelImage: "",  baad may active karni hay
     tarif_valid_from: "",
     tarif_valid_to: "",
     contact_person: "",
@@ -52,10 +55,13 @@ function Hotel() {
   const [hotelName, sethotelName] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const [bankOpen, setBankOpen] = useState(false);
-  const [able, setAble] = useState(true);
   const [imgModal, setImgModal] = useState(false);
   const [destinationVal, setDestinationVal] = useState("");
   const [reload, setReload] = useState(false);
+  const [click, setClick] = useState(true);
+
+  const [showFromDate, setShowFromDate] = useState(dayjs());
+  const [showToDate, setShowToDate] = useState(dayjs());
 
   const showMatches = (input) => {
     return destinations.filter((item) => {
@@ -67,14 +73,19 @@ function Hotel() {
 
   const handleClose = (name) => {
     if (name === "modal") {
+      setClick(true);
       setOpen(false);
     } else if (name === "tarif") {
       setTarifOpen(false);
     } else if (name === "bank") {
       setBankOpen(false);
-      setAble(true);
+      setClick(true);
     }
   };
+
+  const handleDelete = () => {};
+
+  const handleUpdate = () => {};
 
   const [gridApi, setGridApi] = useState(null);
 
@@ -105,13 +116,13 @@ function Hotel() {
     },
     {
       headerName: "Category",
-      field: "categodry",
+      field: "category",
       flex: 1.18,
       cellRenderer: (params) => {
         return (
           <ReactStars
             count={5}
-            value={params.value}
+            value={Number(params.value)}
             edit={false}
             size={20}
             activeColor="#ffd700"
@@ -159,12 +170,12 @@ function Hotel() {
         return (
           <div
             className={`flex items-center justify-center w-28 h-6 text-white font-bold rounded-md ${
-              dayjs(params.data.tarif_valid_to, "DD-MM-YYYY").isBefore(
+              dayjs(params.data.tarif_valid_to, "YYYY-MM-DD").isBefore(
                 dayjs(),
                 "day"
               )
-                ? "bg-red-500"
-                : "bg-green-500"
+                ? "bg-red-600"
+                : "bg-green-600"
             } `}
           >
             {formattedDate}
@@ -186,9 +197,9 @@ function Hotel() {
         return (
           <div
             className={`flex items-center justify-center w-28 h-6 text-white font-bold rounded-md ${
-              dayjs(params.value, "DD-MM-YYYY").isBefore(dayjs(), "day")
-                ? "bg-red-500"
-                : "bg-green-500"
+              dayjs(params.value, "YYYY-MM-DD").isBefore(dayjs(), "day")
+                ? "bg-red-600"
+                : "bg-green-600"
             } `}
           >
             {formattedDate}
@@ -255,6 +266,24 @@ function Hotel() {
         return (
           <div
             onClick={() => {
+              setHotelFields({
+                property_type: params.data.property_type,
+                name:  params.data.name,
+                category:  params.data.category,
+                destination_id: destinations.some((obj => obj.id === params.data.destination_id)),
+                address:  params.data.address,
+                contact_no:  params.data.contact_no,
+                details:  params.data.details,
+                // hotelImage: "",  baad may active karni hay
+                tarif_valid_from:  params.data.tarif_valid_from,
+                tarif_valid_to:  params.data.tarif_valid_to,
+                contact_person:  params.data.contact_person,
+                mob_no_1:  params.data.mob_no_1,
+                mob_no_2:  params.data.mob_no_2,
+                reservation_email:  params.data.reservation_email,
+                website_link:  params.data.website_link,
+                status:  params.data.status,
+              });
               setOpen(true);
               setStat("Edit");
             }}
@@ -269,19 +298,6 @@ function Hotel() {
       },
     },
   ]);
-
-  const handleSave = () => {
-    setAble(false);
-    console.log(hotelFields);
-    axios
-      .post("http://test.seoconsole.net/api/v1/accomodation", hotelFields)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   const onGridReady = (params) => {
     setGridApi(params.api);
@@ -325,20 +341,53 @@ function Hotel() {
     }
   };
 
+  const handleSave = () => {
+    if (
+      hotelFields.address !== "" &&
+      hotelFields.category !== "DEFAULT" &&
+      hotelFields.contact_no !== "" &&
+      hotelFields.contact_person !== "" &&
+      hotelFields.destination_id !== "" &&
+      hotelFields.details !== "" &&
+      hotelFields.mob_no_1 !== "" &&
+      hotelFields.mob_no_2 !== "" &&
+      hotelFields.name !== "" &&
+      hotelFields.property_type !== "DEFAULT" &&
+      hotelFields.reservation_email !== "" &&
+      hotelFields.status !== "DEFAULT"
+    ) {
+      axios
+        .post("http://test.seoconsole.net/api/v1/accomodation", hotelFields)
+        .then((res) => {
+          console.log(res.data);
+          toast.success("Data Added Successfully");
+          setReload(!reload);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      toast.error("Please Fill All Fields Correctly");
+    }
+  };
+
   useEffect(() => {
     const getData = () => {
       axios
         .get("http://test.seoconsole.net/api/v1/accomodation")
         .then((response) => {
           setRow(response.data.reverse());
-        });
+        }),
+        [reload];
     };
 
     const getDestinations = () => {
       axios
         .get("http://test.seoconsole.net/api/v1/destination")
         .then((response) => {
-          response.data.map((i,v)=>{destinations.push(i)})
+          response.data.map((i, v) => {
+            destinations.push(i);
+          });
         });
     };
 
@@ -406,7 +455,7 @@ function Hotel() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] lg:w-[70%] h-fit">
+            <div className="p-3 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] lg:w-[58%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Hotel </div>
                 <div
@@ -418,11 +467,12 @@ function Hotel() {
                   <CloseIcon />
                 </div>
               </div>
-              <div className="flex justify-between w-full mt-4 h-[90%]">
+              <div className="flex justify-between w-full mt-3 h-[90%]">
                 <div className="flex flex-col w-[48%]">
                   <select
                     value={hotelFields.property_type}
                     name="property_type"
+                    disabled={stat === "Edit" ? click : false}
                     onChange={(e) => {
                       handleChange(e);
                     }}
@@ -447,6 +497,7 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Accommodation Name"
+                      disabled={stat === "Edit" ? click : false}
                       name="name"
                       value={hotelFields.name}
                       onChange={(e) => {
@@ -459,6 +510,7 @@ function Hotel() {
 
                   <select
                     value={hotelFields.category}
+                    disabled={stat === "Edit" ? click : false}
                     name="category"
                     onChange={(e) => {
                       handleChange(e);
@@ -478,6 +530,7 @@ function Hotel() {
                   <div className="relative mt-4 w-full">
                     <TextField
                       id="outlined-basic"
+                      disabled={stat === "Edit" ? click : false}
                       size="small"
                       label="Destination"
                       variant="outlined"
@@ -496,7 +549,10 @@ function Hotel() {
                             key={index}
                             onClick={() => {
                               setDestinationVal(match.name);
-                              setHotelFields({...hotelFields , destination_id:match.id})
+                              setHotelFields({
+                                ...hotelFields,
+                                destination_id: match.id,
+                              });
                               setShowPicker(false);
                             }}
                           >
@@ -511,6 +567,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      disabled={stat === "Edit" ? click : false}
                       name="address"
                       value={hotelFields.address}
                       onChange={(e) => {
@@ -526,6 +583,7 @@ function Hotel() {
                     <PhoneInput
                       international
                       value={hotelFields.contact_no}
+                      disabled={stat === "Edit" ? click : false}
                       onChange={(e) => {
                         setHotelFields({ ...hotelFields, contact_no: e });
                       }}
@@ -537,6 +595,7 @@ function Hotel() {
                   <div className="mt-4 w-full h-fit">
                     <Textarea
                       placeholder="Accommodation Details"
+                      disabled={stat === "Edit" ? click : false}
                       minRows={2}
                       maxRows={5}
                       name="details"
@@ -559,21 +618,16 @@ function Hotel() {
                       <Input
                         id="file-input"
                         type="file"
+                        disabled={stat === "Edit" ? click : false}
                         inputProps={{ multiple: true }}
                         onChange={(e) => handleFileSelect(e)}
                         style={{ display: "none" }}
                       />
                       <div className="flex items-center gap-3">
-                        <label htmlFor="file-input">
-                          <Button
-                            variant="outlined"
-                            component="span"
-                            sx={{ height: "30px", fontSize: "10px" }}
-                          >
-                            Select Files
-                          </Button>
+                        <label className="cursor-pointer" htmlFor="file-input">
+                          <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
                         </label>
-                        <div className="hidden md:block overflow-x-auto">
+                        <div className="hidden text-sm md:block overflow-x-auto">
                           {hotelImage === ""
                             ? `Select Hotel Image`
                             : "Selected  "}
@@ -585,7 +639,7 @@ function Hotel() {
                         setImgModal(true);
                         console.log(hotelImage);
                       }}
-                      className="border border-slate-300 rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                      className="border border-slate-300 text-sm rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
                     >
                       View
                     </button>
@@ -600,16 +654,37 @@ function Hotel() {
                     <div className="custom-date-picker w-[48%]">
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <MobileDatePicker
+                          format="DD-MM-YYYY"
                           label="Tarif Valid From"
-                          defaultValue={dayjs("2022-04-17")}
+                          disabled={stat === "Edit" ? click : false}
+                          name="tarif_valid_from"
+                          value={showFromDate}
+                          onAccept={(e) => {
+                            const fromDate = dayjs(e).format("YYYY-MM-DD");
+                            setShowFromDate(e);
+                            setHotelFields({
+                              ...hotelFields,
+                              tarif_valid_from: fromDate,
+                            });
+                          }}
                         />
                       </LocalizationProvider>
                     </div>
                     <div className="custom-date-picker w-[48%]">
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <MobileDatePicker
+                          format="DD-MM-YYYY"
+                          disabled={stat === "Edit" ? click : false}
                           label="Tarif Valid To"
-                          defaultValue={dayjs("2022-04-17")}
+                          value={showToDate}
+                          onAccept={(e) => {
+                            const toDate = dayjs(e).format("YYYY-MM-DD");
+                            setShowToDate(e);
+                            setHotelFields({
+                              ...hotelFields,
+                              tarif_valid_to: toDate,
+                            });
+                          }}
                         />
                       </LocalizationProvider>
                     </div>
@@ -619,6 +694,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      disabled={stat === "Edit" ? click : false}
                       label="Contact Person"
                       name="contact_person"
                       variant="outlined"
@@ -632,6 +708,7 @@ function Hotel() {
 
                   <div className="mt-4">
                     <PhoneInput
+                      disabled={stat === "Edit" ? click : false}
                       international
                       value={hotelFields.mob_no_1}
                       onChange={(e) => {
@@ -644,6 +721,7 @@ function Hotel() {
                   <div className="mt-4">
                     <PhoneInput
                       international
+                      disabled={stat === "Edit" ? click : false}
                       value={hotelFields.mob_no_2}
                       onChange={(e) => {
                         setHotelFields({ ...hotelFields, mob_no_2: e });
@@ -657,6 +735,7 @@ function Hotel() {
                       <TextField
                         id="outlined-basic"
                         size="small"
+                        disabled={stat === "Edit" ? click : false}
                         label="Reservation Email ID"
                         name="reservation_email"
                         value={hotelFields.reservation_email}
@@ -670,6 +749,7 @@ function Hotel() {
                     <div className=" mt-4 w-[48%]">
                       <TextField
                         id="outlined-basic"
+                        disabled={stat === "Edit" ? click : false}
                         size="small"
                         name="website_link"
                         value={hotelFields.website_link}
@@ -683,6 +763,7 @@ function Hotel() {
                     </div>
                   </div>
                   <select
+                    disabled={stat === "Edit" ? click : false}
                     value={hotelFields.status}
                     name="status"
                     onChange={(e) => handleChange(e)}
@@ -691,32 +772,50 @@ function Hotel() {
                     <option value="DEFAULT" disabled={true}>
                       Accommodation Status
                     </option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
                   </select>
                 </div>
               </div>
 
               <div className="mt-4 flex justify-between items-center">
                 <div
-                  onClick={() => {
-                    handleClose("modal");
-                  }}
+                  onClick={stat === "Edit" ? handleDelete : handleClose}
                   className=" w-[48%] rounded-md h-10"
                 >
-                  <button className="hover:bg-red-900 w-full rounded-md  text-white bg-red-600 h-full flex items-center justify-center">
-                    Cancel
+                  <button
+                    className={` bg-red-600 hover:bg-red-900 w-full rounded-md  text-white h-full flex items-center justify-center`}
+                  >
+                    {stat === "Edit" ? "Delete" : "Cancel"}
                   </button>
                 </div>
 
                 <div className=" w-[48%] rounded-md h-10  ">
                   <button
-                    onClick={() => {
-                      handleSave();
-                    }}
-                    className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]"
+                    onClick={
+                      stat === "Edit"
+                        ? click
+                          ? () => {
+                              setClick(false);
+                            }
+                          : handleUpdate
+                        : handleSave
+                    }
+                    className={`w-full rounded-md h-full flex ${
+                      stat === "Edit"
+                        ? click
+                          ? "hover:bg-blue-900"
+                          : "hover:bg-green-900"
+                        : "hover:bg-green-900"
+                    } items-center justify-center text-white ${
+                      stat === "Edit"
+                        ? click
+                          ? "bg-blue-600"
+                          : "bg-green-600"
+                        : "bg-green-600"
+                    }`}
                   >
-                    Save
+                    {stat === "Edit" ? (click ? "Edit" : "Update") : "Save"}
                   </button>
                 </div>
               </div>
@@ -770,7 +869,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      disabled={able}
+                      disabled={click}
                       label="Account Name"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -780,7 +879,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      disabled={able}
+                      disabled={click}
                       label="Account No"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -790,7 +889,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      disabled={able}
+                      disabled={click}
                       label="Bank Name"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -801,7 +900,7 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Branch Name"
-                      disabled={able}
+                      disabled={click}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -811,7 +910,7 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="IFSCI Code"
-                      disabled={able}
+                      disabled={click}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -824,7 +923,7 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Account Name"
-                      disabled={able}
+                      disabled={click}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -833,7 +932,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      disabled={able}
+                      disabled={click}
                       label="Account No"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -844,7 +943,7 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Bank Name"
-                      disabled={able}
+                      disabled={click}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -853,7 +952,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      disabled={able}
+                      disabled={click}
                       label="Branch Name"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -864,7 +963,7 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="IFSCI Code"
-                      disabled={able}
+                      disabled={click}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -878,7 +977,7 @@ function Hotel() {
                   }}
                   className=" w-[49%] rounded-md h-10"
                 >
-                  <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
+                  <button className="hover:bg-red-900 w-full rounded-md  text-white bg-red-600 h-full flex items-center justify-center">
                     Cancel
                   </button>
                 </div>
@@ -886,15 +985,15 @@ function Hotel() {
                 <div className=" w-[49%] rounded-md h-10  ">
                   <button
                     onClick={() => {
-                      setAble(false);
+                      setClick(false);
                     }}
                     className={`w-full rounded-md h-full flex ${
-                      able
+                      click
                         ? "hover:bg-blue-900 bg-blue-700"
                         : "hover:bg-green-900 bg-green-700"
                     }  items-center justify-center text-white `}
                   >
-                    {able ? "Edit" : "Save"}
+                    {click ? "Edit" : "Save"}
                   </button>
                 </div>
               </div>
@@ -907,49 +1006,3 @@ function Hotel() {
 }
 
 export default Hotel;
-
-// 1- property Type
-
-// {
-// Hotel
-// Houseboat
-// Guest House
-// Resort
-// Lodge
-// Homestay
-// Motel
-// Cottage
-// Villa
-// Camping
-// }
-
-// view {Bank Detail}
-// Account Name
-// Account No.
-// Bank Name
-// Branch Name
-// IFSCI Code
-
-// tarif edit allingnment
-
-// tarif --> modal
-
-// tariff date if < current date --> red
-
-// Destination --> Drop Down
-
-// driver date if < current date --> red
-
-// details --> height
-
-// day itinary -> title pehlay karna hay
-
-// vehicle details spacing
-
-// vehicle price 1st ---> per day
-
-// driver id card ---> image field
-
-// price validty --> 2 cols from,to
-
-// Mail settings

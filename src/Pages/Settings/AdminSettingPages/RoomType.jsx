@@ -38,18 +38,17 @@ function RoomType() {
   };
 
   const handleSave = () => {
+    console.log("response.data");
     if (fields.status === "DEFAULT" || fields.name === "") {
-      toast.error("Please Fill All the Fields Correctly !!");
+      toast.error("Please Fill All the Fields Correctly");
     } else {
       if (stat == "Add") {
         axios
           .post("http://test.seoconsole.net/api/v1/roomtype", fields)
           .then((response) => {
-            if (response.data == "success") {
-              setReload(!reload);
-              toast.success("Meal Plan Added Successfully !!!");
-              setOpen(false);
-            }
+            setReload(!reload);
+            toast.success("Room Type Added Successfully");
+            setOpen(false);
           })
           .catch((error) => {
             console.log(error);
@@ -62,7 +61,7 @@ function RoomType() {
     axios
       .delete(`http://test.seoconsole.net/api/v1/roomtype/${fields.id}`)
       .then((response) => {
-        toast.success("Meal Plan Deleted Successfully !!!");
+        toast.success("Room Type Deleted Successfully");
         setReload(!reload);
         setOpen(false);
       })
@@ -78,7 +77,7 @@ function RoomType() {
         status: fields.status,
       })
       .then((response) => {
-        toast.success("Meal Plan Updated Successfully !!!");
+        toast.success("Room Type Updated Successfully");
         setReload(!reload);
         setClick(true);
         setOpen(false);
@@ -320,11 +319,11 @@ function RoomType() {
                     <button
                       onClick={
                         stat === "Edit"
-                          ? click
+                          ? (click
                             ? () => {
                                 setClick(false);
                               }
-                            : handleUpdate
+                            : handleUpdate)
                           : handleSave
                       }
                       className={`w-full rounded-md h-full flex ${

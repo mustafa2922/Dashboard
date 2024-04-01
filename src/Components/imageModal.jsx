@@ -23,7 +23,7 @@ function ImageModal({ state, setState , image }) {
           </div>
         </div>
         <div className="mt-4 w-full">
-            { image == '' ? <div className="text-center text-red-700" > No Image Is Selected </div> : <img className="h-full w-full object-contain" src={image} alt="image" />}
+            { image == '' ? <div className="text-center text-red-700" > No Image Selected </div> : <img className="h-full w-full object-contain" src={image} alt="image" />}
         </div>
       </div>
     </Modal>
