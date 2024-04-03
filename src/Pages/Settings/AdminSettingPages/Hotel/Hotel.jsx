@@ -12,7 +12,7 @@ import TextField from "@mui/material/TextField";
 import ReactStars from "react-rating-stars-component";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import Textarea from "@mui/joy/Textarea";
-import { Button, Input } from "@mui/material";
+import { Input } from "@mui/material";
 import PhoneInput from "react-phone-number-input";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -23,12 +23,13 @@ import HotelPrice from "./HotelTariff";
 import ImageModal from "../../../../Components/imageModal";
 import axios from "axios";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
-import { Field } from "formik";
 import { toast } from "react-toastify";
 
-const destinations = [];
+let destinations = [];
 
 function Hotel() {
+  const [id, setId] = useState("");
+
   const [hotelFields, setHotelFields] = useState({
     property_type: "DEFAULT",
     name: "",
@@ -48,6 +49,8 @@ function Hotel() {
     status: "DEFAULT",
   });
 
+  console.log(destinations);
+
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
@@ -59,39 +62,6 @@ function Hotel() {
   const [destinationVal, setDestinationVal] = useState("");
   const [reload, setReload] = useState(false);
   const [click, setClick] = useState(true);
-
-  const [showFromDate, setShowFromDate] = useState(dayjs());
-  const [showToDate, setShowToDate] = useState(dayjs());
-
-  const showMatches = (input) => {
-    return destinations.filter((item) => {
-      return item.name.toLowerCase().includes(input.toLowerCase());
-    });
-  };
-
-  const matchArr = showMatches(destinationVal);
-
-  const handleClose = (name) => {
-    if (name === "modal") {
-      setClick(true);
-      setOpen(false);
-    } else if (name === "tarif") {
-      setTarifOpen(false);
-    } else if (name === "bank") {
-      setBankOpen(false);
-      setClick(true);
-    }
-  };
-
-  const handleDelete = () => {};
-
-  const handleUpdate = () => {};
-
-  const [gridApi, setGridApi] = useState(null);
-
-  const [hotelImage, setHotelImage] = useState("");
-
-  const [stat, setStat] = useState("");
 
   const [column, setColumn] = useState([
     {
@@ -268,24 +238,35 @@ function Hotel() {
             onClick={() => {
               setHotelFields({
                 property_type: params.data.property_type,
-                name:  params.data.name,
-                category:  params.data.category,
-                destination_id: destinations.some((obj => obj.id === params.data.destination_id)),
-                address:  params.data.address,
-                contact_no:  params.data.contact_no,
-                details:  params.data.details,
+                name: params.data.name,
+                category: params.data.category,
+                destination_id: destinations.some(
+                  (obj) => obj.id === params.data.destination_id
+                ),
+                address: params.data.address,
+                contact_no: params.data.contact_no,
+                details: params.data.details,
                 // hotelImage: "",  baad may active karni hay
-                tarif_valid_from:  params.data.tarif_valid_from,
-                tarif_valid_to:  params.data.tarif_valid_to,
-                contact_person:  params.data.contact_person,
-                mob_no_1:  params.data.mob_no_1,
-                mob_no_2:  params.data.mob_no_2,
-                reservation_email:  params.data.reservation_email,
-                website_link:  params.data.website_link,
-                status:  params.data.status,
+                tarif_valid_from: params.data.tarif_valid_from,
+                tarif_valid_to: params.data.tarif_valid_to,
+                contact_person: params.data.contact_person,
+                mob_no_1: params.data.mob_no_1,
+                mob_no_2: params.data.mob_no_2,
+                reservation_email: params.data.reservation_email,
+                website_link: params.data.website_link,
+                status: params.data.status,
               });
               setOpen(true);
+              setShowFromDate(
+                dayjs(params.data.tarif_valid_from, "YYYY-MM-DD")
+              );
+              setShowToDate(dayjs(params.data.tarif_valid_to, "YYYY-MM-DD"));
               setStat("Edit");
+              const dest = destinations.find(
+                (obj) => obj.id == params.data.destination_id
+              );
+              setDestinationVal(dest.name);
+              setId(params.data.id);
             }}
             className="flex items-center justify-center w-full h-full"
           >
@@ -298,6 +279,67 @@ function Hotel() {
       },
     },
   ]);
+
+  const [showFromDate, setShowFromDate] = useState(dayjs());
+  const [showToDate, setShowToDate] = useState(dayjs());
+
+  const showMatches = (input) => {
+    return destinations.filter((item) => {
+      if (input == "") {
+        return false;
+      }
+      return item.name.toLowerCase().includes(input.toLowerCase());
+    });
+  };
+
+  const matchArr = showMatches(destinationVal);
+
+  const handleClose = (name) => {
+    if (name === "modal") {
+      setClick(true);
+      setOpen(false);
+    } else if (name === "tarif") {
+      setTarifOpen(false);
+    } else if (name === "bank") {
+      setBankOpen(false);
+      setClick(true);
+    }
+  };
+
+  const handleDelete = () => {
+    axios
+      .delete(`http://test.seoconsole.net/api/v1/accomodation/${id}`)
+      .then((response) => {
+        toast.success("Accomodation Deleted Successfully");
+        setReload(!reload);
+        handleClose("modal");
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  };
+
+  const handleUpdate = () => {
+    console.log("update say ---> ", hotelFields);
+    console.log(id);
+    axios
+      .put(`http://test.seoconsole.net/api/v1/accomodation/${id}`, hotelFields)
+      .then((response) => {
+        toast.success("Accomodation Updated Successfully");
+        setReload(!reload);
+        setClick(true);
+        handleClose("modal");
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  };
+
+  const [gridApi, setGridApi] = useState(null);
+
+  const [hotelImage, setHotelImage] = useState("");
+
+  const [stat, setStat] = useState("");
 
   const onGridReady = (params) => {
     setGridApi(params.api);
@@ -359,9 +401,9 @@ function Hotel() {
       axios
         .post("http://test.seoconsole.net/api/v1/accomodation", hotelFields)
         .then((res) => {
-          console.log(res.data);
           toast.success("Data Added Successfully");
           setReload(!reload);
+          handleClose("modal");
         })
         .catch((err) => {
           console.log(err);
@@ -385,9 +427,7 @@ function Hotel() {
       axios
         .get("http://test.seoconsole.net/api/v1/destination")
         .then((response) => {
-          response.data.map((i, v) => {
-            destinations.push(i);
-          });
+          destinations = response.data;
         });
     };
 
@@ -422,6 +462,27 @@ function Hotel() {
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
+                setDestinationVal("");
+                setShowFromDate(dayjs());
+                setShowToDate(dayjs());
+                setHotelFields({
+                  property_type: "DEFAULT",
+                  name: "",
+                  category: "DEFAULT",
+                  destination_id: "",
+                  address: "",
+                  contact_no: "",
+                  details: "",
+                  // hotelImage: "",  baad may active karni hay
+                  tarif_valid_from: "",
+                  tarif_valid_to: "",
+                  contact_person: "",
+                  mob_no_1: "",
+                  mob_no_2: "",
+                  reservation_email: "",
+                  website_link: "",
+                  status: "DEFAULT",
+                });
               }}
               className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
@@ -455,7 +516,7 @@ function Hotel() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-3 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] lg:w-[58%] h-fit">
+            <div className="p-3 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[90%] lg:w-[55%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Hotel </div>
                 <div
@@ -607,7 +668,7 @@ function Hotel() {
                         width: "100%",
                         backgroundColor: "#fff",
                         borderColor: "#d3d3d3",
-                        height: "130px",
+                        height: "100px",
                       }}
                     />
                   </div>
@@ -639,7 +700,7 @@ function Hotel() {
                         setImgModal(true);
                         console.log(hotelImage);
                       }}
-                      className="border border-slate-300 text-sm rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                      className="border border-slate-300 text-xs rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
                     >
                       View
                     </button>
@@ -780,7 +841,13 @@ function Hotel() {
 
               <div className="mt-4 flex justify-between items-center">
                 <div
-                  onClick={stat === "Edit" ? handleDelete : handleClose}
+                  onClick={
+                    stat === "Edit"
+                      ? handleDelete
+                      : () => {
+                          handleClose("modal");
+                        }
+                  }
                   className=" w-[48%] rounded-md h-10"
                 >
                   <button

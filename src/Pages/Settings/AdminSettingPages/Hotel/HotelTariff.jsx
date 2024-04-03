@@ -121,44 +121,68 @@ function HotelPrice({ name, MainSetOpen }) {
       headerName: "Single",
       field: "Single",
       flex: 0.4,
+      cellRenderer:(params)=>{return (
+        <div>{`₹ ${params.data.CNB}`}</div>
+      )}
     },
     {
       headerName: "Double",
       field: "Double",
       flex: 0.45,
+      cellRenderer:(params)=>{return (
+        <div>{`₹ ${params.data.CNB}`}</div>
+      )}
     },
     {
       headerName: "Triple",
       field: "Triple",
       flex: 0.4,
+      cellRenderer:(params)=>{return (
+        <div>{`₹ ${params.data.CNB}`}</div>
+      )}
     },
     {
       headerName: "Quad",
       field: "Quad",
       flex: 0.35,
+      cellRenderer:(params)=>{return (
+        <div>{`₹ ${params.data.CNB}`}</div>
+      )}
     },
     {
       headerName: "CWB",
       field: "CWB",
       flex: 0.35,
+      cellRenderer:(params)=>{return (
+        <div>{`₹ ${params.data.CNB}`}</div>
+      )}
     },
     {
       headerName: "CNB (Above 5 yrs)",
       filter:false,
       field: "CNB",
       flex: 0.7,
+      cellRenderer:(params)=>{return (
+        <div>{`₹ ${params.data.CNB}`}</div>
+      )}
     },
     {
       headerName: "CNB (Below 5 yrs)",
       filter:false,
       field: "CNB",
       flex: 0.7,
+      cellRenderer:(params)=>{return (
+        <div>{`₹ ${params.data.CNB}`}</div>
+      )}
     },
     {
       headerName: "INF (Below 3 yrs)",
       filter:false,
       field: "CNB",
       flex: 0.7,
+      cellRenderer:(params)=>{return (
+        <div>{`₹ ${params.data.CNB}`}</div>
+      )}
     },
     {
       sortable: false,

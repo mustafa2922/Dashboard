@@ -43,7 +43,7 @@ function MealPlan() {
     } else {
       if (stat == "Add") {
         axios
-          .post("http://test.seoconsole.net/api/v1/mealplan", fields)
+          .post("http://test.seoconsole.net/api/v1/mealplan", {name:fields.name , status:fields.status})
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);

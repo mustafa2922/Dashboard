@@ -220,15 +220,13 @@ function Driver() {
         return (
           <div className="ml-[-10px] flex w-full items-center justify-between h-full p-1">
             <div className="h-full leading-4 w-[40%] whitespace-pre-wrap flex items-center ">
-              {" "}
-              {params.data.name}{" "}
+              {params.data.name}
             </div>
             <div className="h-[90%] w-[48%]">
-              {" "}
               <img
                 className="h-full w-full object-contain"
                 src={dummyDriver}
-              />{" "}
+              />
             </div>
           </div>
         );
