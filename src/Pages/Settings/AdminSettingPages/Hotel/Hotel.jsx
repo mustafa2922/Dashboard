@@ -49,8 +49,6 @@ function Hotel() {
     status: "DEFAULT",
   });
 
-  console.log(destinations);
-
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
@@ -236,13 +234,14 @@ function Hotel() {
         return (
           <div
             onClick={() => {
+              const dest = destinations.find(
+                (obj) => obj.id == params.data.destination_id
+              );
               setHotelFields({
                 property_type: params.data.property_type,
                 name: params.data.name,
                 category: params.data.category,
-                destination_id: destinations.some(
-                  (obj) => obj.id === params.data.destination_id
-                ),
+                destination_id: dest.id,
                 address: params.data.address,
                 contact_no: params.data.contact_no,
                 details: params.data.details,
@@ -262,9 +261,6 @@ function Hotel() {
               );
               setShowToDate(dayjs(params.data.tarif_valid_to, "YYYY-MM-DD"));
               setStat("Edit");
-              const dest = destinations.find(
-                (obj) => obj.id == params.data.destination_id
-              );
               setDestinationVal(dest.name);
               setId(params.data.id);
             }}
@@ -320,8 +316,6 @@ function Hotel() {
   };
 
   const handleUpdate = () => {
-    console.log("update say ---> ", hotelFields);
-    console.log(id);
     axios
       .put(`http://test.seoconsole.net/api/v1/accomodation/${id}`, hotelFields)
       .then((response) => {
@@ -372,10 +366,12 @@ function Hotel() {
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
+    console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
         setHotelImage(reader.result);
+        console.log(reader.result)
       };
       reader.readAsDataURL(file);
     } else {
@@ -674,6 +670,7 @@ function Hotel() {
                   </div>
                 </div>
                 <div className="flex flex-col w-[48%]">
+                  
                   <div className=" flex items-center w-full justify-between">
                     <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
                       <Input
@@ -698,7 +695,6 @@ function Hotel() {
                     <button
                       onClick={() => {
                         setImgModal(true);
-                        console.log(hotelImage);
                       }}
                       className="border border-slate-300 text-xs rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
                     >

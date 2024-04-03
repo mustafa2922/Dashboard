@@ -3,157 +3,116 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import "react-phone-number-input/style.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
-import EditNoteIcon from "@mui/icons-material/EditNote";
+import EditIcon from "@mui/icons-material/Edit";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TextField from "@mui/material/TextField";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-
-const data = [
-  {
-    id: "12EF34RC1",
-    by: "JaffarSaleem.com",
-    date: "15-03-2024",
-    company: "Snowmen Tours",
-    fname: "Jhon",
-    lname: "Doe",
-    rank: "Mr",
-    email: "jhon@example.com",
-    mobile: "123456789",
-    location: "London",
-  },
-  {
-    id: "98AB76YZ3",
-    by: "JaffarSaleem.com",
-    date: "16-03-2024",
-    company: "Adventure Seekers",
-    fname: "Emma",
-    lname: "Smith",
-    rank: "Ms",
-    email: "emma@example.com",
-    mobile: "987654321",
-    location: "New York",
-  },
-  {
-    id: "45CD67FG8",
-    by: "JaffarSaleem.com",
-    date: "17-03-2024",
-    company: "Global Explorers",
-    fname: "Michael",
-    lname: "Johnson",
-    rank: "Mr",
-    email: "michael@example.com",
-    mobile: "555123789",
-    location: "Sydney",
-  },
-  {
-    id: "23GH89IJ5",
-    by: "JaffarSaleem.com",
-    date: "18-03-2024",
-    company: "Wanderlust Adventures",
-    fname: "Sophia",
-    lname: "Williams",
-    rank: "Ms",
-    email: "sophia@example.com",
-    mobile: "444777333",
-    location: "Paris",
-  },
-  {
-    id: "67KL12MN0",
-    by: "JaffarSaleem.com",
-    date: "19-03-2024",
-    company: "Excursion Experts",
-    fname: "William",
-    lname: "Brown",
-    rank: "Mr",
-    email: "william@example.com",
-    mobile: "999888777",
-    location: "Tokyo",
-  },
-  {
-    id: "34OP56QR7",
-    by: "JaffarSaleem.com",
-    date: "20-03-2024",
-    company: "Voyage Ventures",
-    fname: "Olivia",
-    lname: "Martinez",
-    rank: "Ms",
-    email: "olivia@example.com",
-    mobile: "333222111",
-    location: "Rome",
-  },
-  {
-    id: "89ST23UV4",
-    by: "JaffarSaleem.com",
-    date: "21-03-2024",
-    company: "Journey Journeys",
-    fname: "James",
-    lname: "Garcia",
-    rank: "Mr",
-    email: "james@example.com",
-    mobile: "777666555",
-    location: "Dubai",
-  },
-  {
-    id: "12WX34YZ5",
-    by: "JaffarSaleem.com",
-    date: "22-03-2024",
-    company: "Discovery Destinations",
-    fname: "Ava",
-    lname: "Lopez",
-    rank: "Ms",
-    email: "ava@example.com",
-    mobile: "222444666",
-    location: "Berlin",
-  },
-  {
-    id: "56CD78EF9",
-    by: "JaffarSaleem.com",
-    date: "23-03-2024",
-    company: "Odyssey Outings",
-    fname: "Noah",
-    lname: "Hernandez",
-    rank: "Mr",
-    email: "noah@example.com",
-    mobile: "888999000",
-    location: "Cairo",
-  },
-  {
-    id: "78GH90IJ1",
-    by: "JaffarSaleem.com",
-    date: "24-03-2024",
-    company: "Roaming Routes",
-    fname: "Isabella",
-    lname: "Young",
-    rank: "Ms",
-    email: "isabella@example.com",
-    mobile: "111222333",
-    location: "Moscow",
-  },
-];
+import dayjs from "dayjs";
+import { toast } from "react-toastify";
 
 function Suppliers() {
   const [search, setSearch] = useState("");
-  const [row, setRow] = useState(data);
+  const [row, setRow] = useState();
+  const [reload, setReload] = useState(false);
   const [open, setOpen] = useState(false);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setClick(true);
+    setOpen(false);
+  };
   const [gridApi, setGridApi] = useState(null);
-  const [value, setValue] = useState();
+  const [click, setClick] = useState(true);
+  const [id, setId] = useState();
 
   const [stat, setStat] = useState("");
+
+  const [fields, setFields] = useState({
+    title: "DEFAULT",
+    first_name: "",
+    last_name: "",
+    email: "",
+    number: "",
+    city: "",
+    company: "",
+    address: "",
+    status: "DEFAULT",
+  });
+
+  const handleChange = (event) => {
+    return setFields({ ...fields, [event.target.name]: event.target.value });
+  };
+
+  const handleSave = () => {
+    if (
+      fields.status === "DEFAULT" ||
+      fields.first_name === "" ||
+      fields.title === "DEFAULT" ||
+      fields.last_name === "" ||
+      fields.company === "" ||
+      fields.city === "" ||
+      fields.address === "" ||
+      fields.email === "" ||
+      fields.number === ""
+    ) {
+      toast.error("Please Fill All the Fields Correctly");
+    } else {
+      if (stat == "Add") {
+        axios
+          .post("http://test.seoconsole.net/api/v1/supplier", fields)
+          .then((response) => {
+            if (response.data == "success") {
+              setReload(!reload);
+              toast.success("Supplier Added Successfully");
+              setOpen(false);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+  };
+
+  const handleDelete = () => {
+    axios
+      .delete(`http://test.seoconsole.net/api/v1/supplier/${id}`)
+      .then((response) => {
+        toast.success("Supplier Deleted Successfully");
+        setReload(!reload);
+        setOpen(false);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  };
+
+  const handleUpdate = () => {
+    axios
+      .put(`http://test.seoconsole.net/api/v1/supplier/${id}`, fields)
+      .then((response) => {
+        toast.success("Supplier Updated Successfully");
+        setReload(!reload);
+        setClick(true);
+        setOpen(false);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  };
 
   const [column, setColumn] = useState([
     {
       headerName: "#",
       field: "serialNumber",
-      flex: 0.28,
+      flex: 0.2,
       sortable: false,
       filter: false,
       cellRenderer: (params) => {
-        return params.rowIndex + 1;
+        return <div className="ml-[-8px]">{params.rowIndex + 1}</div>;
       },
     },
     {
@@ -163,7 +122,7 @@ function Suppliers() {
     {
       headerName: "Name",
       valueGetter: (params) => {
-        return `${params.data.rank} ${params.data.fname} ${params.data.lname}`;
+        return `${params.data.title} ${params.data.first_name} ${params.data.last_name}`;
       },
     },
     {
@@ -172,45 +131,80 @@ function Suppliers() {
     },
     {
       headerName: "Mobile",
-      field: "mobile",
+      field: "number",
     },
     {
       headerName: "Location",
-      field: "location",
+      field: "city",
+      flex: 0.8,
     },
     {
-      headerName: "By",
-      field: "by",
-      flex: 1.2,
+      headerName: "Status",
+      field: "status",
+      flex: 0.8,
       cellRenderer: (params) => {
         return (
-          <div className="flex items-center justify-start gap-2 w-full h-full">
-            <div className="p-1 rounded-full border border-black h-6 w-6 flex items-center justify-center">
-              {params.value[0]}
+          <div className="flex items-center justify-center w-full h-full">
+            <div
+              className={`flex items-center justify-center w-14 ${
+                params.value === "1" ? "bg-green-600" : "bg-red-600"
+              }  text-white rounded-md h-[70%]`}
+            >
+              {params.value == "1" ? "Active" : "Inactive"}
             </div>
-            <div>{params.value}</div>
           </div>
         );
       },
     },
     {
-      headerName: "Date",
-      field: "date",
+      headerName: "Updated By",
+      flex: 1.35,
+      field: "by",
+      cellRenderer: (params) => {
+        return (
+          <div className="flex items-center justify-start gap-2 w-full h-full">
+            <div className="p-1 rounded-full border border-black h-6 w-6 flex items-center justify-center">
+              J
+            </div>
+            <div className="w-0">JaffarSaleem@gmail.com</div>
+          </div>
+        );
+      },
+    },
+    {
+      headerName: "Created At",
+      field: "created_at",
+      flex: 0.7,
+      valueGetter: (params) => {
+        return `${dayjs(params.data.created_at).format("DD-MM-YYYY")}`;
+      },
     },
     {
       sortable: false,
       filter: false,
-      flex: 0.3,
+      flex: 0.2,
       cellRenderer: (params) => {
         return (
           <div
             onClick={() => {
               setOpen(true);
               setStat("Edit");
+              setId(params.data.id);
+              setFields({
+                title: params.data.title,
+                first_name: params.data.first_name,
+                last_name: params.data.last_name,
+                email: params.data.email,
+                number: params.data.number,
+                city: params.data.city,
+                company: params.data.company,
+                address: params.data.address,
+                status: params.data.status,
+              });
             }}
             className="flex items-center justify-center w-full h-full"
           >
-            <EditNoteIcon
+            <EditIcon
               className="hover:bg-black hover:text-white rounded-full border p-1 border-black"
               style={{ fontSize: "25px" }}
             />
@@ -222,7 +216,6 @@ function Suppliers() {
 
   const onGridReady = (params) => {
     setGridApi(params.api);
-    setRow(data);
   };
 
   const ExportData = () => {
@@ -243,11 +236,23 @@ function Suppliers() {
     flex: 1,
   };
 
+  useEffect(() => {
+    const getData = () => {
+      axios
+        .get("http://test.seoconsole.net/api/v1/supplier")
+        .then((response) => {
+          setRow(response.data.reverse());
+        });
+    };
+
+    getData();
+  }, [reload]);
+
   return (
     <div className="h-full">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
         <div className="font-bold"> Suppliers </div>
-        <div className="flex justify-center items-center gap-3 h-full">
+        <div className="flex justify-center  sm:w-[65%] md:w-[55%] lg:w-[43%]  w-[90%] items-center gap-3 h-full">
           <button
             onClick={() => {
               ExportData();
@@ -262,16 +267,27 @@ function Suppliers() {
               setSearch(e.target.value);
               quickFilter(e.target.value);
             }}
-            className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[50%] focus:outline-none focus:border focus:border-black"
+            className="border border-slate-300 h-[80%] px-2 rounded-md text-sm w-[60%] focus:outline-none focus:border focus:border-black"
             placeholder="Search by anything...."
           />
-          <div className="h-[80%]">
+          <div className="w-[40%] h-[80%]">
             <button
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
+                setFields({
+                  title: "DEFAULT",
+                  first_name: "",
+                  last_name: "",
+                  email: "",
+                  number: "",
+                  city: "",
+                  company: "",
+                  address: "",
+                  status: "DEFAULT",
+                });
               }}
-              className="border border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
+              className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
               <span className="sm:block hidden">Add Supplier</span>
               <span className="sm:hidden block">
@@ -282,10 +298,8 @@ function Suppliers() {
         </div>
       </div>
 
-      <div className="h-full w-full overflow-x-auto">
-        <div
-          className="ag-theme-quartz w-[1500px] h-full lg:w-full"
-        >
+      <div className="h-[91.5%] w-full overflow-x-auto">
+        <div className="ag-theme-quartz w-[1500px] h-full xl:w-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -293,6 +307,7 @@ function Suppliers() {
             defaultColDef={defaultColDef}
             enableBrowserTooltips={true}
             pagination={true}
+            paginationPageSize={20}
           />
 
           <Modal
@@ -302,7 +317,7 @@ function Suppliers() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[65%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[50%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Supplier </div>
                 <div className="cursor-pointer" onClick={handleClose}>
@@ -310,8 +325,17 @@ function Suppliers() {
                 </div>
               </div>
               <div className="flex justify-between mt-4 h-[90%]">
-                <div className="w-[48%] ">
-                  <select className="px-2 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                <div className="w-[49%] ">
+                  <select
+                    value={fields.title}
+                    name="title"
+                    disabled={stat === "Edit" ? click : false}
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
+                    className="px-2 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
+                  >
+                    <option value="DEFAULT">Title</option>
                     <option value="Mr.">Mr.</option>
                     <option value="Mrs.">Mrs.</option>
                     <option value="Ms.">Ms.</option>
@@ -319,25 +343,52 @@ function Suppliers() {
                     <option value="Prof.">Prof.</option>
                   </select>
 
-                  <div className=" mt-4 w-full">
-                    <TextField
-                      id="outlined-basic"
-                      size="small"
-                      label="First Name"
-                      variant="outlined"
-                      sx={{ width: "100%" }}
-                    />
+                  <div className="flex flex-row items-center justify-between mt-4 w-full">
+                    <div className="w-[49%]">
+                      <TextField
+                        id="outlined-basic"
+                        size="small"
+                        label="First Name"
+                        name="first_name"
+                        disabled={stat === "Edit" ? click : false}
+                        onChange={(e) => {
+                          handleChange(e);
+                        }}
+                        value={fields.first_name}
+                        variant="outlined"
+                        sx={{ width: "100%" }}
+                      />
+                    </div>
+                    <div className="w-[49%]">
+                      <TextField
+                        id="outlined-basic"
+                        size="small"
+                        label="Last Name"
+                        disabled={stat === "Edit" ? click : false}
+                        value={fields.last_name}
+                        onChange={(e) => handleChange(e)}
+                        name="last_name"
+                        variant="outlined"
+                        sx={{ width: "100%" }}
+                      />
+                    </div>
                   </div>
 
-                  <div className="mt-4 w-full">
-                    <TextField
-                      id="outlined-basic"
-                      size="small"
-                      label="Last Name"
-                      variant="outlined"
-                      sx={{ width: "100%" }}
-                    />
-                  </div>
+                  <select
+                    disabled={stat === "Edit" ? click : false}
+                    name="status"
+                    value={fields.status}
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
+                    className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
+                  >
+                    <option value="DEFAULT" disabled={true}>
+                      Status
+                    </option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                  </select>
 
                   <div className="mt-4 w-full">
                     <TextField
@@ -345,16 +396,25 @@ function Suppliers() {
                       id="outlined-basic"
                       size="small"
                       label="Email"
+                      disabled={stat === "Edit" ? click : false}
+                      name="email"
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
+                      value={fields.email}
                       variant="outlined"
                     />
                   </div>
                 </div>
-                <div className="w-[48%]">
+                <div className="w-[49%]">
                   <div className="">
                     <PhoneInput
                       international
-                      value={value}
-                      onChange={setValue}
+                      value={fields.number}
+                      disabled={stat === "Edit" ? click : false}
+                      onChange={(e) => {
+                        setFields({ ...fields, number: e });
+                      }}
                       placeholder="Number"
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
@@ -363,6 +423,12 @@ function Suppliers() {
                     <TextField
                       fullWidth
                       id="outlined-basic"
+                      name="city"
+                      disabled={stat === "Edit" ? click : false}
+                      value={fields.city}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
                       size="small"
                       label="City"
                       variant="outlined"
@@ -373,6 +439,12 @@ function Suppliers() {
                     <TextField
                       fullWidth
                       id="outlined-basic"
+                      name="company"
+                      disabled={stat === "Edit" ? click : false}
+                      value={fields.company}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
                       size="small"
                       label="Company"
                       variant="outlined"
@@ -383,7 +455,13 @@ function Suppliers() {
                     <TextField
                       fullWidth
                       id="outlined-basic"
+                      disabled={stat === "Edit" ? click : false}
                       size="small"
+                      name="address"
+                      value={fields.address}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
                       label="Address"
                       variant="outlined"
                     />
@@ -392,15 +470,43 @@ function Suppliers() {
               </div>
 
               <div className="mt-4 flex justify-between items-center">
-                <div onClick={handleClose} className=" w-[48%] rounded-md h-10">
-                  <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
-                    Cancel
+                <div
+                  onClick={stat === "Edit" ? handleDelete : handleClose}
+                  className=" w-[49%] rounded-md h-10"
+                >
+                  <button
+                    className={` bg-red-600 hover:bg-red-900 w-full rounded-md  text-white h-full flex items-center justify-center`}
+                  >
+                    {stat === "Edit" ? "Delete" : "Cancel"}
                   </button>
                 </div>
 
                 <div className=" w-[48%] rounded-md h-10  ">
-                  <button className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]">
-                    Save
+                  <button
+                    onClick={
+                      stat === "Edit"
+                        ? click
+                          ? () => {
+                              setClick(false);
+                            }
+                          : handleUpdate
+                        : handleSave
+                    }
+                    className={`w-full rounded-md h-full flex ${
+                      stat === "Edit"
+                        ? click
+                          ? "hover:bg-blue-900"
+                          : "hover:bg-green-900"
+                        : "hover:bg-green-900"
+                    } items-center justify-center text-white ${
+                      stat === "Edit"
+                        ? click
+                          ? "bg-blue-600"
+                          : "bg-green-600"
+                        : "bg-green-600"
+                    }`}
+                  >
+                    {stat === "Edit" ? (click ? "Edit" : "Update") : "Save"}
                   </button>
                 </div>
               </div>

@@ -244,8 +244,8 @@ function Destinations() {
         </div>
       </div>
 
-      <div className="h-full w-full overflow-x-auto ">
-        <div className="ag-theme-quartz h-[92%] w-[800px] md:w-full">
+      <div className="h-[91.5%] w-full overflow-x-auto ">
+        <div className="ag-theme-quartz h-full w-[800px] md:w-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}

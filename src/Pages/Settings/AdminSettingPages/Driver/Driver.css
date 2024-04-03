@@ -13,3 +13,7 @@
   .PhoneInputInput{
     outline: none;
   }
+
+  .MuiFormLabel-root{
+    font-size: 13px !important;
+  }

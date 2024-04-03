@@ -43,7 +43,10 @@ function MealPlan() {
     } else {
       if (stat == "Add") {
         axios
-          .post("http://test.seoconsole.net/api/v1/mealplan", {name:fields.name , status:fields.status})
+          .post("http://test.seoconsole.net/api/v1/mealplan", {
+            name: fields.name,
+            status: fields.status,
+          })
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -246,8 +249,8 @@ function MealPlan() {
         </div>
       </div>
 
-      <div className="h-full w-full overflow-x-auto ">
-        <div className="ag-theme-quartz h-[92%] w-[800px] md:w-full">
+      <div className=" h-[91.5%] w-full overflow-x-auto ">
+        <div className="ag-theme-quartz h-full w-[800px] md:w-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}

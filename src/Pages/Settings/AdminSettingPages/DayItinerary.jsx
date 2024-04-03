@@ -10,8 +10,11 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TextField from "@mui/material/TextField";
 import Textarea from "@mui/joy/Textarea";
+import { Input } from "@mui/material";
+import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import LandScape from "../../../assets/images/lanscape.png";
 import EditIcon from "@mui/icons-material/Edit";
+import ImageModal from "../../../Components/imageModal";
 
 const data = [
   {
@@ -132,15 +135,33 @@ function DayItinerary() {
   const [gridApi, setGridApi] = useState(null);
   const [Editopen, setEditOpen] = useState(false);
 
+  const [itineraryImg, setItineraryImg] = useState("");
+
   const showMatches = (input) => {
     return destinations.filter((item) => {
       return item.toLowerCase().includes(input.toLowerCase());
     });
   };
 
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    console.log(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setItineraryImg(reader.result);
+        console.log(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setItineraryImg("");
+    }
+  };
+
   const matchArr = showMatches(destinationVal);
 
   const [stat, setStat] = useState("");
+  const [imgModal, setImgModal] = useState(false);
 
   const [column, setColumn] = useState([
     {
@@ -150,7 +171,7 @@ function DayItinerary() {
       flex: 0.2,
       filter: false,
       cellRenderer: (params) => {
-        return <div className="ml-[-10px]" >{params.rowIndex + 1}</div>;
+        return <div className="ml-[-10px]">{params.rowIndex + 1}</div>;
       },
     },
     {
@@ -163,14 +184,14 @@ function DayItinerary() {
           <div className="flex  items-center gap-3">
             <div className=" w-16 h-full">
               <div className="group relative">
-                <div
+                {/* <div
                   onClick={() => {
                     setEditOpen(true);
                   }}
                   className="cursor-pointer hidden group-hover:flex bg-black h-5 rounded-full p-3 w-5 justify-center items-center absolute top-[25%] left-[25%]"
                 >
                   <EditIcon style={{ color: "#fff", fontSize: 18 }} />
-                </div>
+                </div> */}
                 <img className="w-full h-full object-contain" src={LandScape} />
               </div>
             </div>
@@ -221,7 +242,7 @@ function DayItinerary() {
             <div className="p-1 rounded-full border border-black h-6 w-6 flex items-center justify-center">
               {params.value[0]}
             </div>
-            <div className="w-0" >{params.value}</div>
+            <div className="w-0">{params.value}</div>
           </div>
         );
       },
@@ -407,13 +428,48 @@ function DayItinerary() {
                         width: "100%",
                         backgroundColor: "#fff",
                         borderColor: "#d3d3d3",
-                        height: "155px",
+                        height: "100px",
                       }}
+                    />
+                  </div>
+
+                  <div className=" mt-4 flex items-center w-full justify-between">
+                    <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
+                      <Input
+                        id="file-input"
+                        type="file"
+                        disabled={stat === "Edit" ? click : false}
+                        inputProps={{ multiple: true }}
+                        onChange={(e) => handleFileSelect(e)}
+                        style={{ display: "none" }}
+                      />
+                      <div className="flex items-center gap-3">
+                        <label className="cursor-pointer" htmlFor="file-input">
+                          <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
+                        </label>
+                        <div className="hidden text-sm md:block overflow-x-auto">
+                          {itineraryImg === ""
+                            ? `Select Itinerary Image`
+                            : "Selected  "}
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setImgModal(true);
+                      }}
+                      className="border border-slate-300 text-xs rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                    >
+                      View
+                    </button>
+                    <ImageModal
+                      setState={setImgModal}
+                      state={imgModal}
+                      image={itineraryImg}
                     />
                   </div>
                 </div>
               </div>
-
               <div className="mt-4 flex justify-between items-center">
                 <div onClick={handleClose} className=" w-[48%] rounded-md h-10">
                   <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
@@ -430,7 +486,7 @@ function DayItinerary() {
             </div>
           </Modal>
 
-          <Modal
+          {/* <Modal
             keepMounted
             open={Editopen}
             onClose={handleClose}
@@ -445,7 +501,7 @@ function DayItinerary() {
                 </div>
               </div>
             </div>
-          </Modal>
+          </Modal> */}
         </div>
       </div>
     </div>

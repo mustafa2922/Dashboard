@@ -7,7 +7,6 @@ import React, { useState } from "react";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import "react-phone-number-input/style.css";
-import EditNoteIcon from "@mui/icons-material/EditNote";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TextField from "@mui/material/TextField";
 import dummyDriver from "../../../../assets/images/dummyDriver.png";
@@ -17,10 +16,12 @@ import ImageModal from "../../../../Components/imageModal";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import { Button, Input } from "@mui/material";
+import { Input } from "@mui/material";
 import { PatternFormat } from "react-number-format";
+import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import "./Driver.css";
+import EditIcon from "@mui/icons-material/Edit";
 
 const data = [
   {
@@ -192,6 +193,36 @@ function Driver() {
   const [LicenseCopyModal, setLicenseCopyModal] = useState(false);
   const [IdCardModal, setIdCardModal] = useState(false);
 
+  const [vehicleMarkVal , setvehicleMarkVal] = useState("");
+
+  const [driverFields, setDriverFields] = useState({
+    name: "",
+    transfer_id: "",
+    veh_no: "",
+    veh_model: "",
+    veh_color: "",
+    veh_price_ac: "",
+    veh_price_non_ac: "",
+    price_valid_from: "",
+    price_valid_to: "",
+    // veh_img: "",
+    mob_no_1: "",
+    mob_no_2: "",
+    address: "",
+    aadher_no: "",
+    // driver_img: "",
+    // driver_id_card: "",
+    // license_copy: "",
+    status: "0",
+  });
+
+  const handleChange = (event) => {
+    return setDriverFields({
+      ...driverFields,
+      [event.target.name]: event.target.value,
+    });
+  };
+
   const [value, setValue] = useState();
 
   const [stat, setStat] = useState("");
@@ -223,10 +254,7 @@ function Driver() {
               {params.data.name}
             </div>
             <div className="h-[90%] w-[48%]">
-              <img
-                className="h-full w-full object-contain"
-                src={dummyDriver}
-              />
+              <img className="h-full w-full object-contain" src={dummyDriver} />
             </div>
           </div>
         );
@@ -395,7 +423,7 @@ function Driver() {
             }}
             className="flex items-center justify-center w-full h-full"
           >
-            <EditNoteIcon
+            <EditIcon
               className="hover:bg-black hover:text-white rounded-full border p-1 border-black"
               style={{ fontSize: "25px" }}
             />
@@ -411,20 +439,16 @@ function Driver() {
       const reader = new FileReader();
       reader.onload = () => {
         if (str === "driver") {
-          console.log('---driver---')
-          setDriverPhoto(reader.result)
+          setDriverPhoto(reader.result);
         }
         if (str === "id") {
-          console.log('---id---')
-          setIdCardImg(reader.result)
+          setIdCardImg(reader.result);
         }
-        if (str === 'vehicle') {
-          console.log('---vehicle---')
-          setVehiclePhoto(reader.result)
+        if (str === "vehicle") {
+          setVehiclePhoto(reader.result);
         }
-        if (str === 'liscense') {
-          console.log('---liscense---')
-          setLicenseCopy(reader.result)
+        if (str === "liscense") {
+          setLicenseCopy(reader.result);
         }
       };
       reader.readAsDataURL(file);
@@ -499,8 +523,8 @@ function Driver() {
         </div>
       </div>
 
-      <div className="h-full w-full overflow-x-auto">
-        <div className="ag-theme-quartz h-full xl:w-[100%] w-[2000px]">
+      <div className=" h-[91.5%] w-full overflow-x-auto ">
+        <div className="ag-theme-quartz h-full w-[2200px] xl:w-full">
           <AgGridReact
             onGridReady={onGridReady}
             columnDefs={column}
@@ -518,7 +542,7 @@ function Driver() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[80%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[50%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Driver </div>
                 <div className="cursor-pointer" onClick={handleClose}>
@@ -526,13 +550,18 @@ function Driver() {
                 </div>
               </div>
 
-              <div className="w-full flex justify-between h-[90%] mt-4">
+              <div className="w-full flex justify-between h-[90%] mt-3">
                 <div className="flex flex-col items-start justify-center h-full w-[48%]">
                   <div className=" w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
                       label="Driver Name"
+                      name="name"
+                      value={driverFields.name}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -541,8 +570,10 @@ function Driver() {
                   <div className="mt-4 w-full">
                     <PhoneInput
                       international
-                      value={value}
-                      onChange={setValue}
+                      value={driverFields.mob_no_1}
+                      onChange={(e) => {
+                        setDriverFields({ ...driverFields, mob_no_1: e });
+                      }}
                       placeholder="Mobile No"
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
@@ -551,8 +582,10 @@ function Driver() {
                   <div className="mt-4 w-full">
                     <PhoneInput
                       international
-                      value={value}
-                      onChange={setValue}
+                      value={driverFields.mob_no_2}
+                      onChange={(e) => {
+                        setDriverFields({ ...driverFields, mob_no_2: e });
+                      }}
                       placeholder="Alternative No"
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
@@ -562,6 +595,11 @@ function Driver() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      value={driverFields.address}
+                      name="address"
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
                       label="Driver Address"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -573,11 +611,20 @@ function Driver() {
                       format="####_####_####"
                       className="focus:outline-none w-full border border-[#b9b9b9] h-10 px-2 rounded-md p-1 text-black"
                       placeholder="Aadhar No"
+                      name="aadher_no"
+                      value={driverFields.aadher_no}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
                     />
                   </div>
 
                   <select
                     defaultValue={"DEFAULT"}
+                    value={vehicleMarkVal}
+                    onChange={(e) => {
+                      setvehicleMarkVal(e.target.value);
+                    }}
                     className="px-2 mt-4 text-slate-600 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-sm"
                   >
                     <option value="DEFAULT" disabled={true}>
@@ -692,18 +739,12 @@ function Driver() {
                         id="file-input1"
                         type="file"
                         inputProps={{ multiple: true }}
-                        onChange={(e) => handleFileSelect(e,'id')}
+                        onChange={(e) => handleFileSelect(e, "id")}
                         style={{ display: "none" }}
                       />
                       <div className="flex items-center gap-3">
-                        <label htmlFor="file-input1">
-                          <Button
-                            variant="outlined"
-                            component="span"
-                            sx={{ height: "30px", fontSize: "10px" }}
-                          >
-                            Select Files
-                          </Button>
+                        <label htmlFor="file-input1" className="cursor-pointer">
+                          <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
                         </label>
                         <div className="hidden md:block text-xs overflow-x-auto">
                           {idCardImg === "" ? `Driver Id Card` : "Selected  "}
@@ -730,23 +771,15 @@ function Driver() {
                         id="file-input2"
                         type="file"
                         inputProps={{ multiple: true }}
-                        onChange={(e) => handleFileSelect(e,'vehicle')}
+                        onChange={(e) => handleFileSelect(e, "vehicle")}
                         style={{ display: "none" }}
                       />
                       <div className="flex items-center gap-3">
-                        <label htmlFor="file-input2">
-                          <Button
-                            variant="outlined"
-                            component="span"
-                            sx={{ height: "30px", fontSize: "10px" }}
-                          >
-                            Select Files
-                          </Button>
+                        <label htmlFor="file-input2" className="cursor-pointer">
+                          <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
                         </label>
                         <div className="hidden md:block  text-xs overflow-x-auto">
-                          {vehiclePhoto === ""
-                            ? `Vehicle Image`
-                            : "Selected  "}
+                          {vehiclePhoto === "" ? `Vehicle Image` : "Selected  "}
                         </div>
                       </div>
                     </div>
@@ -770,23 +803,15 @@ function Driver() {
                         id="file-input3"
                         type="file"
                         inputProps={{ multiple: true }}
-                        onChange={(e) => handleFileSelect(e,'driver')}
+                        onChange={(e) => handleFileSelect(e, "driver")}
                         style={{ display: "none" }}
                       />
                       <div className="flex items-center gap-3">
-                        <label htmlFor="file-input3">
-                          <Button
-                            variant="outlined"
-                            component="span"
-                            sx={{ height: "30px", fontSize: "10px" }}
-                          >
-                            Select Files
-                          </Button>
+                        <label htmlFor="file-input3" className="cursor-pointer">
+                          <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
                         </label>
                         <div className="hidden md:block  text-xs overflow-x-auto">
-                          {driverPhoto === ""
-                            ? `Driver Image`
-                            : "Selected  "}
+                          {driverPhoto === "" ? `Driver Image` : "Selected  "}
                         </div>
                       </div>
                     </div>
@@ -810,23 +835,15 @@ function Driver() {
                         id="file-input4"
                         type="file"
                         inputProps={{ multiple: true }}
-                        onChange={(e) => handleFileSelect(e,'liscense')}
+                        onChange={(e) => handleFileSelect(e, "liscense")}
                         style={{ display: "none" }}
                       />
                       <div className="flex items-center gap-3">
-                        <label htmlFor="file-input4">
-                          <Button
-                            variant="outlined"
-                            component="span"
-                            sx={{ height: "30px", fontSize: "10px" }}
-                          >
-                            Select Files
-                          </Button>
+                        <label htmlFor="file-input4" className="cursor-pointer">
+                          <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
                         </label>
                         <div className="hidden md:block  text-xs overflow-x-auto">
-                          {licenseCopy === ""
-                            ? `Liscense Copy`
-                            : "Selected  "}
+                          {licenseCopy === "" ? `Liscense Copy` : "Selected  "}
                         </div>
                       </div>
                     </div>

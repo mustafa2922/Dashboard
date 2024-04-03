@@ -32,7 +32,7 @@ function Setting() {
       <div className="flex w-full fixed z-10 h-14">
         <div className="border bg-[#f9fbfc] hidden lg:flex w-14 lg:w-[20%] custom-heading text-xl items-center px-4 font-bold text-black h-14">
           Setting
-        </div>{" "}
+        </div>
         <div
           onClick={() => {
             setShow(!show);

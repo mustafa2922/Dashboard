@@ -56,7 +56,7 @@ const App = () => {
     return (
       <div className="main h-screen w-full">
         <Navbar sendDataToApp={getStatusFromSideBar} />
-        <div className="wrapper flex h-[92.5vh]">
+        <div className="wrapper flex h-[92.3vh]">
           <div
             className={`sideBar-Wrapper md:block ${
               show ? "hidden" : ""
@@ -65,7 +65,7 @@ const App = () => {
             <SideBar />
           </div>
 
-          <div className="content-Wrapper w-full relative h-full overflow-y-hidden">
+          <div className="content-Wrapper w-full relative h-full overflow-y-auto">
             <Outlet />
           </div>
         </div>
