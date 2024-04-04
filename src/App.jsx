@@ -9,8 +9,8 @@ import Queries from "./Pages/Queries/Queries";
 import Corporate from "./Pages/Corporate/Corporate";
 import Dashboard from "./Pages/Home/Dashboard";
 import Expense from "./Pages/Expense/Expense";
-import ClientDetail from "./Pages/ClientDetails/ClientDetail";
-import AgentDetails from "./Pages/AgentDetails/AgentDetails";
+import ClientDetail from "./Pages/Clients/ClientDetail";
+import AgentDetails from "./Pages/Agents/AgentDetails";
 import EmailTemplate from "./Pages/EmailTemplate/EmailTemplate";
 import MarketingDashboard from "./Pages/MarketingDashboard/MarketingDashboard";
 import ClientsGroup from "./Pages/ClientsGroup/ClientsGroup";
@@ -43,6 +43,7 @@ import Currency from "./Pages/Settings/AdminSettingPages/Currency";
 import Driver from "./Pages/Settings/AdminSettingPages/Driver/Driver";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CorporateDetail from "./Pages/Corporate/CorporateDetail";
 
 
 const App = () => {
@@ -87,6 +88,7 @@ const router = createBrowserRouter([
         { path: "/itineraries", element: <Itineraries /> },
         { path: "/queries", element: <Queries /> },
         { path: "/corporate", element: <Corporate /> },
+        { path: "/corporate/:corporateId", element: <CorporateDetail/> },
         { path: "/settings/*", element: <Setting /> },
         { path: "/expenses", element: <Expense /> },
         { path: "/marketingDashboard", element: <MarketingDashboard /> },
