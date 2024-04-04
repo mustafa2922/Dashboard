@@ -39,7 +39,7 @@ export default function AdminSetting() {
 
         <Link className="w-[48%] md:w-[30%]" to={"/roomType"}>
           <BedIcon fontSize="large" />
-          Room type
+          Room Category
         </Link>
 
         <Link className="w-[48%] md:w-[30%]" to={"/mealPlan"}>

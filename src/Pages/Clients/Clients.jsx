@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -18,117 +18,37 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const data = [
-  {
-    id: "12EF34RC1",
-    fname: "John",
-    lname: "Doe",
-    number: 123456789,
-    email: "johndoe@gmail.com",
-    city: "London",
-    status: "Active",
-    by: "TravBiz.com",
-    rank: "Ms.",
-  },
-  {
-    id: "12EF34RC2",
-    fname: "Jane",
-    lname: "Smith",
-    number: 987654321,
-    email: "janesmith@example.com",
-    city: "New York",
-    status: "Active",
-    by: "TravBiz.com",
-    rank: "Prof.",
-  },
-  {
-    id: "12EF34RC3",
-    fname: "Michael",
-    lname: "Johnson",
-    number: 456123789,
-    email: "michaeljohnson@example.com",
-    city: "Los Angeles",
-    status: "inactive",
-    by: "TravBiz.com",
-    rank: "Mrs.",
-  },
-  {
-    id: "12EF34RC4",
-    fname: "Emily",
-    lname: "Brown",
-    number: 789456123,
-    email: "emilybrown@example.com",
-    city: "Chicago",
-    status: "Active",
-    by: "TravBiz.com",
-    rank: "Dr.",
-  },
-  {
-    id: "12EF34RC5",
-    fname: "David",
-    lname: "Lee",
-    number: 321654987,
-    email: "davidlee@example.com",
-    city: "San Francisco",
-    status: "Active",
-    by: "TravBiz.com",
-    rank: "Mr.",
-  },
-  {
-    id: "12EF34RC6",
-    fname: "Sarah",
-    lname: "Johnson",
-    number: 654789321,
-    email: "sarahjohnson@example.com",
-    city: "Miami",
-    status: "Active",
-    by: "TravBiz.com",
-    rank: "Ms.",
-  },
-  {
-    id: "12EF34RC7",
-    fname: "Matthew",
-    lname: "Davis",
-    number: 987654123,
-    email: "matthewdavis@example.com",
-    city: "Seattle",
-    status: "Active",
-    by: "TravBiz.com",
-    rank: "Dr.",
-  },
-  {
-    id: "12EF34RC8",
-    fname: "Olivia",
-    lname: "Wilson",
-    number: 741852963,
-    email: "oliviawilson@example.com",
-    city: "Dallas",
-    status: "Active",
-    by: "TravBiz.com",
-    rank: "Ms.",
-  },
-  {
-    id: "12EF34RC9",
-    fname: "William",
-    lname: "Taylor",
-    number: 369852147,
-    email: "williamtaylor@example.com",
-    city: "Houston",
-    status: "Active",
-    by: "TravBiz.com",
-    rank: "Prof.",
-  },
-];
 
 const Clients = () => {
   const [search, setSearch] = useState("");
-  const [row, setRow] = useState(data);
+  const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
   const [gridApi, setGridApi] = useState(null);
   const [stat, setStat] = useState("");
-
+  const [reload, setReload] = useState(false)
   const [click, setClick] = useState(true);
+  const [id, setId] = useState("")
+
+ const[fields, setField] = useState({
+  title: "",
+  first_name: "",
+  last_name: "",
+  email: "",
+  mob: "",
+  sec_email: "",
+  sec_mob: "",
+  city: "",
+  address: "",
+  date_of_birth: "22-02-2024",
+  marriage_anniversary: "22-02-2024",
+ })
+
+ const handleChange = (event)=>{
+  return setField({...fields, [event.target.name]: event.target.value});
+ }
 
   const handleClose = () => {
     setClick(true);
@@ -140,20 +60,19 @@ const Clients = () => {
       fields.first_name === "" ||
       fields.title === "DEFAULT" ||
       fields.last_name === "" ||
-      fields.company === "" ||
       fields.city === "" ||
       fields.address === "" ||
       fields.email === "" ||
       fields.sec_email === "" ||
       fields.mob === "" ||
-      fields.gst === "" ||
-      fields.sec_mob === ""
+      fields.sec_mob === ""||
+      fields.address === ""
     ) {
       toast.error("Please Fill All Fields Correctly");
     } else {
       if (stat == "Add") {
         axios
-          .post("http://test.seoconsole.net/api/v1/agent", fields)
+          .post("http://test.seoconsole.net/api/v1/client", fields)
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -166,15 +85,18 @@ const Clients = () => {
           });
       }
     }
+    console.log("succes")
+    console.log(fields)
   };
 
   const handleDelete = () => {
+    console.log(id)
     axios
       .delete(`http://test.seoconsole.net/api/v1/agent/${id}`)
       .then((response) => {
         toast.success("Agent Deleted Successfully");
         setReload(!reload);
-        setOpen(false);
+        setOpen(false)
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -209,10 +131,10 @@ const Clients = () => {
     {
       headerName: "Name",
       valueGetter: (params) => {
-        return `${params.data.rank} ${params.data.fname} ${params.data.lname}`;
+        return `${params.data.title} ${params.data.first_name} ${params.data.last_name}`;
       },
     },
-    { headerName: "Number", field: "number" },
+    { headerName: "Number", field: "sec_mob" },
     {
       headerName: "Email",
       field: "email",
@@ -261,6 +183,18 @@ const Clients = () => {
               onClick={() => {
                 setOpen(true);
                 setStat("Edit");
+                setField({
+                  title: params.data.title,
+                  first_name: params.data.first_name,
+                  last_name: params.data.last_name,
+                  email: params.data.email,
+                  mob: params.data.mob,
+                  sec_email: params.data.sec_email,
+                  sec_mob: params.data.sec_mob,
+                  city: params.data.city,
+                  address: params.data.address,
+                });
+                setId(params.data.id);
               }}
               className="hover:bg-black hover:text-white rounded-full border p-1 border-black"
               style={{ fontSize: "25px" }}
@@ -273,7 +207,7 @@ const Clients = () => {
 
   const onGridReady = (params) => {
     setGridApi(params.api);
-    setRow(data);
+    setRow();
   };
 
   const ExportData = () => {
@@ -293,6 +227,19 @@ const Clients = () => {
     flex: 1,
     tooltipField: "name",
   };
+
+  useEffect(()=>{
+    const getdata = ()=>{
+      axios
+      .get("http://test.seoconsole.net/api/v1/client")
+      .then(
+        (response)=>{
+          setRow(response.data.reverse())
+        }
+      )
+    }
+    getdata();
+  },[reload])
 
   return (
     <div className="h-full">
@@ -321,19 +268,6 @@ const Clients = () => {
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
-                setFields({
-                  company: "",
-                  gst: "",
-                  title: "DEFAULT",
-                  first_name: "",
-                  last_name: "",
-                  email: "",
-                  mob: "",
-                  sec_email: "",
-                  sec_mob: "",
-                  city: "",
-                  address: "",
-                });
               }}
               className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
@@ -356,6 +290,7 @@ const Clients = () => {
             enableBrowserTooltips={true}
             pagination={true}
             paginationPageSize={20}
+            rowSelection="multiple"
           />
 
           <Modal
@@ -376,6 +311,11 @@ const Clients = () => {
               <div className="flex mt-4 justify-between h-[90%]">
                 <div className="w-[48%] ">
                   <select
+                    value={fields.title}
+                    name="title"
+                    onChange={(e)=>{
+                      handleChange(e);
+                    }}
                     disabled={stat === "Edit" ? click : false}
                     className="px-2 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                   >
@@ -395,6 +335,11 @@ const Clients = () => {
                         label="First Name"
                         disabled={stat === "Edit" ? click : false}
                         variant="outlined"
+                        name="first_name"
+                        onChange={(e) => {
+                          handleChange(e);
+                        }}
+                        value={fields.first_name}
                       />
                     </div>
 
@@ -406,6 +351,11 @@ const Clients = () => {
                         label="Last Name"
                         variant="outlined"
                         disabled={stat === "Edit" ? click : false}
+                        name="last_name"
+                        onChange={(e) => {
+                          handleChange(e);
+                        }}
+                        value={fields.last_name}
                       />
                     </div>
                   </div>
@@ -418,17 +368,24 @@ const Clients = () => {
                       label="Email-1"
                       disabled={stat === "Edit" ? click : false}
                       variant="outlined"
+                      name="email"
+                      onChange={(e) => {
+                        handleChange(e)
+                      }}
+                      value={fields.email}
                     />
                   </div>
 
                   <div className="mt-4">
                     <PhoneInput
                       international
-                      value={value}
-                      onChange={setValue}
                       disabled={stat === "Edit" ? click : false}
                       placeholder="Number-1"
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                      value={fields.mob}
+                      onChange={(e) => {
+                        setField({ ...fields, mob: e });
+                      }}
                     />
                   </div>
 
@@ -440,6 +397,11 @@ const Clients = () => {
                       label="Email-2"
                       disabled={stat === "Edit" ? click : false}
                       variant="outlined"
+                      name="sec_email"
+                      onChange={(e) => {
+                        handleChange(e)
+                      }}
+                      value={fields.sec_email}
                     />
                   </div>
                 </div>
@@ -447,11 +409,13 @@ const Clients = () => {
                   <div>
                     <PhoneInput
                       international
-                      value={value}
-                      onChange={setValue}
                       placeholder="Number-2"
                       disabled={stat === "Edit" ? click : false}
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                      value={fields.sec_mob}
+                      onChange={(e) => {
+                        setField({ ...fields, sec_mob: e });
+                      }}
                     />
                   </div>
 
@@ -463,6 +427,11 @@ const Clients = () => {
                       size="small"
                       label="City"
                       variant="outlined"
+                      name="city"
+                      onChange={(e) =>{
+                        handleChange(e)
+                      }}
+                      value={fields.city}
                     />
                   </div>
 
@@ -474,6 +443,12 @@ const Clients = () => {
                       size="small"
                       label="Address"
                       variant="outlined"
+                      name="address"
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
+                      value={fields.address}
+
                     />
                   </div>
 

@@ -208,7 +208,7 @@ function RoomType() {
   return (
     <div className="h-full">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
-        <div className="font-bold"> Room Type </div>
+        <div className="font-bold"> Room Category </div>
         <div className="flex justify-center  sm:w-[65%] md:w-[55%] lg:w-[43%]  w-[90%] items-center gap-3 h-full">
           <button
             onClick={() => {
@@ -236,7 +236,7 @@ function RoomType() {
               }}
               className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
-              <span className="sm:block hidden">Add Room Type</span>
+              <span className="sm:block hidden">Add Room Category</span>
               <span className="sm:hidden block">
                 <AddRoundedIcon />
               </span>
@@ -266,7 +266,7 @@ function RoomType() {
           >
             <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[80%] md:w-[40%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
-                <div className="font-bold text-lg"> {stat} Room Type </div>
+                <div className="font-bold text-lg"> {stat} Room Category </div>
                 <div className="cursor-pointer" onClick={handleClose}>
                   <CloseIcon />
                 </div>
