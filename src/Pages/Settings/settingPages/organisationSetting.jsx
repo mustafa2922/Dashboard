@@ -3,7 +3,7 @@ import "./organisationSetting.css";
 
 export default function OrganisationSetting() {
   return (
-    <main className="w-full h-full">
+    <main className="p-5 w-full h-full">
       <DashboardHeader title="Organisation Settings" />
 
       <button className="edit-button">Edit settings</button>

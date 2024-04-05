@@ -184,14 +184,14 @@ function DayItinerary() {
           <div className="flex  items-center gap-3">
             <div className=" w-16 h-full">
               <div className="group relative">
-                {/* <div
+                <div
                   onClick={() => {
                     setEditOpen(true);
                   }}
                   className="cursor-pointer hidden group-hover:flex bg-black h-5 rounded-full p-3 w-5 justify-center items-center absolute top-[25%] left-[25%]"
                 >
                   <EditIcon style={{ color: "#fff", fontSize: 18 }} />
-                </div> */}
+                </div>
                 <img className="w-full h-full object-contain" src={LandScape} />
               </div>
             </div>
@@ -486,7 +486,7 @@ function DayItinerary() {
             </div>
           </Modal>
 
-          {/* <Modal
+          <Modal
             keepMounted
             open={Editopen}
             onClose={handleClose}
@@ -501,7 +501,7 @@ function DayItinerary() {
                 </div>
               </div>
             </div>
-          </Modal> */}
+          </Modal>
         </div>
       </div>
     </div>

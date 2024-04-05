@@ -41,10 +41,10 @@ import MailSetting from "./Pages/Settings/AdminSettingPages/MailSetting";
 import WeatherSetting from "./Pages/Settings/AdminSettingPages/WeatherSetting";
 import Currency from "./Pages/Settings/AdminSettingPages/Currency";
 import Driver from "./Pages/Settings/AdminSettingPages/Driver/Driver";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import CorporateDetail from "./Pages/Corporate/CorporateDetail";
-
+import Login from "./Pages/Login/Login";
 
 const App = () => {
   const Layout = () => {
@@ -70,12 +70,16 @@ const App = () => {
             <Outlet />
           </div>
         </div>
-        <ToastContainer  autoClose={2000} />
+        <ToastContainer autoClose={2000} />
       </div>
     );
   };
 
-const router = createBrowserRouter([
+  const router = createBrowserRouter([
+    {
+      path: "/login",
+      element: <Login />,
+    },
     {
       path: "/",
       element: <Layout />,
@@ -88,7 +92,7 @@ const router = createBrowserRouter([
         { path: "/itineraries", element: <Itineraries /> },
         { path: "/queries", element: <Queries /> },
         { path: "/corporate", element: <Corporate /> },
-        { path: "/corporate/:corporateId", element: <CorporateDetail/> },
+        { path: "/corporate/:corporateId", element: <CorporateDetail /> },
         { path: "/settings/*", element: <Setting /> },
         { path: "/expenses", element: <Expense /> },
         { path: "/marketingDashboard", element: <MarketingDashboard /> },
@@ -119,7 +123,7 @@ const router = createBrowserRouter([
         { path: "/roomType", element: <RoomType /> },
         { path: "/mealPlan", element: <MealPlan /> },
         { path: "/accommodation", element: <Hotel /> },
-        { path: "/driver", element: <Driver/> },
+        { path: "/driver", element: <Driver /> },
         { path: "/transfer", element: <Transfer /> },
         { path: "/dayItinerary", element: <DayItinerary /> },
         { path: "/leadSource", element: <LeadSource /> },
@@ -134,4 +138,4 @@ const router = createBrowserRouter([
   return <RouterProvider router={router} />;
 };
 
-export {App };
+export { App };

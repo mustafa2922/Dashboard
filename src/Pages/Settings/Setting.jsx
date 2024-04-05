@@ -125,7 +125,7 @@ function Setting() {
           </div>
         </div>
 
-        <div className="custom-contaner p-8 lg:ml-[20%] w-full lg:w-[80%] h-full overflow-y-scroll ">
+        <div className="custom-contaner pl-3 pb-0 lg:ml-[20%] w-full lg:w-[80%] h-[100%] overflow-y-auto ">
           <Routes>
             <Route path="/" element={<TeamManagement />} />
             <Route path="/team_management" element={<TeamManagement />} />

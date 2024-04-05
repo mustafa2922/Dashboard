@@ -7,7 +7,7 @@ export default function PackagesInclusions() {
   const id = useId();
 
   return (
-    <main>
+    <main className="p-5"  >
       <DashboardHeader title="Package Inclusions / Exclusion Setting" />
 
       <section className="editor-section">

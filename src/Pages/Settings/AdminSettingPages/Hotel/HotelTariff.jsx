@@ -108,7 +108,7 @@ function HotelPrice({ name, MainSetOpen }) {
 
   const [column, setColumn] = useState([
     {
-      headerName: "Room Type",
+      headerName: "Room Category",
       field: "RoomType",
       flex: 0.55,
     },

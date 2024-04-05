@@ -8,7 +8,7 @@ export default function DefaultSetting() {
   const id = useId();
 
   return (
-    <main>
+    <main className='p-5' >
       <DashboardHeader title="Default Settings" />
 
       <div className="file-input">

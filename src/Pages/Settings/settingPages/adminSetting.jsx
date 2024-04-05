@@ -17,7 +17,7 @@ import "./adminSetting.css";
 
 export default function AdminSetting() {
   return (
-    <main className="w-full h-full" >
+    <main className="p-5 w-full h-full" >
 
       <h2 className="admin-heading2">System Masters</h2>
       <p className="heading-text">
