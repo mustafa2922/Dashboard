@@ -5,7 +5,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useState } from "react";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
-import EditNoteIcon from "@mui/icons-material/EditNote";
+import EditIcon from "@mui/icons-material/Edit";
 import { Link } from "react-router-dom";
 import "react-phone-number-input/style.css";
 import Modal from "@mui/material/Modal";
@@ -21,34 +21,35 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-
 const Clients = () => {
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
   const [gridApi, setGridApi] = useState(null);
   const [stat, setStat] = useState("");
-  const [reload, setReload] = useState(false)
+  const [reload, setReload] = useState(false);
   const [click, setClick] = useState(true);
-  const [id, setId] = useState("")
+  const [id, setId] = useState("");
+  const [showDOBDate, setShowDOBDate] = useState(dayjs());
+  const [showMADate, setShowMADate] = useState(dayjs());
 
- const[fields, setField] = useState({
-  title: "",
-  first_name: "",
-  last_name: "",
-  email: "",
-  mob: "",
-  sec_email: "",
-  sec_mob: "",
-  city: "",
-  address: "",
-  date_of_birth: "22-02-2024",
-  marriage_anniversary: "22-02-2024",
- })
+  const [fields, setField] = useState({
+    title: "DEFAULT",
+    first_name: "",
+    last_name: "",
+    email: "",
+    mob: "",
+    sec_email: "",
+    sec_mob: "",
+    city: "",
+    address: "",
+    date_of_birth: showDOBDate,
+    marriage_anniversary: showMADate,
+  });
 
- const handleChange = (event)=>{
-  return setField({...fields, [event.target.name]: event.target.value});
- }
+  const handleChange = (event) => {
+    return setField({ ...fields, [event.target.name]: event.target.value });
+  };
 
   const handleClose = () => {
     setClick(true);
@@ -57,16 +58,17 @@ const Clients = () => {
 
   const handleSave = () => {
     if (
-      fields.first_name === "" ||
       fields.title === "DEFAULT" ||
+      fields.first_name === "" ||
       fields.last_name === "" ||
+      fields.email === "" ||
+      fields.mob === "" ||
+      fields.sec_email === "" ||
+      fields.sec_mob === "" ||
       fields.city === "" ||
       fields.address === "" ||
-      fields.email === "" ||
-      fields.sec_email === "" ||
-      fields.mob === "" ||
-      fields.sec_mob === ""||
-      fields.address === ""
+      fields.address === "" ||
+      fields.email === fields.sec_email
     ) {
       toast.error("Please Fill All Fields Correctly");
     } else {
@@ -85,18 +87,16 @@ const Clients = () => {
           });
       }
     }
-    console.log("succes")
-    console.log(fields)
   };
 
   const handleDelete = () => {
-    console.log(id)
+    console.log(id);
     axios
-      .delete(`http://test.seoconsole.net/api/v1/agent/${id}`)
+      .delete(`http://test.seoconsole.net/api/v1/client/${id}`)
       .then((response) => {
-        toast.success("Agent Deleted Successfully");
+        toast.success("Client Deleted Successfully");
         setReload(!reload);
-        setOpen(false)
+        setOpen(false);
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -105,9 +105,9 @@ const Clients = () => {
 
   const handleUpdate = () => {
     axios
-      .put(`http://test.seoconsole.net/api/v1/agent/${id}`, fields)
+      .put(`http://test.seoconsole.net/api/v1/client/${id}`, fields)
       .then((response) => {
-        toast.success("Agent Updated Successfully");
+        toast.success("Client Updated Successfully");
         setReload(!reload);
         setClick(true);
         setOpen(false);
@@ -117,16 +117,14 @@ const Clients = () => {
       });
   };
 
-  const [value, setValue] = useState();
-
   const [column, setColumn] = useState([
     {
       headerCheckboxSelection: true,
       checkboxSelection: true,
-      cellClass: "flex items-center justify-start",
+      cellClass: "ml-[-9px] flex items-center justify-start",
       sortable: false,
       filter: false,
-      flex: 0.25,
+      flex: 0.3,
     },
     {
       headerName: "Name",
@@ -179,10 +177,12 @@ const Clients = () => {
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
-            <EditNoteIcon
+            <EditIcon
               onClick={() => {
                 setOpen(true);
                 setStat("Edit");
+                setShowDOBDate(dayjs(params.data.date_of_birth));
+                setShowMADate(dayjs(params.data.marriage_anniversary));
                 setField({
                   title: params.data.title,
                   first_name: params.data.first_name,
@@ -193,6 +193,8 @@ const Clients = () => {
                   sec_mob: params.data.sec_mob,
                   city: params.data.city,
                   address: params.data.address,
+                  date_of_birth: dayjs(params.data.date_of_birth),
+                  marriage_anniversary: dayjs(params.data.date_of_birth),
                 });
                 setId(params.data.id);
               }}
@@ -228,18 +230,14 @@ const Clients = () => {
     tooltipField: "name",
   };
 
-  useEffect(()=>{
-    const getdata = ()=>{
-      axios
-      .get("http://test.seoconsole.net/api/v1/client")
-      .then(
-        (response)=>{
-          setRow(response.data.reverse())
-        }
-      )
-    }
+  useEffect(() => {
+    const getdata = () => {
+      axios.get("http://test.seoconsole.net/api/v1/client").then((response) => {
+        setRow(response.data.reverse());
+      });
+    };
     getdata();
-  },[reload])
+  }, [reload]);
 
   return (
     <div className="h-full">
@@ -268,6 +266,20 @@ const Clients = () => {
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
+
+                setField({
+                  title: "DEFAULT",
+                  first_name: "",
+                  last_name: "",
+                  email: "",
+                  mob: "",
+                  sec_email: "",
+                  sec_mob: "",
+                  city: "",
+                  address: "",
+                  date_of_birth: showDOBDate,
+                  marriage_anniversary: showMADate,
+                });
               }}
               className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
@@ -313,12 +325,13 @@ const Clients = () => {
                   <select
                     value={fields.title}
                     name="title"
-                    onChange={(e)=>{
+                    onChange={(e) => {
                       handleChange(e);
                     }}
                     disabled={stat === "Edit" ? click : false}
                     className="px-2 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                   >
+                    <option value="DEFAULT">Title</option>
                     <option value="Mr.">Mr.</option>
                     <option value="Mrs.">Mrs.</option>
                     <option value="Ms.">Ms.</option>
@@ -370,7 +383,7 @@ const Clients = () => {
                       variant="outlined"
                       name="email"
                       onChange={(e) => {
-                        handleChange(e)
+                        handleChange(e);
                       }}
                       value={fields.email}
                     />
@@ -399,7 +412,7 @@ const Clients = () => {
                       variant="outlined"
                       name="sec_email"
                       onChange={(e) => {
-                        handleChange(e)
+                        handleChange(e);
                       }}
                       value={fields.sec_email}
                     />
@@ -428,8 +441,8 @@ const Clients = () => {
                       label="City"
                       variant="outlined"
                       name="city"
-                      onChange={(e) =>{
-                        handleChange(e)
+                      onChange={(e) => {
+                        handleChange(e);
                       }}
                       value={fields.city}
                     />
@@ -448,7 +461,6 @@ const Clients = () => {
                         handleChange(e);
                       }}
                       value={fields.address}
-
                     />
                   </div>
 
@@ -456,17 +468,37 @@ const Clients = () => {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <MobileDatePicker
                         label="Date Of Birth"
+                        format="DD-MM-YYYY"
                         disabled={stat === "Edit" ? click : false}
-                        defaultValue={dayjs("2022-04-17")}
+                        name="date_of_birth"
+                        value={showDOBDate}
+                        onAccept={(e) => {
+                          const DOB = dayjs(e).format("YYYY-MM-DD");
+                          setShowDOBDate(e);
+                          setField({
+                            ...fields,
+                            date_of_birth: DOB,
+                          });
+                        }}
                       />
                     </LocalizationProvider>
                   </div>
                   <div className=" mt-4 custom-date-picker">
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <MobileDatePicker
+                        format="DD-MM-YYYY"
                         label="Marriage Anniversary"
                         disabled={stat === "Edit" ? click : false}
-                        defaultValue={dayjs("2022-04-17")}
+                        value={showMADate}
+                        name="marriage_anniversary"
+                        onAccept={(e) => {
+                          const MA = dayjs(e).format("YYYY-MM-DD");
+                          setShowMADate(e);
+                          setField({
+                            ...fields,
+                            marriage_anniversary: MA,
+                          });
+                        }}
                       />
                     </LocalizationProvider>
                   </div>

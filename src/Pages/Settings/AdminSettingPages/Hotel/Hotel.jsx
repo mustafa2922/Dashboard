@@ -58,6 +58,8 @@ function Hotel() {
   const [bankOpen, setBankOpen] = useState(false);
   const [imgModal, setImgModal] = useState(false);
   const [destinationVal, setDestinationVal] = useState("");
+
+  
   const [reload, setReload] = useState(false);
   const [click, setClick] = useState(true);
 
