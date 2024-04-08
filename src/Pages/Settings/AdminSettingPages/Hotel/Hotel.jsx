@@ -640,7 +640,7 @@ function Hotel() {
 
                   <div className="mt-4">
                     <PhoneInput
-                      international
+                       defaultCountry="IN"
                       value={hotelFields.contact_no}
                       disabled={stat === "Edit" ? click : false}
                       onChange={(e) => {
@@ -768,7 +768,7 @@ function Hotel() {
                   <div className="mt-4">
                     <PhoneInput
                       disabled={stat === "Edit" ? click : false}
-                      international
+                      defaultCountry="IN"
                       value={hotelFields.mob_no_1}
                       onChange={(e) => {
                         setHotelFields({ ...hotelFields, mob_no_1: e });
@@ -779,8 +779,8 @@ function Hotel() {
                   </div>
                   <div className="mt-4">
                     <PhoneInput
-                      international
-                      disabled={stat === "Edit" ? click : false}
+                       defaultCountry="IN"
+                       disabled={stat === "Edit" ? click : false}
                       value={hotelFields.mob_no_2}
                       onChange={(e) => {
                         setHotelFields({ ...hotelFields, mob_no_2: e });

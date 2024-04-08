@@ -10,7 +10,7 @@ const Login = () => {
 
   const [pin, setPin] = useState([]);
 
-  const pass = '1221'
+  const pass = "1221";
 
   const handleChange = (value) => {
     if (pin.length < 4) {
@@ -26,8 +26,9 @@ const Login = () => {
   console.log(pin);
 
   return (
-    <div id="container">
-      <style>{`
+    <div className="w-full h-screen flex justify-center items-center" >
+      <div className="!w-[90%] sm:!w-[70%]" id="container">
+        <style>{`
 
       @keyframes shake {
         10%, 90% {
@@ -59,22 +60,11 @@ const Login = () => {
         } 
         html{
           height: 100%;
-          font-size: 65.2%;
+          font-size: 75.2%;
           box-sizing: border-box;
-          font-family: Montserrat, sans-serif;
+          font-family: monospace;
           -webkit-font-smoothing: antialiased; 
           font-weight: 400;
-        }
-
-        body{
-          height: 100%;
-          background: #e9ebee;
-          color: #1d2129;
-          display: flex;
-          align-items: center;
-          flex-direction: column;
-          justify-content: center;
-          perspective: 1500px;
         }
         
         h1{
@@ -203,7 +193,8 @@ const Login = () => {
         }
         
         #container{
-          width: 95%;
+          width: 70%;
+          margin:auto;
           position: relative;
           border-radius: 20px;
           box-shadow: 0 28px 28px 10px rgba(0, 0, 0, .2), 0 10px 10px -10px rgba(0, 0, 0, .02);
@@ -212,7 +203,7 @@ const Login = () => {
         
         .content{
           width: 100%;
-          padding: 2em 4em;
+          padding: 4em 4em;
           text-align: center;
           p{
             font-size: 1.4em;
@@ -265,30 +256,32 @@ const Login = () => {
         
         .front{
           background-color : #12344d ;
+          padding:20px;
           z-index: 3;
         }
         
         .back{
           z-index: 3;
+          padding:20px;
           .content{
             transform: rotateY(180deg)
           }	
         }
         
         .active .front{
-          animation: rot-front .6s ease-in-out normal forwards;
+          animation: rot-front 0.5s ease-in-out normal forwards;
         }
         
         .active .back {
-          animation: rot-back .6s ease-in-out normal forwards;
+          animation: rot-back 0.5s ease-in-out normal forwards;
         }
         
         .close .front {
-          animation: close-rot-front .6s ease-in-out normal forwards;
+          animation: close-rot-front 0.5s ease-in-out normal forwards;
         }
         
         .close .back{ 
-          animation: close-rot-back .6s ease-in-out normal forwards;
+          animation: close-rot-back 0.5s ease-in-out normal forwards;
         }
         
         @keyframes rot-front{ 
@@ -366,213 +359,222 @@ const Login = () => {
         }
       `}</style>
 
-      <div className={`flex h-full ${isActive ? "active" : "close"}`}>
-        <div className=" w-[50%]">
-          <div className="px-5 py-2 w-[400px]">
-            <div className="text-slate-800 text-center text-2xl font-bold">
-              Login With Pin
+        <div className={`flex h-full ${isActive ? "active" : "close"}`}>
+          <div className=" w-full lg:w-[50%]">
+            <div className=" px-1 lg:px-5  py-5 lg:py-16 w-full">
+              <div className="text-slate-800 p-10 text-center text-4xl font-bold">
+                Login With Pin
+              </div>
+
+              <div
+                className={` ${
+                  pin.length > 3 ? (pin.join("") === pass ? "" : "shake") : ""
+                } flex flex-row w-[45%] sm:w-[30%] lg:w-[40%] m-auto justify-evenly`}
+              >
+                <div
+                  className={` ${
+                    pin.length >= 1 ? "bg-black" : "bg-white"
+                  }  border  border-black h-7 w-7 rounded-full`}
+                ></div>
+                <div
+                  className={` ${
+                    pin.length >= 2 ? "bg-black" : "bg-white"
+                  }  border  border-black h-7 w-7 rounded-full`}
+                ></div>
+                <div
+                  className={` ${
+                    pin.length >= 3 ? "bg-black" : "bg-white"
+                  }  border  border-black h-7 w-7 rounded-full`}
+                ></div>
+                <div
+                  className={` ${
+                    pin.length == 4 ? "bg-black" : "bg-white"
+                  }  border  border-black h-7 w-7 rounded-full`}
+                ></div>
+              </div>
+
+              <div className="flex flex-col min-[200px]:w-[70%] w-[50%] sm:w-[40%] lg:w-[50%] m-auto mt-7">
+                <div className="flex flex-row justify-evenly mt-2">
+                  <div
+                    onClick={() => {
+                      handleChange("1");
+                    }}
+                    className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
+                  >
+                    1
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleChange("2");
+                    }}
+                    className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
+                  >
+                    2
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleChange("3");
+                    }}
+                    className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
+                  >
+                    3
+                  </div>
+                </div>
+
+                <div className="flex flex-row  justify-evenly mt-2">
+                  <div
+                    onClick={() => {
+                      handleChange("4");
+                    }}
+                    className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
+                  >
+                    4
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleChange("5");
+                    }}
+                    className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
+                  >
+                    5
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleChange("6");
+                    }}
+                    className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
+                  >
+                    6
+                  </div>
+                </div>
+
+                <div className="flex flex-row justify-evenly  mt-2">
+                  <div
+                    onClick={() => {
+                      handleChange("7");
+                    }}
+                    className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
+                  >
+                    7
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleChange("8");
+                    }}
+                    className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
+                  >
+                    8
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleChange("9");
+                    }}
+                    className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
+                  >
+                    9
+                  </div>
+                </div>
+
+                <div className="flex flex-row  justify-evenly mt-2">
+                  <div
+                    onClick={() => {
+                      handleChange("0");
+                    }}
+                    className="border select-none  cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
+                  >
+                    0
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleDelete();
+                    }}
+                    className="border cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
+                  >
+                    <BackspaceOutlinedIcon style={{ fontSize: 20 }} />
+                  </div>
+                </div>
+              </div>
+
+              <div></div>
             </div>
-
-            <div className={ ` ${ pin.length > 3 ? (pin.join('') === pass) ? '' : 'shake' : ''} flex flex-row w-[30%] m-auto justify-evenly mt-7`}>
-              <div
-                className={` ${
-                  pin.length >= 1 ? "bg-black" : "bg-white"
-                }  border  border-black h-5 w-5 rounded-full`}
-              ></div>
-              <div
-                className={` ${
-                  pin.length >= 2 ? "bg-black" : "bg-white"
-                }  border  border-black h-5 w-5 rounded-full`}
-              ></div>
-              <div
-                className={` ${
-                  pin.length >= 3 ? "bg-black" : "bg-white"
-                }  border  border-black h-5 w-5 rounded-full`}
-              ></div>
-              <div
-                className={` ${
-                  pin.length == 4 ? "bg-black" : "bg-white"
-                }  border  border-black h-5 w-5 rounded-full`}
-              ></div>
-            </div>
-
-            <div className="flex flex-col w-[50%] m-auto mt-7">
-              <div className="flex flex-row justify-evenly mt-2">
-                <div
-                  onClick={() => {
-                    handleChange("1");
-                  }}
-                  className="border cursor-pointer border-black rounded-full h-20 w-20 text-xl flex items-center justify-center"
-                >
-                  1
-                </div>
-                <div
-                  onClick={() => {
-                    handleChange("2");
-                  }}
-                  className="border cursor-pointer border-black rounded-full h-20 w-20 text-xl flex items-center justify-center"
-                >
-                  2
-                </div>
-                <div
-                  onClick={() => {
-                    handleChange("3");
-                  }}
-                  className="border cursor-pointer border-black rounded-full h-20 w-20 text-xl flex items-center justify-center"
-                >
-                  3
-                </div>
-              </div>
-
-              <div className="flex flex-row  justify-evenly mt-2">
-                <div
-                  onClick={() => {
-                    handleChange("4");
-                  }}
-                  className="border cursor-pointer border-black rounded-full h-20 w-20 text-xl flex items-center justify-center"
-                >
-                  4
-                </div>
-                <div
-                  onClick={() => {
-                    handleChange("5");
-                  }}
-                  className="border cursor-pointer border-black rounded-full h-20 w-20 text-xl flex items-center justify-center"
-                >
-                  5
-                </div>
-                <div
-                  onClick={() => {
-                    handleChange("6");
-                  }}
-                  className="border cursor-pointer border-black rounded-full h-20 w-20 text-xl flex items-center justify-center"
-                >
-                  6
-                </div>
-              </div>
-
-              <div className="flex flex-row justify-evenly  mt-2">
-                <div
-                  onClick={() => {
-                    handleChange("7");
-                  }}
-                  className="border cursor-pointer border-black rounded-full h-20 w-20 text-xl flex items-center justify-center"
-                >
-                  7
-                </div>
-                <div
-                  onClick={() => {
-                    handleChange("8");
-                  }}
-                  className="border cursor-pointer border-black rounded-full h-20 w-20 text-xl flex items-center justify-center"
-                >
-                  8
-                </div>
-                <div
-                  onClick={() => {
-                    handleChange("9");
-                  }}
-                  className="border cursor-pointer border-black rounded-full h-20 w-20 text-xl flex items-center justify-center"
-                >
-                  9
-                </div>
-              </div>
-
-              <div className="flex flex-row  justify-evenly mt-2">
-                <div
-                  onClick={() => {
-                    handleChange("0");
-                  }}
-                  className="border cursor-pointer border-black rounded-full h-20 w-20 text-xl flex items-center justify-center"
-                >
-                  0
-                </div>
-                <div
-                  onClick={() => {
-                    handleDelete();
-                  }}
-                  className="border cursor-pointer border-black rounded-full h-20 w-20 text-xl flex items-center justify-center"
-                >
-                  <BackspaceOutlinedIcon />
-                </div>
-              </div>
-            </div>
-
-            <div></div>
           </div>
-        </div>
 
-        <div className="h-fit page front w-[50%] ">
-          <div
-            style={
-              isActive
-                ? { opacity: 0, transition: "opacity 0.6s" }
-                : { opacity: 1, transition: "opacity 0.6s" }
-            }
-            className="content"
-          >
-            <PersonAddAltOutlinedIcon style={{ fontSize: 100 }} />
-            <h1>Hello, friend!</h1>
-            <p>Enter your personal details and start your journey with us</p>
-            <button
-              onClick={(e) => {
-                setIsActive(true);
-              }}
-              className="flex items-center h-16"
-              id="register"
+          <div className=" page front w-[50%] hidden lg:block ">
+            <div
+              style={
+                isActive
+                  ? { opacity: 0, transition: "opacity 0.5s" }
+                  : { opacity: 1, transition: "opacity 0.5s" }
+              }
+              className="content h-full"
             >
-              <span className="text-white text-base">Login</span>
-              <ArrowForwardOutlinedIcon />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className={`flex  h-full  ${isActive ? "active" : "close"}`}>
-        <div className="page back  w-[50%] absolute top-0">
-          <div
-            style={
-              isActive
-                ? { opacity: 1, transition: "opacity 0.6s" }
-                : { opacity: 0, transition: "opacity 0.6s" }
-            }
-            className=" content"
-          >
-            <LogoutOutlinedIcon style={{ fontSize: 100 }} />
-            <h1>Welcome Back!</h1>
-            <p>
-              To stay connected with us, please login with your personal info
-            </p>
-            <button
-              onClick={() => {
-                setIsActive(false);
-              }}
-              className="flex items-center h-16"
-              id="register"
-            >
-              <ArrowBackOutlinedIcon />
-              <span className="text-white text-base">Pin Login</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="register w-[50%] absolute top-0 right-0 h-full">
-          <div className="h-full content">
-            <h1>Log In</h1>
-            <form>
-              <input type="email" placeholder="email" />
-              <input type="password" placeholder="password" />
-              <span className="remember">Remember me</span>
-              <span className="forget">Forgot password?</span>
-              <span className="clearfix"></span>
+              <PersonAddAltOutlinedIcon style={{ fontSize: 100 }} />
+              <h1>Hello,friend!</h1>
+              <p className="!text-3xl" >Enter your personal details and start your journey with us</p>
               <button
                 onClick={(e) => {
-                  e.preventDefault();
+                  setIsActive(true);
                 }}
+                className="flex items-center h-16"
+                id="register"
               >
-                Log In
+                <span className="text-white text-base">Login</span>
+                <ArrowForwardOutlinedIcon />
               </button>
-            </form>
+            </div>
+          </div>
+        </div>
+
+        <div
+          className={`flex  hidden lg:block h-full  ${
+            isActive ? "active" : "close"
+          }`}
+        >
+          <div className="page back  w-[50%] absolute top-0">
+            <div
+              style={
+                isActive
+                  ? { opacity: 1, transition: "opacity 0.5s" }
+                  : { opacity: 0, transition: "opacity 0.5s" }
+              }
+              className=" content"
+            >
+              <LogoutOutlinedIcon style={{ fontSize: 100 }} />
+              <h1>Welcome Back!</h1>
+              <p className="!text-3xl" >
+                To stay connected with us, please login with your personal info
+              </p>
+              <button
+                onClick={() => {
+                  setIsActive(false);
+                }}
+                className="flex items-center h-16"
+                id="register"
+              >
+                <ArrowBackOutlinedIcon />
+                <span className="text-white text-base">Pin Login</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="register w-[50%] absolute top-0 right-0 h-full">
+            <div className="h-full content">
+              <h1>Log In</h1>
+              <form className="mt-10">
+                <input type="email" placeholder="email" />
+                <input type="password" placeholder="password" />
+                <span className="forget">Forgot password?</span>
+                <span className="clearfix"></span>
+                <button
+                  className="h-20"
+                  onClick={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  Log In
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

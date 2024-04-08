@@ -27,9 +27,15 @@ const TeamManagement = () => {
 
   const [reload, setReload] = useState(false);
 
+  const [id,setId] = useState('');
+
+  console.log("id-->",id)
+ 
   const [fields, setFields] = useState({
-    id: "",
-    name: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    pin: "",
     status: "DEFAULT",
   });
 
@@ -38,15 +44,15 @@ const TeamManagement = () => {
   };
 
   const handleSave = () => {
-    if (fields.status === "DEFAULT" || fields.name === "") {
+    if (fields.status === "DEFAULT" || fields.first_name === "" || fields.last_name === "" || fields.email === "" || fields.pin === "") {
       toast.error("Please Fill All the Fields Correctly");
     } else {
       if (stat == "Add") {
         axios
-          .post("http://test.seoconsole.net/api/v1/destination", fields)
+          .post("http://test.seoconsole.net/api/v1/team", fields)
           .then((response) => {
             setReload(!reload);
-            toast.success("Destination Added Successfully");
+            toast.success("Team Member Added Successfully");
             setOpen(false);
           })
           .catch((error) => {
@@ -58,9 +64,9 @@ const TeamManagement = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`http://test.seoconsole.net/api/v1/destination/${fields.id}`)
+      .delete(`http://test.seoconsole.net/api/v1/team/${id}`)
       .then((response) => {
-        toast.success("Destination Deleted Successfully");
+        toast.success("Team Member Deleted Successfully");
         setReload(!reload);
         setOpen(false);
       })
@@ -71,12 +77,12 @@ const TeamManagement = () => {
 
   const handleUpdate = () => {
     axios
-      .put(`http://test.seoconsole.net/api/v1/destination/${fields.id}`, {
+      .put(`http://test.seoconsole.net/api/v1/team/${id}`, {
         name: fields.name,
         status: fields.status,
       })
       .then((response) => {
-        toast.success("Destination Updated Successfully");
+        toast.success("Team Member Updated Successfully");
         setReload(!reload);
         setClick(true);
         setOpen(false);
@@ -88,11 +94,9 @@ const TeamManagement = () => {
 
   useEffect(() => {
     const getData = () => {
-      axios
-        .get("http://test.seoconsole.net/api/v1/destination")
-        .then((response) => {
-          setRow(response.data.reverse());
-        });
+      axios.get("http://test.seoconsole.net/api/v1/team").then((response) => {
+        setRow(response.data.reverse());
+      });
     };
 
     getData();
@@ -104,7 +108,7 @@ const TeamManagement = () => {
         return (
           <div className="h-full w-full flex justify-center items-center">
             <div className="p-1 rounded-full border bg-[#3b5de7] text-white h-8 w-8 font-bold text-lg flex items-center justify-center">
-              {params.data.name[0]}
+              {params.data.first_name[0].toUpperCase()}
             </div>
           </div>
         );
@@ -113,19 +117,23 @@ const TeamManagement = () => {
     },
     {
       headerName: "Name",
-      field: "name",
-      flex: 1.3,
+      field: "first_name",
+      flex: 0.6,
+      valueGetter: (params) => {
+        return ` ${params.data.first_name} ${params.data.last_name}`;
+      },
     },
     {
       headerName: "Email",
       field: "email",
+      flex:1.5,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-start gap-2 w-full h-full">
             <div className="p-1 rounded-full border border-black h-6 w-6 flex items-center justify-center">
-              J
+              {params.data.email[0].toUpperCase()}
             </div>
-            <div className="w-0">JaffarSaleem@gmail.com</div>
+            <div className="w-0">{params.data.email}</div>
           </div>
         );
       },
@@ -176,8 +184,12 @@ const TeamManagement = () => {
               setFields({
                 name: params.data.name,
                 status: params.data.status,
-                id: params.data.id,
+                first_name: params.data.first_name,
+                last_name: params.data.last_name,
+                email: params.data.email,
+                pin: params.data.pin,
               });
+              setId(params.data.id);
             }}
             className="flex items-center justify-center w-full h-full"
           >
@@ -233,7 +245,7 @@ const TeamManagement = () => {
   ];
 
   return (
-    <div className="h-[83vh]">
+    <div className="h-[90vh]">
       <div className="flex justify-between items-center text-slate-500 text-sm h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
         <div>Team - People within your organisation </div>
         <div className="flex justify-center  sm:w-[65%] md:w-[55%] lg:w-[43%]  w-[90%] items-center gap-3 h-full">
@@ -250,8 +262,15 @@ const TeamManagement = () => {
             <button
               onClick={() => {
                 setOpen(true);
-                setStat("Add");
-                setFields({ name: "", status: "DEFAULT" });
+                setStat("Invite");
+                setId('')
+                setFields({
+                  first_name: "",
+                  last_name: "",
+                  email: "",
+                  pin: "",
+                  status: "DEFAULT",
+                });
               }}
               className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
@@ -285,7 +304,7 @@ const TeamManagement = () => {
           >
             <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[80%] md:w-[50%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
-                <div className="font-bold text-lg"> {stat} Destination </div>
+                <div className="font-bold text-lg"> {stat} Team Member </div>
                 <div className="cursor-pointer" onClick={handleClose}>
                   <CloseIcon />
                 </div>
@@ -297,45 +316,71 @@ const TeamManagement = () => {
                       id="outlined-basic"
                       size="small"
                       label="First Name"
+                      value={fields.first_name}
+                      onChange={handleChange}
                       name="first_name"
+                      disabled={stat === "Edit" ? click : false}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
                   </div>
 
-                  <div className="mt-4 w-full">
+                  <div className="mt-5 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
                       label="Last Name"
-                      name="first_name"
+                      disabled={stat === "Edit" ? click : false}
+                      onChange={handleChange}
+                      value={fields.last_name}
+                      name="last_name"
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
                   </div>
 
-                  <div className="mt-4 w-full">
+                  <div className="mt-5 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      onChange={handleChange}
+                      value={fields.email}
+                      disabled={stat === "Edit" ? click : false}
                       label="Email"
-                      name="first_name"
+                      name="email"
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
                   </div>
 
-                  <div className="mt-4 w-full">
+                  <div className="mt-5 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
                       label="Pin"
-                      name="first_name"
+                      onChange={handleChange}
+                      value={fields.pin}
+                      disabled={stat === "Edit" ? click : false}
+                      name="pin"
                       variant="outlined"
                       sx={{ width: "100%" }}
                       type="number"
                     />
                   </div>
+
+                  <select
+                    disabled={stat === "Edit" ? click : false}
+                    onChange={handleChange}
+                    name="status"
+                    value={fields.status}
+                    className="w-full hover:border-slate-600 focus:outline-none border-slate-300 border mt-5 h-10 rounded-[0.3rem]"
+                  >
+                    <option value="DEFAULT" disabled>
+                      Status
+                    </option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                  </select>
                 </div>
 
                 <div className="w-[68%] ">
@@ -351,7 +396,7 @@ const TeamManagement = () => {
                     </div>
                   </div>
 
-                  <div className="border h-[172px] overflow-x-auto">
+                  <div className="border h-[242px] overflow-x-auto">
                     {permissions.map((item, index) => {
                       return (
                         <div key={index} className="flex flex-row">
@@ -359,13 +404,19 @@ const TeamManagement = () => {
                             <div className="p-1">{item}</div>
                           </div>
 
-                          <label htmlFor={`A${index}`} className="flex-[0.4] border">
+                          <label
+                            htmlFor={`A${index}`}
+                            className="flex-[0.4] border"
+                          >
                             <div className="p-1">
                               <input id={`A${index}`} type="checkbox" />
                             </div>
                           </label>
 
-                          <label htmlFor={`B${index}`} className="flex-[0.4] border">
+                          <label
+                            htmlFor={`B${index}`}
+                            className="flex-[0.4] border"
+                          >
                             <div className="p-1">
                               <input id={`B${index}`} type="checkbox" />
                             </div>
