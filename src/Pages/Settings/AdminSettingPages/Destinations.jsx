@@ -43,7 +43,7 @@ function Destinations() {
     } else {
       if (stat == "Add") {
         axios
-          .post("http://test.seoconsole.net/api/v1/destination", fields)
+          .post("https://task.jajasoft.online/api/v1/destination", fields)
           .then((response) => {
             setReload(!reload);
             toast.success("Destination Added Successfully");
@@ -58,7 +58,7 @@ function Destinations() {
 
   const handleDelete = () => {
     axios
-      .delete(`http://test.seoconsole.net/api/v1/destination/${fields.id}`)
+      .delete(`https://task.jajasoft.online/api/v1/destination/${fields.id}`)
       .then((response) => {
         toast.success("Destination Deleted Successfully");
         setReload(!reload);
@@ -71,7 +71,7 @@ function Destinations() {
 
   const handleUpdate = () => {
     axios
-      .put(`http://test.seoconsole.net/api/v1/destination/${fields.id}`, {
+      .put(`https://task.jajasoft.online/api/v1/destination/${fields.id}`, {
         name: fields.name,
         status: fields.status,
       })
@@ -89,7 +89,7 @@ function Destinations() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("http://test.seoconsole.net/api/v1/destination")
+        .get("https://task.jajasoft.online/api/v1/destination")
         .then((response) => {
           setRow(response.data.reverse());
         });
@@ -263,7 +263,7 @@ function Destinations() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[80%] md:w-[40%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[80%] md:w-[30%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Destination </div>
                 <div className="cursor-pointer" onClick={handleClose}>
@@ -296,9 +296,6 @@ function Destinations() {
                   }}
                   className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                 >
-                  <option value="DEFAULT" disabled={true}>
-                    Status
-                  </option>
                   <option value="1">Active</option>
                   <option value="0">Inactive</option>
                 </select>

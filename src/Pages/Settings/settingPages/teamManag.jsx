@@ -28,8 +28,6 @@ const TeamManagement = () => {
   const [reload, setReload] = useState(false);
 
   const [id,setId] = useState('');
-
-  console.log("id-->",id)
  
   const [fields, setFields] = useState({
     first_name: "",
@@ -47,9 +45,9 @@ const TeamManagement = () => {
     if (fields.status === "DEFAULT" || fields.first_name === "" || fields.last_name === "" || fields.email === "" || fields.pin === "") {
       toast.error("Please Fill All the Fields Correctly");
     } else {
-      if (stat == "Add") {
+      if (stat == "Invite") {
         axios
-          .post("http://test.seoconsole.net/api/v1/team", fields)
+          .post("https://task.jajasoft.online/api/v1/team", fields)
           .then((response) => {
             setReload(!reload);
             toast.success("Team Member Added Successfully");
@@ -64,7 +62,7 @@ const TeamManagement = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`http://test.seoconsole.net/api/v1/team/${id}`)
+      .delete(`https://task.jajasoft.online/api/v1/team/${id}`)
       .then((response) => {
         toast.success("Team Member Deleted Successfully");
         setReload(!reload);
@@ -77,7 +75,7 @@ const TeamManagement = () => {
 
   const handleUpdate = () => {
     axios
-      .put(`http://test.seoconsole.net/api/v1/team/${id}`, {
+      .put(`https://task.jajasoft.online/api/v1/team/${id}`, {
         name: fields.name,
         status: fields.status,
       })
@@ -94,7 +92,7 @@ const TeamManagement = () => {
 
   useEffect(() => {
     const getData = () => {
-      axios.get("http://test.seoconsole.net/api/v1/team").then((response) => {
+      axios.get("https://task.jajasoft.online/api/v1/team").then((response) => {
         setRow(response.data.reverse());
       });
     };
@@ -375,9 +373,7 @@ const TeamManagement = () => {
                     value={fields.status}
                     className="w-full hover:border-slate-600 focus:outline-none border-slate-300 border mt-5 h-10 rounded-[0.3rem]"
                   >
-                    <option value="DEFAULT" disabled>
-                      Status
-                    </option>
+                 
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
                   </select>

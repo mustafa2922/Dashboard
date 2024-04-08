@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 
 function Suppliers() {
+  const [able, setAble] = useState(true);
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [reload, setReload] = useState(false);
@@ -39,16 +40,35 @@ function Suppliers() {
     city: "",
     company: "",
     address: "",
-    status: "DEFAULT",
+    status: "1",
   });
 
+  const checkStatus = () => {
+    if (
+      fields.status === "" ||
+      fields.first_name === "" ||
+      fields.title === "DEFAULT" ||
+      fields.last_name === "" ||
+      fields.company === "" ||
+      fields.city === "" ||
+      fields.address === "" ||
+      fields.email === "" ||
+      fields.number === ""
+    ) {
+      setAble(true);
+    } else {
+      setAble(true);
+    }
+  };
   const handleChange = (event) => {
     return setFields({ ...fields, [event.target.name]: event.target.value });
+    checkStatus()
   };
+
 
   const handleSave = () => {
     if (
-      fields.status === "DEFAULT" ||
+      fields.status === "" ||
       fields.first_name === "" ||
       fields.title === "DEFAULT" ||
       fields.last_name === "" ||
@@ -62,7 +82,7 @@ function Suppliers() {
     } else {
       if (stat == "Add") {
         axios
-          .post("http://test.seoconsole.net/api/v1/supplier", fields)
+          .post("https://task.jajasoft.online/api/v1/supplier", fields)
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -79,7 +99,7 @@ function Suppliers() {
 
   const handleDelete = () => {
     axios
-      .delete(`http://test.seoconsole.net/api/v1/supplier/${id}`)
+      .delete(`https://task.jajasoft.online/api/v1/supplier/${id}`)
       .then((response) => {
         toast.success("Supplier Deleted Successfully");
         setReload(!reload);
@@ -92,7 +112,7 @@ function Suppliers() {
 
   const handleUpdate = () => {
     axios
-      .put(`http://test.seoconsole.net/api/v1/supplier/${id}`, fields)
+      .put(`https://task.jajasoft.online/api/v1/supplier/${id}`, fields)
       .then((response) => {
         toast.success("Supplier Updated Successfully");
         setReload(!reload);
@@ -239,7 +259,7 @@ function Suppliers() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("http://test.seoconsole.net/api/v1/supplier")
+        .get("https://task.jajasoft.online/api/v1/supplier")
         .then((response) => {
           setRow(response.data.reverse());
         });
@@ -275,6 +295,7 @@ function Suppliers() {
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
+                setAble(true);
                 setFields({
                   title: "DEFAULT",
                   first_name: "",
@@ -284,7 +305,7 @@ function Suppliers() {
                   city: "",
                   company: "",
                   address: "",
-                  status: "DEFAULT",
+                  status: "1",
                 });
               }}
               className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
@@ -329,7 +350,6 @@ function Suppliers() {
                   <select
                     value={fields.title}
                     name="title"
-                    disabled={stat === "Edit" ? click : false}
                     onChange={(e) => {
                       handleChange(e);
                     }}
@@ -350,7 +370,6 @@ function Suppliers() {
                         size="small"
                         label="First Name"
                         name="first_name"
-                        disabled={stat === "Edit" ? click : false}
                         onChange={(e) => {
                           handleChange(e);
                         }}
@@ -364,7 +383,6 @@ function Suppliers() {
                         id="outlined-basic"
                         size="small"
                         label="Last Name"
-                        disabled={stat === "Edit" ? click : false}
                         value={fields.last_name}
                         onChange={(e) => handleChange(e)}
                         name="last_name"
@@ -375,7 +393,6 @@ function Suppliers() {
                   </div>
 
                   <select
-                    disabled={stat === "Edit" ? click : false}
                     name="status"
                     value={fields.status}
                     onChange={(e) => {
@@ -383,9 +400,6 @@ function Suppliers() {
                     }}
                     className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                   >
-                    <option value="DEFAULT" disabled={true}>
-                      Status
-                    </option>
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
                   </select>
@@ -396,7 +410,6 @@ function Suppliers() {
                       id="outlined-basic"
                       size="small"
                       label="Email"
-                      disabled={stat === "Edit" ? click : false}
                       name="email"
                       onChange={(e) => {
                         handleChange(e);
@@ -411,7 +424,6 @@ function Suppliers() {
                     <PhoneInput
                       international
                       value={fields.number}
-                      disabled={stat === "Edit" ? click : false}
                       onChange={(e) => {
                         setFields({ ...fields, number: e });
                       }}
@@ -424,7 +436,6 @@ function Suppliers() {
                       fullWidth
                       id="outlined-basic"
                       name="city"
-                      disabled={stat === "Edit" ? click : false}
                       value={fields.city}
                       onChange={(e) => {
                         handleChange(e);
@@ -440,7 +451,6 @@ function Suppliers() {
                       fullWidth
                       id="outlined-basic"
                       name="company"
-                      disabled={stat === "Edit" ? click : false}
                       value={fields.company}
                       onChange={(e) => {
                         handleChange(e);
@@ -455,7 +465,6 @@ function Suppliers() {
                     <TextField
                       fullWidth
                       id="outlined-basic"
-                      disabled={stat === "Edit" ? click : false}
                       size="small"
                       name="address"
                       value={fields.address}
@@ -483,6 +492,7 @@ function Suppliers() {
 
                 <div className=" w-[48%] rounded-md h-10  ">
                   <button
+                    disabled={able}
                     onClick={
                       stat === "Edit"
                         ? click
@@ -492,21 +502,15 @@ function Suppliers() {
                           : handleUpdate
                         : handleSave
                     }
-                    className={`w-full rounded-md h-full flex ${
+                    className={`w-full rounded-md h-full flex items-center ${
                       stat === "Edit"
-                        ? click
-                          ? "hover:bg-blue-900"
-                          : "hover:bg-green-900"
-                        : "hover:bg-green-900"
-                    } items-center justify-center text-white ${
-                      stat === "Edit"
-                        ? click
-                          ? "bg-blue-600"
-                          : "bg-green-600"
-                        : "bg-green-600"
-                    }`}
+                        ? "hover:bg-green-900 bg-green-600 "
+                        : able
+                        ? " bg-slate-600  "
+                        : "hover:bg-green-900 bg-green-600"
+                    }justify-center text-white`}
                   >
-                    {stat === "Edit" ? (click ? "Edit" : "Update") : "Save"}
+                    {stat === "Edit" ? "Update" : "Save"}
                   </button>
                 </div>
               </div>
@@ -519,3 +523,17 @@ function Suppliers() {
 }
 
 export default Suppliers;
+
+// ${
+//   stat === "Edit"
+//     ? click
+//       ? "hover:bg-blue-900"
+//       : "hover:bg-green-900"
+//     : "hover:bg-green-900"
+// } items-center justify-center text-white ${
+//   stat === "Edit"
+//     ? click
+//       ? "bg-blue-600"
+//       : "bg-green-600"
+//     : "bg-green-600"
+// }

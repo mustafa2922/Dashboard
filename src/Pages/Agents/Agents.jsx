@@ -70,7 +70,7 @@ function Agents() {
     } else {
       if (stat == "Add") {
         axios
-          .post("http://test.seoconsole.net/api/v1/agent", fields)
+          .post("https://task.jajasoft.online/api/v1/agent", fields)
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -87,7 +87,7 @@ function Agents() {
 
   const handleDelete = () => {
     axios
-      .delete(`http://test.seoconsole.net/api/v1/agent/${id}`)
+      .delete(`https://task.jajasoft.online/api/v1/agent/${id}`)
       .then((response) => {
         toast.success("Agent Deleted Successfully");
         setReload(!reload);
@@ -100,7 +100,7 @@ function Agents() {
 
   const handleUpdate = () => {
     axios
-      .put(`http://test.seoconsole.net/api/v1/agent/${id}`, fields)
+      .put(`https://task.jajasoft.online/api/v1/agent/${id}`, fields)
       .then((response) => {
         toast.success("Agent Updated Successfully");
         setReload(!reload);
@@ -232,7 +232,7 @@ function Agents() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("http://test.seoconsole.net/api/v1/agent")
+        .get("https://task.jajasoft.online/api/v1/agent")
         .then((response) => {
           setRow(response.data.reverse());
         });

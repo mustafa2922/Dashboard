@@ -140,7 +140,7 @@ function Transfer() {
     } else {
       if (stat == "Add") {
         axios
-          .post("http://test.seoconsole.net/api/v1/vehicle", vehFields)
+          .post("https://task.jajasoft.online/api/v1/vehicle", vehFields)
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -157,7 +157,7 @@ function Transfer() {
 
   const handleDelete = () => {
     axios
-      .delete(`http://test.seoconsole.net/api/v1/vehicle/${id}`)
+      .delete(`https://task.jajasoft.online/api/v1/vehicle/${id}`)
       .then((response) => {
         toast.success("Vehicle Deleted Successfully");
         setReload(!reload);
@@ -170,7 +170,7 @@ function Transfer() {
 
   const handleUpdate = () => {
     axios
-      .put(`http://test.seoconsole.net/api/v1/vehicle/${id}`, vehFields)
+      .put(`https://task.jajasoft.online/api/v1/vehicle/${id}`, vehFields)
       .then((response) => {
         toast.success("Vehicle Updated Successfully");
         setReload(!reload);
@@ -185,7 +185,7 @@ function Transfer() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("http://test.seoconsole.net/api/v1/vehicle")
+        .get("https://task.jajasoft.online/api/v1/vehicle")
         .then((response) => {
           setRow(response.data.reverse());
         });

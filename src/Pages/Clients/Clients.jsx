@@ -74,7 +74,7 @@ const Clients = () => {
     } else {
       if (stat == "Add") {
         axios
-          .post("http://test.seoconsole.net/api/v1/client", fields)
+          .post("https://task.jajasoft.online/api/v1/client", fields)
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -92,7 +92,7 @@ const Clients = () => {
   const handleDelete = () => {
     console.log(id);
     axios
-      .delete(`http://test.seoconsole.net/api/v1/client/${id}`)
+      .delete(`https://task.jajasoft.online/api/v1/client/${id}`)
       .then((response) => {
         toast.success("Client Deleted Successfully");
         setReload(!reload);
@@ -105,7 +105,7 @@ const Clients = () => {
 
   const handleUpdate = () => {
     axios
-      .put(`http://test.seoconsole.net/api/v1/client/${id}`, fields)
+      .put(`https://task.jajasoft.online/api/v1/client/${id}`, fields)
       .then((response) => {
         toast.success("Client Updated Successfully");
         setReload(!reload);
@@ -232,7 +232,7 @@ const Clients = () => {
 
   useEffect(() => {
     const getdata = () => {
-      axios.get("http://test.seoconsole.net/api/v1/client").then((response) => {
+      axios.get("https://task.jajasoft.online/api/v1/client").then((response) => {
         setRow(response.data.reverse());
       });
     };
@@ -391,10 +391,10 @@ const Clients = () => {
 
                   <div className="mt-4">
                     <PhoneInput
-                      international
+                      defaultCountry="IN"
                       disabled={stat === "Edit" ? click : false}
                       placeholder="Number-1"
-                      className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                      className={`border border-[#b9b9b9] ${ stat === "Edit" ?  click ? 'text-slate-400' : '' : ''} rounded-sm p-2 hover:border-black h-10`}
                       value={fields.mob}
                       onChange={(e) => {
                         setField({ ...fields, mob: e });
@@ -421,10 +421,10 @@ const Clients = () => {
                 <div className="w-[48%]">
                   <div>
                     <PhoneInput
-                      international
+                      defaultCountry="IN"
                       placeholder="Number-2"
                       disabled={stat === "Edit" ? click : false}
-                      className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                      className={`border border-[#b9b9b9] ${ stat === "Edit" ?  click ? 'text-slate-400' : '' : ''} rounded-sm p-2 hover:border-black h-10`}
                       value={fields.sec_mob}
                       onChange={(e) => {
                         setField({ ...fields, sec_mob: e });

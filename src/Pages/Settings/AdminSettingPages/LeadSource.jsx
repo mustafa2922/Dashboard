@@ -43,7 +43,7 @@ function LeadSource() {
     } else {
       if (stat == "Add") {
         axios
-          .post("http://test.seoconsole.net/api/v1/leadsource", fields)
+          .post("https://task.jajasoft.online/api/v1/leadsource", fields)
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -60,7 +60,7 @@ function LeadSource() {
 
   const handleDelete = () => {
     axios
-      .delete(`http://test.seoconsole.net/api/v1/leadsource/${fields.id}`)
+      .delete(`https://task.jajasoft.online/api/v1/leadsource/${fields.id}`)
       .then((response) => {
         toast.success("Lead Source Deleted Successfully");
         setReload(!reload);
@@ -73,7 +73,7 @@ function LeadSource() {
 
   const handleUpdate = () => {
     axios
-      .put(`http://test.seoconsole.net/api/v1/leadsource/${fields.id}`, {
+      .put(`https://task.jajasoft.online/api/v1/leadsource/${fields.id}`, {
         name: fields.name,
         status: fields.status,
       })
@@ -91,7 +91,7 @@ function LeadSource() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("http://test.seoconsole.net/api/v1/leadsource")
+        .get("https://task.jajasoft.online/api/v1/leadsource")
         .then((response) => {
           setRow(response.data.reverse());
         });

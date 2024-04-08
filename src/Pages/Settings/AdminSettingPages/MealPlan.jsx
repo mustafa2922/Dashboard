@@ -43,7 +43,7 @@ function MealPlan() {
     } else {
       if (stat == "Add") {
         axios
-          .post("http://test.seoconsole.net/api/v1/mealplan", {
+          .post("https://task.jajasoft.online/api/v1/mealplan", {
             name: fields.name,
             status: fields.status,
           })
@@ -63,7 +63,7 @@ function MealPlan() {
 
   const handleDelete = () => {
     axios
-      .delete(`http://test.seoconsole.net/api/v1/mealplan/${fields.id}`)
+      .delete(`https://task.jajasoft.online/api/v1/mealplan/${fields.id}`)
       .then((response) => {
         toast.success("Meal Plan Deleted Successfully");
         setReload(!reload);
@@ -76,7 +76,7 @@ function MealPlan() {
 
   const handleUpdate = () => {
     axios
-      .put(`http://test.seoconsole.net/api/v1/mealplan/${fields.id}`, {
+      .put(`https://task.jajasoft.online/api/v1/mealplan/${fields.id}`, {
         name: fields.name,
         status: fields.status,
       })
@@ -94,7 +94,7 @@ function MealPlan() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("http://test.seoconsole.net/api/v1/mealplan")
+        .get("https://task.jajasoft.online/api/v1/mealplan")
         .then((response) => {
           setRow(response.data.reverse());
         });
@@ -268,7 +268,7 @@ function MealPlan() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[80%] md:w-[40%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[80%] md:w-[30%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Meal PLan </div>
                 <div className="cursor-pointer" onClick={handleClose}>
@@ -301,9 +301,6 @@ function MealPlan() {
                   }}
                   className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                 >
-                  <option value="DEFAULT" disabled={true}>
-                    Status
-                  </option>
                   <option value="1">Active</option>
                   <option value="0">Inactive</option>
                 </select>

@@ -6,8 +6,10 @@ import email3 from '../../../assets/images/email3.png'
 
 function MailSetting() {
   return (
-    <div className="flex flex-row p-3 w-full h-full justify-between bg-[#f7f9fa] ">
-      <div className="w-[49%]  border-slate-300 border rounded-lg p-5 h-fit bg-white">
+    <div className="flex flex-wrap flex-row p-3 w-full h-full justify-between bg-[#f7f9fa] ">
+
+      <div className="w-[100%] lg:w-[49%]  border-slate-300 border rounded-lg  px-1  md:px-5 py-5 h-fit bg-white">
+
         <div className="text-black font-bold">SETUP SMTP SETTINGS</div>
 
         <div className="flex flex-col mt-4 ml-4">
@@ -153,16 +155,17 @@ function MailSetting() {
         </div>
       </div>
 
-      <div className="w-[49%]  border-slate-300 border rounded-lg h-fit pb-10 bg-white">
+      <div className="w-[100%]  mt-5  lg:mt-0  lg:w-[49%]  border-slate-300 border rounded-lg h-fit pb-10 bg-white">
 
         <div className="w-full flex items-center rounded-t-lg justify-start p-3 font-bold text-lg text-white bg-[#6c757d]" > Configure Email </div>
 
-        <div className="mt-5 px-8" >
+        <div className="mt-5 px-2 lg:px-8" >
+
           <div className="w-full text-center" >Connect your email inbox and transform the way you do sales.</div>
 
-          <div className="flex flex-row w-full justify-evenly mt-5 items-center" >
+          <div className="flex flex-wrap flex-row w-full justify-evenly mt-5 items-center" >
 
-            <div className="flex flex-col w-[30%] items-center" >
+            <div className="flex flex-col w-full  sm:w-[30%] items-center" >
               <div className="w-28" >
                 <img className="h-full w-full object-contain" src={email1} />
               </div>
@@ -171,7 +174,7 @@ function MailSetting() {
               </div>
             </div>
  
-            <div className="flex flex-col w-[30%] items-center" >
+            <div className="flex flex-col w-full  sm:w-[30%] items-center" >
               <div className="w-28" >
                 <img className="h-full w-full object-contain" src={email2} />
               </div>
@@ -180,7 +183,7 @@ function MailSetting() {
               </div>
             </div>
  
-            <div className="flex flex-col w-[30%] items-center" >
+            <div className="flex flex-col w-full sm:w-[30%] items-center" >
               <div className="w-28" >
                 <img className="h-full w-full object-contain" src={email3} />
               </div>
@@ -193,7 +196,7 @@ function MailSetting() {
           </div>
         </div>
 
-        <div className="mt-5 mx-8 bg-[#f5f5f5] p-2 py-5" >
+        <div className="mt-5 mx-2 md:mx-8 bg-[#f5f5f5] p-2 py-5" >
           <div className="text-black font-bold text-sm" >Use the following settings:</div>
           <div className="mt-2" >
             <p className="text-xs" >{`1) Mail.com SMTP server address: smtp.yourdomain.com`}</p>

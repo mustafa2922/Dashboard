@@ -27,66 +27,66 @@ export default function AdminSetting() {
 
       <section className="button-grid flex flex-wrap">
 
-        <Link className="w-[48%] md:w-[30%]" to={"/suppliers"}>
+        <Link  target="_blank" className="w-[48%] md:w-[30%]" to={"/suppliers"}>
           <SupervisedUserCircleIcon fontSize="large" />
           Suppliers
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/destinations"}>
+        <Link   target="_blank" className="w-[48%] md:w-[30%]" to={"/destinations"}>
           <FlagIcon fontSize="large" />
           Destinations
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/roomType"}>
+        <Link   target="_blank" className="w-[48%] md:w-[30%]" to={"/roomType"}>
           <BedIcon fontSize="large" />
           Room Category
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/mealPlan"}>
+        <Link   target="_blank" className="w-[48%] md:w-[30%]" to={"/mealPlan"}>
           <StorefrontIcon fontSize="large" />
           Meal plan
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/accommodation"}>
+        <Link   target="_blank" className="w-[48%] md:w-[30%]" to={"/accommodation"}>
           <HotelIcon fontSize="large" />
           Accomodation
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/driver"}>
+        <Link   target="_blank" className="w-[48%] md:w-[30%]" to={"/driver"}>
           <CommuteIcon fontSize="large" />
           Driver
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/transfer"}>
+        <Link   target="_blank" className="w-[48%] md:w-[30%]" to={"/transfer"}>
           <DirectionsCarIcon fontSize="large" />
           Vehicle
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/dayItinerary"}>
+        <Link   target="_blank" className="w-[48%] md:w-[30%]" to={"/dayItinerary"}>
           <ContentPasteIcon fontSize="large" />
           Day itinerary
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/leadSource"}>
+        <Link   target="_blank" className="w-[48%] md:w-[30%]" to={"/leadSource"}>
           <LeaderboardIcon fontSize="large" />
           Lead source
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/packageTheme"}>
+        <Link   target="_blank" className="w-[48%] md:w-[30%]" to={"/packageTheme"}>
           <BackupTableIcon fontSize="large" />
           Package theme
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/mailSetting"}>
+        <Link   target="_blank" className="w-[48%] md:w-[30%]" to={"/mailSetting"}>
           <EmailIcon fontSize="large" />
           Mail setting
         </Link>
-        <Link className="w-[48%] md:w-[30%]" to={"/weatherSetting"}>
+        <Link   target="_blank" className="w-[48%] md:w-[30%]" to={"/weatherSetting"}>
           <ThunderstormIcon fontSize="large" />
           Weather setting
         </Link>
 
-        <Link className="w-[48%] md:w-[30%]" to={"/currency"}>
+        <Link   target="_blank" className="w-[48%] md:w-[30%]" to={"/currency"}>
           <AttachMoneyIcon fontSize="large" />
           Currency
         </Link>

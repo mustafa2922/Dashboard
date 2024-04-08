@@ -6,7 +6,6 @@ import "react-phone-number-input/style.css";
 import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
-import EditNoteIcon from "@mui/icons-material/EditNote";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TextField from "@mui/material/TextField";
 import ReactStars from "react-rating-stars-component";
@@ -24,6 +23,8 @@ import ImageModal from "../../../../Components/imageModal";
 import axios from "axios";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { toast } from "react-toastify";
+import EditIcon from "@mui/icons-material/Edit";
+
 
 let destinations = [];
 
@@ -268,7 +269,7 @@ function Hotel() {
             }}
             className="flex items-center justify-center w-full h-full"
           >
-            <EditNoteIcon
+            <EditIcon
               className="hover:bg-black hover:text-white rounded-full border p-1 border-black"
               style={{ fontSize: "25px" }}
             />
@@ -306,7 +307,7 @@ function Hotel() {
 
   const handleDelete = () => {
     axios
-      .delete(`http://test.seoconsole.net/api/v1/accomodation/${id}`)
+      .delete(`https://task.jajasoft.online/api/v1/accomodation/${id}`)
       .then((response) => {
         toast.success("Accomodation Deleted Successfully");
         setReload(!reload);
@@ -319,7 +320,7 @@ function Hotel() {
 
   const handleUpdate = () => {
     axios
-      .put(`http://test.seoconsole.net/api/v1/accomodation/${id}`, hotelFields)
+      .put(`https://task.jajasoft.online/api/v1/accomodation/${id}`, hotelFields)
       .then((response) => {
         toast.success("Accomodation Updated Successfully");
         setReload(!reload);
@@ -397,7 +398,7 @@ function Hotel() {
       hotelFields.status !== "DEFAULT"
     ) {
       axios
-        .post("http://test.seoconsole.net/api/v1/accomodation", hotelFields)
+        .post("https://task.jajasoft.online/api/v1/accomodation", hotelFields)
         .then((res) => {
           toast.success("Data Added Successfully");
           setReload(!reload);
@@ -414,7 +415,7 @@ function Hotel() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("http://test.seoconsole.net/api/v1/accomodation")
+        .get("https://task.jajasoft.online/api/v1/accomodation")
         .then((response) => {
           setRow(response.data.reverse());
         }),
@@ -423,7 +424,7 @@ function Hotel() {
 
     const getDestinations = () => {
       axios
-        .get("http://test.seoconsole.net/api/v1/destination")
+        .get("https://task.jajasoft.online/api/v1/destination")
         .then((response) => {
           destinations = response.data;
         });
@@ -516,7 +517,7 @@ function Hotel() {
           >
             <div className="p-3 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[90%] lg:w-[50%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
-                <div className="font-bold text-lg"> {stat} Hotel </div>
+                <div className="font-bold text-lg"> {stat} Accommodation </div>
                 <div
                   className="cursor-pointer"
                   onClick={() => {
@@ -555,7 +556,7 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      label="Accommodation Name"
+                      label="Name"
                       disabled={stat === "Edit" ? click : false}
                       name="name"
                       value={hotelFields.name}
@@ -632,7 +633,7 @@ function Hotel() {
                       onChange={(e) => {
                         handleChange(e);
                       }}
-                      label="Accommodation Address"
+                      label="Address"
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -646,14 +647,14 @@ function Hotel() {
                       onChange={(e) => {
                         setHotelFields({ ...hotelFields, contact_no: e });
                       }}
-                      placeholder="Accommodation Contact No"
-                      className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                      placeholder="Contact No"
+                      className={`border border-[#b9b9b9] ${ stat === "Edit" ?  click ? 'text-slate-400' : '' : ''} rounded-sm p-2 hover:border-black h-10`}
                     />
                   </div>
 
                   <div className="mt-4 w-full h-fit">
                     <Textarea
-                      placeholder="Accommodation Details"
+                      placeholder="Details"
                       disabled={stat === "Edit" ? click : false}
                       minRows={2}
                       maxRows={5}
@@ -774,7 +775,7 @@ function Hotel() {
                         setHotelFields({ ...hotelFields, mob_no_1: e });
                       }}
                       placeholder="Mobile No *"
-                      className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                      className={`border border-[#b9b9b9] ${ stat === "Edit" ?  click ? 'text-slate-400' : '' : ''} rounded-sm p-2 hover:border-black h-10`}
                     />
                   </div>
                   <div className="mt-4">
@@ -786,7 +787,7 @@ function Hotel() {
                         setHotelFields({ ...hotelFields, mob_no_2: e });
                       }}
                       placeholder="Alternative No"
-                      className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                      className={`border border-[#b9b9b9] ${ stat === "Edit" ?  click ? 'text-slate-400' : '' : ''} rounded-sm p-2 hover:border-black h-10`}
                     />
                   </div>
                   <div className="w-full flex items-center justify-between">
@@ -828,9 +829,7 @@ function Hotel() {
                     onChange={(e) => handleChange(e)}
                     className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                   >
-                    <option value="DEFAULT" disabled={true}>
-                      Accommodation Status
-                    </option>
+
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
                   </select>
@@ -912,7 +911,7 @@ function Hotel() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[70%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[50%] h-fit">
               <div className="flex justify-between text-3xl items-center px-1">
                 <div className="font-bold text-lg">
                   {" "}

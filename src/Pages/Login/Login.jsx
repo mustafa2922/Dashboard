@@ -526,7 +526,7 @@ const Login = () => {
         </div>
 
         <div
-          className={`flex  hidden lg:block h-full  ${
+          className={`flex  lg:block h-full  ${
             isActive ? "active" : "close"
           }`}
         >

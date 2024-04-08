@@ -70,7 +70,7 @@ function Corporate() {
     } else {
       if (stat == "Add") {
         axios
-          .post("http://test.seoconsole.net/api/v1/corporate", fields)
+          .post("https://task.jajasoft.online/api/v1/corporate", fields)
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -87,7 +87,7 @@ function Corporate() {
 
   const handleDelete = () => {
     axios
-      .delete(`http://test.seoconsole.net/api/v1/corporate/${id}`)
+      .delete(`https://task.jajasoft.online/api/v1/corporate/${id}`)
       .then((response) => {
         toast.success("Corporate Deleted Successfully");
         setReload(!reload);
@@ -100,7 +100,7 @@ function Corporate() {
 
   const handleUpdate = () => {
     axios
-      .put(`http://test.seoconsole.net/api/v1/corporate/${id}`, fields)
+      .put(`https://task.jajasoft.online/api/v1/corporate/${id}`, fields)
       .then((response) => {
         toast.success("Corporate Updated Successfully");
         setReload(!reload);
@@ -232,7 +232,7 @@ function Corporate() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("http://test.seoconsole.net/api/v1/corporate")
+        .get("https://task.jajasoft.online/api/v1/corporate")
         .then((response) => {
           setRow(response.data.reverse());
         });
