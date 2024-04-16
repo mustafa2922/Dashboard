@@ -22,6 +22,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Clients = () => {
+  const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
@@ -52,11 +53,11 @@ const Clients = () => {
   };
 
   const handleClose = () => {
-    setClick(true);
     setOpen(false);
   };
 
   const handleSave = () => {
+    setAble(true);
     if (
       fields.title === "DEFAULT" ||
       fields.first_name === "" ||
@@ -71,6 +72,7 @@ const Clients = () => {
       fields.email === fields.sec_email
     ) {
       toast.error("Please Fill All Fields Correctly");
+      setAble(false);
     } else {
       if (stat == "Add") {
         axios
@@ -78,42 +80,70 @@ const Clients = () => {
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
+              setAble(false);
               toast.success("Agent Added Successfully");
               setOpen(false);
             }
           })
           .catch((error) => {
             console.log(error);
+            setAble(false);
           });
       }
     }
   };
 
   const handleDelete = () => {
-    console.log(id);
-    axios
-      .delete(`https://task.jajasoft.online/api/v1/client/${id}`)
-      .then((response) => {
-        toast.success("Client Deleted Successfully");
-        setReload(!reload);
-        setOpen(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+    const confirmationToastId = toast.warning(
+      <div className="flex flex-col">
+        <p>You want to delete this item?</p>
+        <div className="flex items-center justify-start gap-2">
+          <button
+            className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
+            onClick={() => {
+              axios
+                .delete(`https://task.jajasoft.online/api/v1/client/${id}`)
+                .then((response) => {
+                  toast.dismiss(confirmationToastId);
+                  toast.success("Client Deleted Successfully");
+                  setReload(!reload);
+                  setOpen(false);
+                })
+                .catch((err) => {
+                  console.log(err.response.data);
+                });
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="w-8 h-6 text-xs bg-green-500 rounded-md text-white "
+            onClick={() => {
+              toast.dismiss(confirmationToastId);
+            }}
+          >
+            No
+          </button>
+        </div>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const handleUpdate = () => {
+    setAble(true);
     axios
       .put(`https://task.jajasoft.online/api/v1/client/${id}`, fields)
       .then((response) => {
         toast.success("Client Updated Successfully");
         setReload(!reload);
+        setAble(false);
         setClick(true);
         setOpen(false);
       })
       .catch((err) => {
         console.log(err.response.data);
+        setAble(false);
       });
   };
 
@@ -232,9 +262,11 @@ const Clients = () => {
 
   useEffect(() => {
     const getdata = () => {
-      axios.get("https://task.jajasoft.online/api/v1/client").then((response) => {
-        setRow(response.data.reverse());
-      });
+      axios
+        .get("https://task.jajasoft.online/api/v1/client")
+        .then((response) => {
+          setRow(response.data.reverse());
+        });
     };
     getdata();
   }, [reload]);
@@ -312,7 +344,7 @@ const Clients = () => {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[70%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[48%] h-fit">
               <div className="flex justify-between items-center h-[10%] px-2">
                 <div className="font-bold text-lg">{stat} Client</div>
                 <div className="cursor-pointer" onClick={handleClose}>
@@ -328,7 +360,6 @@ const Clients = () => {
                     onChange={(e) => {
                       handleChange(e);
                     }}
-                    disabled={stat === "Edit" ? click : false}
                     className="px-2 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                   >
                     <option value="DEFAULT">Title</option>
@@ -346,7 +377,6 @@ const Clients = () => {
                         id="outlined-basic"
                         size="small"
                         label="First Name"
-                        disabled={stat === "Edit" ? click : false}
                         variant="outlined"
                         name="first_name"
                         onChange={(e) => {
@@ -363,7 +393,6 @@ const Clients = () => {
                         size="small"
                         label="Last Name"
                         variant="outlined"
-                        disabled={stat === "Edit" ? click : false}
                         name="last_name"
                         onChange={(e) => {
                           handleChange(e);
@@ -379,7 +408,6 @@ const Clients = () => {
                       id="outlined-basic"
                       size="small"
                       label="Email-1"
-                      disabled={stat === "Edit" ? click : false}
                       variant="outlined"
                       name="email"
                       onChange={(e) => {
@@ -392,9 +420,8 @@ const Clients = () => {
                   <div className="mt-4">
                     <PhoneInput
                       defaultCountry="IN"
-                      disabled={stat === "Edit" ? click : false}
                       placeholder="Number-1"
-                      className={`border border-[#b9b9b9] ${ stat === "Edit" ?  click ? 'text-slate-400' : '' : ''} rounded-sm p-2 hover:border-black h-10`}
+                      className={`border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10`}
                       value={fields.mob}
                       onChange={(e) => {
                         setField({ ...fields, mob: e });
@@ -408,7 +435,6 @@ const Clients = () => {
                       id="outlined-basic"
                       size="small"
                       label="Email-2"
-                      disabled={stat === "Edit" ? click : false}
                       variant="outlined"
                       name="sec_email"
                       onChange={(e) => {
@@ -423,8 +449,7 @@ const Clients = () => {
                     <PhoneInput
                       defaultCountry="IN"
                       placeholder="Number-2"
-                      disabled={stat === "Edit" ? click : false}
-                      className={`border border-[#b9b9b9] ${ stat === "Edit" ?  click ? 'text-slate-400' : '' : ''} rounded-sm p-2 hover:border-black h-10`}
+                      className={`border border-[#b9b9b9]  rounded-sm p-2 hover:border-black h-10`}
                       value={fields.sec_mob}
                       onChange={(e) => {
                         setField({ ...fields, sec_mob: e });
@@ -436,7 +461,6 @@ const Clients = () => {
                     <TextField
                       fullWidth
                       id="outlined-basic"
-                      disabled={stat === "Edit" ? click : false}
                       size="small"
                       label="City"
                       variant="outlined"
@@ -452,7 +476,6 @@ const Clients = () => {
                     <TextField
                       fullWidth
                       id="outlined-basic"
-                      disabled={stat === "Edit" ? click : false}
                       size="small"
                       label="Address"
                       variant="outlined"
@@ -469,7 +492,6 @@ const Clients = () => {
                       <MobileDatePicker
                         label="Date Of Birth"
                         format="DD-MM-YYYY"
-                        disabled={stat === "Edit" ? click : false}
                         name="date_of_birth"
                         value={showDOBDate}
                         onAccept={(e) => {
@@ -488,7 +510,6 @@ const Clients = () => {
                       <MobileDatePicker
                         format="DD-MM-YYYY"
                         label="Marriage Anniversary"
-                        disabled={stat === "Edit" ? click : false}
                         value={showMADate}
                         name="marriage_anniversary"
                         onAccept={(e) => {
@@ -518,30 +539,13 @@ const Clients = () => {
 
                 <div className=" w-[48%] rounded-md h-10  ">
                   <button
-                    onClick={
-                      stat === "Edit"
-                        ? click
-                          ? () => {
-                              setClick(false);
-                            }
-                          : handleUpdate
-                        : handleSave
-                    }
-                    className={`w-full rounded-md h-full flex ${
-                      stat === "Edit"
-                        ? click
-                          ? "hover:bg-blue-900"
-                          : "hover:bg-green-900"
-                        : "hover:bg-green-900"
-                    } items-center justify-center text-white ${
-                      stat === "Edit"
-                        ? click
-                          ? "bg-blue-600"
-                          : "bg-green-600"
-                        : "bg-green-600"
-                    }`}
+                    disabled={able}
+                    onClick={stat === "Edit" ? handleUpdate : handleSave}
+                    className={`w-full rounded-md h-full flex items-center
+                         hover:bg-green-900 bg-green-600
+                    justify-center text-white`}
                   >
-                    {stat === "Edit" ? (click ? "Edit" : "Update") : "Save"}
+                    {stat === "Edit" ? "Update" : "Save"}
                   </button>
                 </div>
               </div>

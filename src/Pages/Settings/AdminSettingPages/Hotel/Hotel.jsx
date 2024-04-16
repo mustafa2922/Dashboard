@@ -25,10 +25,10 @@ import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternate
 import { toast } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
 
-
 let destinations = [];
 
 function Hotel() {
+  const [able, setAble] = useState(false);
   const [id, setId] = useState("");
 
   const [hotelFields, setHotelFields] = useState({
@@ -47,7 +47,7 @@ function Hotel() {
     mob_no_2: "",
     reservation_email: "",
     website_link: "",
-    status: "DEFAULT",
+    status: "1",
   });
 
   const [search, setSearch] = useState("");
@@ -60,7 +60,6 @@ function Hotel() {
   const [imgModal, setImgModal] = useState(false);
   const [destinationVal, setDestinationVal] = useState("");
 
-  
   const [reload, setReload] = useState(false);
   const [click, setClick] = useState(true);
 
@@ -78,7 +77,7 @@ function Hotel() {
     {
       headerName: "Name",
       field: "name",
-      flex: 0.88,
+      flex: 1.4,
     },
     {
       headerName: "Type",
@@ -88,7 +87,7 @@ function Hotel() {
     {
       headerName: "Category",
       field: "category",
-      flex: 1.18,
+      flex: 1.1,
       cellRenderer: (params) => {
         return (
           <ReactStars
@@ -110,7 +109,7 @@ function Hotel() {
       headerName: "Tarif",
       sortable: false,
       filter: false,
-      flex: 0.6,
+      flex: 0.4,
       cellRenderer: (params) => {
         return (
           <div
@@ -131,6 +130,7 @@ function Hotel() {
     {
       headerName: "Tarif Valid From",
       field: "tarif_valid_from",
+      filter:false,
       cellStyle: {
         display: "flex",
         alignItems: "center",
@@ -153,11 +153,12 @@ function Hotel() {
           </div>
         );
       },
-      flex: 1.35,
+      flex: 1,
     },
     {
       headerName: "Tarif Valid To",
       field: "tarif_valid_to",
+      filter:false,
       cellStyle: {
         display: "flex",
         alignItems: "center",
@@ -167,7 +168,7 @@ function Hotel() {
         const formattedDate = dayjs(params.value).format("DD-MM-YYYY");
         return (
           <div
-            className={`flex items-center justify-center w-28 h-6 text-white font-bold rounded-md ${
+            className={`flex items-center justify-center w-32 h-6 text-white font-bold rounded-md ${
               dayjs(params.value, "YYYY-MM-DD").isBefore(dayjs(), "day")
                 ? "bg-red-600"
                 : "bg-green-600"
@@ -177,7 +178,7 @@ function Hotel() {
           </div>
         );
       },
-      flex: 1.18,
+      flex: 1,
     },
     {
       headerName: "Bank Details",
@@ -306,29 +307,61 @@ function Hotel() {
   };
 
   const handleDelete = () => {
-    axios
-      .delete(`https://task.jajasoft.online/api/v1/accomodation/${id}`)
-      .then((response) => {
-        toast.success("Accomodation Deleted Successfully");
-        setReload(!reload);
-        handleClose("modal");
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+    const confirmationToastId = toast.warning(
+      <div className="flex flex-col">
+        <p>You want to delete this item?</p>
+        <div className="flex items-center justify-start gap-2">
+          <button
+            className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
+            onClick={() => {
+              axios
+                .delete(
+                  `https://jajasend.site/api/v1/accomodation/${id}`
+                )
+                .then((response) => {
+                  toast.dismiss(confirmationToastId);
+                  toast.success("Accommodation Deleted Successfully");
+                  setReload(!reload);
+                  setOpen(false);
+                })
+                .catch((err) => {
+                  console.log(err.response.data);
+                });
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="w-8 h-6 text-xs bg-green-500 rounded-md text-white "
+            onClick={() => {
+              toast.dismiss(confirmationToastId);
+            }}
+          >
+            No
+          </button>
+        </div>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const handleUpdate = () => {
+    setAble(true);
     axios
-      .put(`https://task.jajasoft.online/api/v1/accomodation/${id}`, hotelFields)
+      .put(
+        `https://jajasend.site/api/v1/accomodation/${id}`,
+        hotelFields
+      )
       .then((response) => {
         toast.success("Accomodation Updated Successfully");
         setReload(!reload);
+        setAble(false);
         setClick(true);
         handleClose("modal");
       })
       .catch((err) => {
         console.log(err.response.data);
+        setAble(false);
       });
   };
 
@@ -374,7 +407,7 @@ function Hotel() {
       const reader = new FileReader();
       reader.onload = () => {
         setHotelImage(reader.result);
-        console.log(reader.result)
+        console.log(reader.result);
       };
       reader.readAsDataURL(file);
     } else {
@@ -382,7 +415,10 @@ function Hotel() {
     }
   };
 
+  console.log(hotelFields);
+
   const handleSave = () => {
+    setAble(true);
     if (
       hotelFields.address !== "" &&
       hotelFields.category !== "DEFAULT" &&
@@ -395,36 +431,39 @@ function Hotel() {
       hotelFields.name !== "" &&
       hotelFields.property_type !== "DEFAULT" &&
       hotelFields.reservation_email !== "" &&
-      hotelFields.status !== "DEFAULT"
+      hotelFields.status !== ""
     ) {
+
       axios
-        .post("https://task.jajasoft.online/api/v1/accomodation", hotelFields)
+        .post("https://jajasend.site/api/v1/accomodation", hotelFields)
         .then((res) => {
-          toast.success("Data Added Successfully");
+          setAble(false);
+          toast.success("Accomodation Added Successfully");
           setReload(!reload);
           handleClose("modal");
         })
         .catch((err) => {
+          setAble(false);
           console.log(err);
         });
     } else {
       toast.error("Please Fill All Fields Correctly");
+      setAble(false);
     }
   };
 
   useEffect(() => {
     const getData = () => {
       axios
-        .get("https://task.jajasoft.online/api/v1/accomodation")
+        .get("https://jajasend.site/api/v1/accomodation")
         .then((response) => {
           setRow(response.data.reverse());
-        }),
-        [reload];
+        })
     };
 
     const getDestinations = () => {
       axios
-        .get("https://task.jajasoft.online/api/v1/destination")
+        .get("https://jajasend.site/api/v1/destination")
         .then((response) => {
           destinations = response.data;
         });
@@ -480,7 +519,7 @@ function Hotel() {
                   mob_no_2: "",
                   reservation_email: "",
                   website_link: "",
-                  status: "DEFAULT",
+                  status: "1",
                 });
               }}
               className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
@@ -515,7 +554,7 @@ function Hotel() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-3 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[90%] lg:w-[50%] h-fit">
+            <div className="p-3 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[90%] lg:w-[60%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Accommodation </div>
                 <div
@@ -532,7 +571,6 @@ function Hotel() {
                   <select
                     value={hotelFields.property_type}
                     name="property_type"
-                    disabled={stat === "Edit" ? click : false}
                     onChange={(e) => {
                       handleChange(e);
                     }}
@@ -557,7 +595,6 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Name"
-                      disabled={stat === "Edit" ? click : false}
                       name="name"
                       value={hotelFields.name}
                       onChange={(e) => {
@@ -570,7 +607,6 @@ function Hotel() {
 
                   <select
                     value={hotelFields.category}
-                    disabled={stat === "Edit" ? click : false}
                     name="category"
                     onChange={(e) => {
                       handleChange(e);
@@ -590,7 +626,6 @@ function Hotel() {
                   <div className="relative mt-4 w-full">
                     <TextField
                       id="outlined-basic"
-                      disabled={stat === "Edit" ? click : false}
                       size="small"
                       label="Destination"
                       variant="outlined"
@@ -624,38 +659,40 @@ function Hotel() {
                   </div>
 
                   <div className=" mt-4 w-full">
-                    <TextField
-                      id="outlined-basic"
-                      size="small"
-                      disabled={stat === "Edit" ? click : false}
+                    <Textarea
+                    placeholder="Address"
                       name="address"
                       value={hotelFields.address}
                       onChange={(e) => {
                         handleChange(e);
                       }}
-                      label="Address"
-                      variant="outlined"
-                      sx={{ width: "100%" }}
+                      minRows={2}
+                      maxRows={5}
+                      sx={{
+                        width: "100%",
+                        backgroundColor: "#fff",
+                        borderColor: "#d3d3d3",
+                        height: "60px",
+                      }}
                     />
                   </div>
 
                   <div className="mt-4">
                     <PhoneInput
-                       defaultCountry="IN"
+                      defaultCountry="IN"
                       value={hotelFields.contact_no}
-                      disabled={stat === "Edit" ? click : false}
+                     
                       onChange={(e) => {
                         setHotelFields({ ...hotelFields, contact_no: e });
                       }}
                       placeholder="Contact No"
-                      className={`border border-[#b9b9b9] ${ stat === "Edit" ?  click ? 'text-slate-400' : '' : ''} rounded-sm p-2 hover:border-black h-10`}
+                      className={`border border-[#b9b9b9]  rounded-sm p-2 hover:border-black h-10`}
                     />
                   </div>
 
                   <div className="mt-4 w-full h-fit">
                     <Textarea
                       placeholder="Details"
-                      disabled={stat === "Edit" ? click : false}
                       minRows={2}
                       maxRows={5}
                       name="details"
@@ -667,19 +704,17 @@ function Hotel() {
                         width: "100%",
                         backgroundColor: "#fff",
                         borderColor: "#d3d3d3",
-                        height: "100px",
+                        height: "96px",
                       }}
                     />
                   </div>
                 </div>
                 <div className="flex flex-col w-[48%]">
-                  
                   <div className=" flex items-center w-full justify-between">
                     <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
                       <Input
                         id="file-input"
                         type="file"
-                        disabled={stat === "Edit" ? click : false}
                         inputProps={{ multiple: true }}
                         onChange={(e) => handleFileSelect(e)}
                         style={{ display: "none" }}
@@ -689,9 +724,7 @@ function Hotel() {
                           <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
                         </label>
                         <div className="hidden text-sm md:block overflow-x-auto">
-                          {hotelImage === ""
-                            ? `Select Hotel Image`
-                            : "Selected  "}
+                          {hotelImage === "" ? `Select Hotel` : "Selected  "}
                         </div>
                       </div>
                     </div>
@@ -716,7 +749,6 @@ function Hotel() {
                         <MobileDatePicker
                           format="DD-MM-YYYY"
                           label="Tarif Valid From"
-                          disabled={stat === "Edit" ? click : false}
                           name="tarif_valid_from"
                           value={showFromDate}
                           onAccept={(e) => {
@@ -734,7 +766,6 @@ function Hotel() {
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <MobileDatePicker
                           format="DD-MM-YYYY"
-                          disabled={stat === "Edit" ? click : false}
                           label="Tarif Valid To"
                           value={showToDate}
                           onAccept={(e) => {
@@ -754,7 +785,6 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      disabled={stat === "Edit" ? click : false}
                       label="Contact Person"
                       name="contact_person"
                       variant="outlined"
@@ -768,34 +798,33 @@ function Hotel() {
 
                   <div className="mt-4">
                     <PhoneInput
-                      disabled={stat === "Edit" ? click : false}
+                     
                       defaultCountry="IN"
                       value={hotelFields.mob_no_1}
                       onChange={(e) => {
                         setHotelFields({ ...hotelFields, mob_no_1: e });
                       }}
                       placeholder="Mobile No *"
-                      className={`border border-[#b9b9b9] ${ stat === "Edit" ?  click ? 'text-slate-400' : '' : ''} rounded-sm p-2 hover:border-black h-10`}
+                      className={`border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10`}
                     />
                   </div>
                   <div className="mt-4">
                     <PhoneInput
-                       defaultCountry="IN"
-                       disabled={stat === "Edit" ? click : false}
+                      defaultCountry="IN"
+                      
                       value={hotelFields.mob_no_2}
                       onChange={(e) => {
                         setHotelFields({ ...hotelFields, mob_no_2: e });
                       }}
                       placeholder="Alternative No"
-                      className={`border border-[#b9b9b9] ${ stat === "Edit" ?  click ? 'text-slate-400' : '' : ''} rounded-sm p-2 hover:border-black h-10`}
+                      className={`border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10`}
                     />
                   </div>
-                  <div className="w-full flex items-center justify-between">
-                    <div className=" mt-4 w-[48%]">
+                  <div className="w-full mt-4">
+                 
                       <TextField
                         id="outlined-basic"
                         size="small"
-                        disabled={stat === "Edit" ? click : false}
                         label="Reservation Email ID"
                         name="reservation_email"
                         value={hotelFields.reservation_email}
@@ -805,11 +834,11 @@ function Hotel() {
                         variant="outlined"
                         sx={{ width: "100%" }}
                       />
-                    </div>
-                    <div className=" mt-4 w-[48%]">
+                      </div>
+                   <div className="w-full mt-4" >
+                   
                       <TextField
                         id="outlined-basic"
-                        disabled={stat === "Edit" ? click : false}
                         size="small"
                         name="website_link"
                         value={hotelFields.website_link}
@@ -820,16 +849,14 @@ function Hotel() {
                         variant="outlined"
                         sx={{ width: "100%" }}
                       />
-                    </div>
+                  
                   </div>
                   <select
-                    disabled={stat === "Edit" ? click : false}
                     value={hotelFields.status}
                     name="status"
                     onChange={(e) => handleChange(e)}
                     className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                   >
-
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
                   </select>
@@ -856,30 +883,13 @@ function Hotel() {
 
                 <div className=" w-[48%] rounded-md h-10  ">
                   <button
-                    onClick={
-                      stat === "Edit"
-                        ? click
-                          ? () => {
-                              setClick(false);
-                            }
-                          : handleUpdate
-                        : handleSave
-                    }
-                    className={`w-full rounded-md h-full flex ${
-                      stat === "Edit"
-                        ? click
-                          ? "hover:bg-blue-900"
-                          : "hover:bg-green-900"
-                        : "hover:bg-green-900"
-                    } items-center justify-center text-white ${
-                      stat === "Edit"
-                        ? click
-                          ? "bg-blue-600"
-                          : "bg-green-600"
-                        : "bg-green-600"
-                    }`}
+                    disabled={able}
+                    onClick={stat === "Edit" ? handleUpdate : handleSave}
+                    className={`w-full rounded-md h-full flex items-center
+                         hover:bg-green-900 bg-green-600
+                    justify-center text-white`}
                   >
-                    {stat === "Edit" ? (click ? "Edit" : "Update") : "Save"}
+                    {stat === "Edit" ? "Update" : "Save"}
                   </button>
                 </div>
               </div>

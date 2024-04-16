@@ -14,19 +14,18 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 
 function Transfer() {
+  const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [reload, setReload] = useState(false);
   const [open, setOpen] = useState(false);
   const handleClose = () => {
-    setClick(true);
     setOpen(false);
   };
   const [gridApi, setGridApi] = useState(null);
   const [value, setValue] = useState();
 
   const [stat, setStat] = useState("");
-  const [click, setClick] = useState(true);
   const [id, setId] = useState();
 
   const [vehFields, setVehFields] = useState({
@@ -122,7 +121,7 @@ function Transfer() {
     }
   };
 
-  const quickFilter = () => {
+  const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
   };
 
@@ -135,20 +134,23 @@ function Transfer() {
   };
 
   const handleSave = () => {
+    setAble(true);
     if (vehFields.passenger_capacity === "" || vehFields.veh_mark === "") {
       toast.error("Please Fill All the Fields Correctly");
     } else {
       if (stat == "Add") {
         axios
-          .post("https://task.jajasoft.online/api/v1/vehicle", vehFields)
+          .post("https://jajasend.site/api/v1/vehicle", vehFields)
           .then((response) => {
             if (response.data == "success") {
+              setAble(false);
               setReload(!reload);
               toast.success("Vehicle Added Successfully");
               setOpen(false);
             }
           })
           .catch((error) => {
+            setAble(false);
             console.log(error);
           });
       }
@@ -156,39 +158,67 @@ function Transfer() {
   };
 
   const handleDelete = () => {
-    axios
-      .delete(`https://task.jajasoft.online/api/v1/vehicle/${id}`)
-      .then((response) => {
-        toast.success("Vehicle Deleted Successfully");
-        setReload(!reload);
-        setOpen(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+    setAble(true);
+    const confirmationToastId = toast.warning(
+      <div className="flex flex-col">
+        <p>You want to delete this item?</p>
+        <div className="flex items-center justify-start gap-2">
+          <button
+            className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
+            onClick={() => {
+              axios
+                .delete(`https://jajasend.site/api/v1/vehicle/${id}`)
+                .then((response) => {
+                  toast.dismiss(confirmationToastId);
+                  toast.success("Vehicle Deleted Successfully");
+                  setAble(false);
+                  setReload(!reload);
+                  setOpen(false);
+                })
+                .catch((err) => {
+                  setAble(false);
+                  console.log(err.response.data);
+                });
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="w-8 h-6 text-xs bg-green-500 rounded-md text-white "
+            onClick={() => {
+              toast.dismiss(confirmationToastId);
+              setAble(false);
+            }}
+          >
+            No
+          </button>
+        </div>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const handleUpdate = () => {
+    setAble(true);
     axios
-      .put(`https://task.jajasoft.online/api/v1/vehicle/${id}`, vehFields)
+      .put(`https://jajasend.site/api/v1/vehicle/${id}`, vehFields)
       .then((response) => {
+        setAble(false);
         toast.success("Vehicle Updated Successfully");
         setReload(!reload);
-        setClick(true);
         setOpen(false);
       })
       .catch((err) => {
+        setAble(false);
         console.log(err.response.data);
       });
   };
 
   useEffect(() => {
     const getData = () => {
-      axios
-        .get("https://task.jajasoft.online/api/v1/vehicle")
-        .then((response) => {
-          setRow(response.data.reverse());
-        });
+      axios.get("https://jajasend.site/api/v1/vehicle").then((response) => {
+        setRow(response.data.reverse());
+      });
     };
 
     getData();
@@ -221,6 +251,7 @@ function Transfer() {
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
+                setAble(false);
                 setVehFields({
                   veh_mark: "",
                   passenger_capacity: "",
@@ -255,7 +286,7 @@ function Transfer() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[80%] md:w-[30%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[80%] md:w-[25%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Vehicle </div>
                 <div className="cursor-pointer" onClick={handleClose}>
@@ -266,7 +297,6 @@ function Transfer() {
                 <div className=" mt-4 w-full">
                   <TextField
                     id="outlined-basic"
-                    disabled={stat === "Edit" ? click : false}
                     size="small"
                     label="Vehicle Mark"
                     variant="outlined"
@@ -283,7 +313,6 @@ function Transfer() {
                     id="outlined-basic"
                     size="small"
                     label="Passenger Capacity"
-                    disabled={stat === "Edit" ? click : false}
                     value={vehFields.passenger_capacity}
                     name="passenger_capacity"
                     onChange={(e) => {
@@ -301,6 +330,7 @@ function Transfer() {
                   className=" w-[49%] rounded-md h-10"
                 >
                   <button
+                    disabled={able}
                     className={` bg-red-600 hover:bg-red-900 w-full rounded-md  text-white h-full flex items-center justify-center`}
                   >
                     {stat === "Edit" ? "Delete" : "Cancel"}
@@ -309,30 +339,13 @@ function Transfer() {
 
                 <div className=" w-[48%] rounded-md h-10  ">
                   <button
-                    onClick={
-                      stat === "Edit"
-                        ? click
-                          ? () => {
-                              setClick(false);
-                            }
-                          : handleUpdate
-                        : handleSave
-                    }
-                    className={`w-full rounded-md h-full flex ${
-                      stat === "Edit"
-                        ? click
-                          ? "hover:bg-blue-900"
-                          : "hover:bg-green-900"
-                        : "hover:bg-green-900"
-                    } items-center justify-center text-white ${
-                      stat === "Edit"
-                        ? click
-                          ? "bg-blue-600"
-                          : "bg-green-600"
-                        : "bg-green-600"
-                    }`}
+                    disabled={able}
+                    onClick={stat === "Edit" ? handleUpdate : handleSave}
+                    className={`w-full rounded-md h-full flex items-center
+                         hover:bg-green-900 bg-green-600
+                    justify-center text-white`}
                   >
-                    {stat === "Edit" ? (click ? "Edit" : "Update") : "Save"}
+                    {stat === "Edit" ? "Update" : "Save"}
                   </button>
                 </div>
               </div>

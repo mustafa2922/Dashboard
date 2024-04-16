@@ -14,27 +14,26 @@ import { toast } from "react-toastify";
 import dayjs from "dayjs";
 
 const TeamManagement = () => {
+  const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
   const handleClose = () => {
-    setClick(true);
     setOpen(false);
   };
   const [gridApi, setGridApi] = useState(null);
   const [stat, setStat] = useState("");
-  const [click, setClick] = useState(true);
 
   const [reload, setReload] = useState(false);
 
-  const [id,setId] = useState('');
- 
+  const [id, setId] = useState("");
+
   const [fields, setFields] = useState({
     first_name: "",
     last_name: "",
     email: "",
     pin: "",
-    status: "DEFAULT",
+    status: "1",
   });
 
   const handleChange = (event) => {
@@ -42,8 +41,16 @@ const TeamManagement = () => {
   };
 
   const handleSave = () => {
-    if (fields.status === "DEFAULT" || fields.first_name === "" || fields.last_name === "" || fields.email === "" || fields.pin === "") {
+    setAble(true);
+    if (
+      fields.status === "" ||
+      fields.first_name === "" ||
+      fields.last_name === "" ||
+      fields.email === "" ||
+      fields.pin === ""
+    ) {
       toast.error("Please Fill All the Fields Correctly");
+      setAble(false);
     } else {
       if (stat == "Invite") {
         axios
@@ -52,41 +59,66 @@ const TeamManagement = () => {
             setReload(!reload);
             toast.success("Team Member Added Successfully");
             setOpen(false);
+            setAble(false);
           })
           .catch((error) => {
             console.log(error);
+            setAble(false);
           });
       }
     }
   };
 
   const handleDelete = () => {
-    axios
-      .delete(`https://task.jajasoft.online/api/v1/team/${id}`)
-      .then((response) => {
-        toast.success("Team Member Deleted Successfully");
-        setReload(!reload);
-        setOpen(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+    const confirmationToastId = toast.warning(
+      <div className="flex flex-col">
+        <p>You want to delete this item?</p>
+        <div className="flex items-center justify-start gap-2">
+          <button
+            className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
+            onClick={() => {
+              axios
+                .delete(`https://task.jajasoft.online/api/v1/team/${id}`)
+                .then((response) => {
+                  toast.dismiss(confirmationToastId);
+                  toast.success("Team Member Deleted Successfully");
+                  setReload(!reload);
+                  setOpen(false);
+                })
+                .catch((err) => {
+                  console.log(err.response.data);
+                });
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="w-8 h-6 text-xs bg-green-500 rounded-md text-white "
+            onClick={() => {
+              toast.dismiss(confirmationToastId);
+            }}
+          >
+            No
+          </button>
+        </div>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const handleUpdate = () => {
+    setAble(true);
     axios
-      .put(`https://task.jajasoft.online/api/v1/team/${id}`, {
-        name: fields.name,
-        status: fields.status,
-      })
+      .put(`https://task.jajasoft.online/api/v1/team/${id}`, fields)
       .then((response) => {
         toast.success("Team Member Updated Successfully");
         setReload(!reload);
-        setClick(true);
+        setAble(false);
         setOpen(false);
       })
       .catch((err) => {
         console.log(err.response.data);
+        setAble(false);
       });
   };
 
@@ -124,7 +156,7 @@ const TeamManagement = () => {
     {
       headerName: "Email",
       field: "email",
-      flex:1.5,
+      flex: 1.5,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-start gap-2 w-full h-full">
@@ -261,13 +293,13 @@ const TeamManagement = () => {
               onClick={() => {
                 setOpen(true);
                 setStat("Invite");
-                setId('')
+                setId("");
                 setFields({
                   first_name: "",
                   last_name: "",
                   email: "",
                   pin: "",
-                  status: "DEFAULT",
+                  status: "1",
                 });
               }}
               className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
@@ -317,7 +349,6 @@ const TeamManagement = () => {
                       value={fields.first_name}
                       onChange={handleChange}
                       name="first_name"
-                      disabled={stat === "Edit" ? click : false}
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
@@ -328,7 +359,6 @@ const TeamManagement = () => {
                       id="outlined-basic"
                       size="small"
                       label="Last Name"
-                      disabled={stat === "Edit" ? click : false}
                       onChange={handleChange}
                       value={fields.last_name}
                       name="last_name"
@@ -343,7 +373,6 @@ const TeamManagement = () => {
                       size="small"
                       onChange={handleChange}
                       value={fields.email}
-                      disabled={stat === "Edit" ? click : false}
                       label="Email"
                       name="email"
                       variant="outlined"
@@ -358,7 +387,6 @@ const TeamManagement = () => {
                       label="Pin"
                       onChange={handleChange}
                       value={fields.pin}
-                      disabled={stat === "Edit" ? click : false}
                       name="pin"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -367,13 +395,11 @@ const TeamManagement = () => {
                   </div>
 
                   <select
-                    disabled={stat === "Edit" ? click : false}
                     onChange={handleChange}
                     name="status"
                     value={fields.status}
                     className="w-full hover:border-slate-600 focus:outline-none border-slate-300 border mt-5 h-10 rounded-[0.3rem]"
                   >
-                 
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
                   </select>
@@ -437,30 +463,13 @@ const TeamManagement = () => {
 
                 <div className=" w-[48%] rounded-md h-10  ">
                   <button
-                    onClick={
-                      stat === "Edit"
-                        ? click
-                          ? () => {
-                              setClick(false);
-                            }
-                          : handleUpdate
-                        : handleSave
-                    }
-                    className={`w-full rounded-md h-full flex ${
-                      stat === "Edit"
-                        ? click
-                          ? "hover:bg-blue-900"
-                          : "hover:bg-green-900"
-                        : "hover:bg-green-900"
-                    } items-center justify-center text-white ${
-                      stat === "Edit"
-                        ? click
-                          ? "bg-blue-600"
-                          : "bg-green-600"
-                        : "bg-green-600"
-                    }`}
+                    disabled={able}
+                    onClick={stat === "Edit" ? handleUpdate : handleSave}
+                    className={`w-full rounded-md h-full flex items-center
+                         hover:bg-green-900 bg-green-600
+                    justify-center text-white`}
                   >
-                    {stat === "Edit" ? (click ? "Edit" : "Update") : "Save"}
+                    {stat === "Edit" ? "Update" : "Save"}
                   </button>
                 </div>
               </div>

@@ -6,7 +6,7 @@ import "react-phone-number-input/style.css";
 import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
-import EditNoteIcon from "@mui/icons-material/EditNote";
+import EditIcon from "@mui/icons-material/Edit";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
@@ -14,23 +14,22 @@ import { toast } from "react-toastify";
 import dayjs from "dayjs";
 
 function MealPlan() {
+  const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
   const handleClose = () => {
-    setClick(true);
     setOpen(false);
   };
   const [gridApi, setGridApi] = useState(null);
   const [stat, setStat] = useState("");
-  const [click, setClick] = useState(true);
 
   const [reload, setReload] = useState(false);
 
   const [fields, setFields] = useState({
     id: "",
     name: "",
-    status: "DEFAULT",
+    status: "1",
   });
 
   const handleChange = (event) => {
@@ -38,8 +37,10 @@ function MealPlan() {
   };
 
   const handleSave = () => {
-    if (fields.status === "DEFAULT" || fields.name === "") {
+    setAble(true);
+    if (fields.status === "" || fields.name === "") {
       toast.error("Please Fill All the Fields Correctly");
+      setAble(false);
     } else {
       if (stat == "Add") {
         axios
@@ -49,12 +50,14 @@ function MealPlan() {
           })
           .then((response) => {
             if (response.data == "success") {
+              setAble(false);
               setReload(!reload);
               toast.success("Meal Plan Added Successfully");
               setOpen(false);
             }
           })
           .catch((error) => {
+            setAble(false);
             console.log(error);
           });
       }
@@ -62,31 +65,59 @@ function MealPlan() {
   };
 
   const handleDelete = () => {
-    axios
-      .delete(`https://task.jajasoft.online/api/v1/mealplan/${fields.id}`)
-      .then((response) => {
-        toast.success("Meal Plan Deleted Successfully");
-        setReload(!reload);
-        setOpen(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+    const confirmationToastId = toast.warning(
+      <div className="flex flex-col">
+        <p>You want to delete this item?</p>
+        <div className="flex items-center justify-start gap-2">
+          <button
+            className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
+            onClick={() => {
+              axios
+                .delete(
+                  `https://task.jajasoft.online/api/v1/mealplan/${fields.id}`
+                )
+                .then((response) => {
+                  toast.dismiss(confirmationToastId);
+                  toast.success("Meal Plan Deleted Successfully");
+                  setReload(!reload);
+                  setOpen(false);
+                })
+                .catch((err) => {
+                  console.log(err.response.data);
+                });
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="w-8 h-6 text-xs bg-green-500 rounded-md text-white "
+            onClick={() => {
+              toast.dismiss(confirmationToastId);
+            }}
+          >
+            No
+          </button>
+        </div>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const handleUpdate = () => {
+    setAble(true);
     axios
       .put(`https://task.jajasoft.online/api/v1/mealplan/${fields.id}`, {
         name: fields.name,
         status: fields.status,
       })
       .then((response) => {
+        setAble(false);
         toast.success("Meal Plan Updated Successfully");
         setReload(!reload);
-        setClick(true);
         setOpen(false);
       })
       .catch((err) => {
+        setAble(false);
         console.log(err.response.data);
       });
   };
@@ -177,7 +208,7 @@ function MealPlan() {
             }}
             className="flex items-center justify-center w-full h-full"
           >
-            <EditNoteIcon
+            <EditIcon
               className="hover:bg-black hover:text-white rounded-full border p-1 border-black"
               style={{ fontSize: "25px" }}
             />
@@ -236,7 +267,7 @@ function MealPlan() {
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
-                setFields({ name: "", status: "DEFAULT" });
+                setFields({ name: "", status: "1" });
               }}
               className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
@@ -282,7 +313,6 @@ function MealPlan() {
                     size="small"
                     label="Name"
                     name="name"
-                    disabled={stat === "Edit" ? click : false}
                     value={fields.name}
                     onChange={(e) => {
                       handleChange(e);
@@ -293,7 +323,6 @@ function MealPlan() {
                 </div>
 
                 <select
-                  disabled={stat === "Edit" ? click : false}
                   name="status"
                   value={fields.status}
                   onChange={(e) => {
@@ -318,30 +347,13 @@ function MealPlan() {
 
                   <div className=" w-[48%] rounded-md h-10  ">
                     <button
-                      onClick={
-                        stat === "Edit"
-                          ? click
-                            ? () => {
-                                setClick(false);
-                              }
-                            : handleUpdate
-                          : handleSave
-                      }
-                      className={`w-full rounded-md h-full flex ${
-                        stat === "Edit"
-                          ? click
-                            ? "hover:bg-blue-900"
-                            : "hover:bg-green-900"
-                          : "hover:bg-green-900"
-                      } items-center justify-center text-white ${
-                        stat === "Edit"
-                          ? click
-                            ? "bg-blue-600"
-                            : "bg-green-600"
-                          : "bg-green-600"
-                      }`}
+                      disabled={able}
+                      onClick={stat === "Edit" ? handleUpdate : handleSave}
+                      className={`w-full rounded-md h-full flex items-center
+                         hover:bg-green-900 bg-green-600
+                    justify-center text-white`}
                     >
-                      {stat === "Edit" ? (click ? "Edit" : "Update") : "Save"}
+                      {stat === "Edit" ? "Update" : "Save"}
                     </button>
                   </div>
                 </div>

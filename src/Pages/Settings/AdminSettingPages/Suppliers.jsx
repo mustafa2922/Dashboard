@@ -16,17 +16,15 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 
 function Suppliers() {
-  const [able, setAble] = useState(true);
+  const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [reload, setReload] = useState(false);
   const [open, setOpen] = useState(false);
   const handleClose = () => {
-    setClick(true);
     setOpen(false);
   };
   const [gridApi, setGridApi] = useState(null);
-  const [click, setClick] = useState(true);
   const [id, setId] = useState();
 
   const [stat, setStat] = useState("");
@@ -43,28 +41,9 @@ function Suppliers() {
     status: "1",
   });
 
-  const checkStatus = () => {
-    if (
-      fields.status === "" ||
-      fields.first_name === "" ||
-      fields.title === "DEFAULT" ||
-      fields.last_name === "" ||
-      fields.company === "" ||
-      fields.city === "" ||
-      fields.address === "" ||
-      fields.email === "" ||
-      fields.number === ""
-    ) {
-      setAble(true);
-    } else {
-      setAble(true);
-    }
-  };
   const handleChange = (event) => {
-    return setFields({ ...fields, [event.target.name]: event.target.value });
-    checkStatus()
+    setFields({ ...fields, [event.target.name]: event.target.value });
   };
-
 
   const handleSave = () => {
     if (
@@ -79,8 +58,10 @@ function Suppliers() {
       fields.number === ""
     ) {
       toast.error("Please Fill All the Fields Correctly");
+      setAble(false);
     } else {
       if (stat == "Add") {
+        setAble(true);
         axios
           .post("https://task.jajasoft.online/api/v1/supplier", fields)
           .then((response) => {
@@ -88,9 +69,11 @@ function Suppliers() {
               setReload(!reload);
               toast.success("Supplier Added Successfully");
               setOpen(false);
+              setAble(false);
             }
           })
           .catch((error) => {
+            setAble(false);
             console.log(error);
           });
       }
@@ -98,29 +81,55 @@ function Suppliers() {
   };
 
   const handleDelete = () => {
-    axios
-      .delete(`https://task.jajasoft.online/api/v1/supplier/${id}`)
-      .then((response) => {
-        toast.success("Supplier Deleted Successfully");
-        setReload(!reload);
-        setOpen(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+    const confirmationToastId = toast.warning(
+      <div className="flex flex-col">
+        <p>You want to delete this item?</p>
+        <div className="flex items-center justify-start gap-2">
+          <button
+            className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
+            onClick={() => {
+              axios
+                .delete(`https://task.jajasoft.online/api/v1/supplier/${id}`)
+                .then((response) => {
+                  toast.dismiss(confirmationToastId);
+                  toast.success("Supplier Deleted Successfully");
+                  setReload(!reload);
+                  setOpen(false);
+                })
+                .catch((err) => {
+                  console.log(err.response.data);
+                });
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="w-8 h-6 text-xs bg-green-500 rounded-md text-white "
+            onClick={() => {
+              toast.dismiss(confirmationToastId);
+            }}
+          >
+            No
+          </button>
+        </div>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const handleUpdate = () => {
+    setAble(true);
     axios
       .put(`https://task.jajasoft.online/api/v1/supplier/${id}`, fields)
       .then((response) => {
         toast.success("Supplier Updated Successfully");
+        setAble(false)
         setReload(!reload);
-        setClick(true);
         setOpen(false);
       })
       .catch((err) => {
         console.log(err.response.data);
+        setAble(false)
       });
   };
 
@@ -295,7 +304,6 @@ function Suppliers() {
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
-                setAble(true);
                 setFields({
                   title: "DEFAULT",
                   first_name: "",
@@ -422,7 +430,7 @@ function Suppliers() {
                 <div className="w-[49%]">
                   <div className="">
                     <PhoneInput
-                      international
+                      defaultCountry="IN"
                       value={fields.number}
                       onChange={(e) => {
                         setFields({ ...fields, number: e });
@@ -493,22 +501,10 @@ function Suppliers() {
                 <div className=" w-[48%] rounded-md h-10  ">
                   <button
                     disabled={able}
-                    onClick={
-                      stat === "Edit"
-                        ? click
-                          ? () => {
-                              setClick(false);
-                            }
-                          : handleUpdate
-                        : handleSave
-                    }
-                    className={`w-full rounded-md h-full flex items-center ${
-                      stat === "Edit"
-                        ? "hover:bg-green-900 bg-green-600 "
-                        : able
-                        ? " bg-slate-600  "
-                        : "hover:bg-green-900 bg-green-600"
-                    }justify-center text-white`}
+                    onClick={stat === "Edit" ? handleUpdate : handleSave}
+                    className={`w-full rounded-md h-full flex items-center
+                         hover:bg-green-900 bg-green-600
+                    justify-center text-white`}
                   >
                     {stat === "Edit" ? "Update" : "Save"}
                   </button>

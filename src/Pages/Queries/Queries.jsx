@@ -232,7 +232,6 @@ function Queries() {
   const defaultColDef = {
     sortable: true,
     filter: true,
-    cellStyle: {},
     flex: 1,
     cellStyle: { margin: "0px !important" },
     tooltipField: "name",

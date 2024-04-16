@@ -3,13 +3,12 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import "react-phone-number-input/style.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import "react-phone-number-input/style.css";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TextField from "@mui/material/TextField";
-import dummyDriver from "../../../../assets/images/dummyDriver.png";
 import PhoneInput from "react-phone-number-input";
 import dayjs from "dayjs";
 import ImageModal from "../../../../Components/imageModal";
@@ -22,164 +21,20 @@ import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternate
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import "./Driver.css";
 import EditIcon from "@mui/icons-material/Edit";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const data = [
-  {
-    name: "John Doe",
-    mobile: 987654321,
-    vehicleMark: "Toyota Camry",
-    vehicleNo: "NY1234",
-    vehicleModel: 2022,
-    vehicleColor: "Black",
-    pricePerDay: 1500,
-    priceArrDep: 1500,
-    vehicleFromDate: "02/01/24",
-    vehicleToDate: "02/05/24",
-    status: "Active",
-    updatedBy: "JaffarSaleem.com",
-    updatedOn: "01/15/24",
-  },
-  {
-    name: "Alice Smith",
-    mobile: 555555555,
-    vehicleMark: "Honda Accord",
-    vehicleNo: "LA5678",
-    vehicleModel: 2023,
-    vehicleColor: "Silver",
-    pricePerDay: 1300,
-    priceArrDep: 1300,
-    vehicleFromDate: "03/01/24",
-    vehicleToDate: "03/01/24",
-    status: "Active",
-    updatedBy: "JaffarSaleem.com",
-    updatedOn: "01/20/24",
-  },
-  {
-    name: "Bob Johnson",
-    mobile: 111111111,
-    vehicleMark: "Ford Mustang",
-    vehicleNo: "TX9876",
-    vehicleModel: 2021,
-    vehicleColor: "Red",
-    pricePerDay: 2000,
-    priceArrDep: 2000,
-    vehicleFromDate: "04/01/24",
-    vehicleToDate: "04/02/24",
-    status: "inactive",
-    updatedBy: "JaffarSaleem.com",
-    updatedOn: "02/01/24",
-  },
-  {
-    name: "Emily Brown",
-    mobile: 999888777,
-    vehicleMark: "Chevrolet Tahoe",
-    vehicleNo: "FL5432",
-    vehicleModel: 2024,
-    vehicleColor: "Blue",
-    pricePerDay: 1800,
-    priceArrDep: 1800,
-    vehicleFromDate: "05/01/24",
-    vehicleToDate: "05/02/24",
-    status: "Active",
-    updatedBy: "JaffarSaleem.com",
-    updatedOn: "02/10/24",
-  },
-  {
-    name: "Michael Wilson",
-    mobile: 666666666,
-    vehicleMark: "BMW X5",
-    vehicleNo: "CA4321",
-    vehicleModel: 2023,
-    vehicleColor: "Gray",
-    pricePerDay: 2200,
-    priceArrDep: 2200,
-    vehicleFromDate: "06/01/24",
-    vehicleToDate: "06/01/24",
-    status: "inactive",
-    updatedBy: "JaffarSaleem.com",
-    updatedOn: "02/20/24",
-  },
-  {
-    name: "Emma Garcia",
-    mobile: 333333333,
-    vehicleMark: "Audi Q7",
-    vehicleNo: "GA8765",
-    vehicleModel: 2022,
-    vehicleColor: "White",
-    pricePerDay: 1700,
-    priceArrDep: 1700,
-    vehicleFromDate: "07/01/24",
-    vehicleToDate: "07/05/24",
-    status: "Active",
-    updatedBy: "JaffarSaleem.com",
-    updatedOn: "03/01/24",
-  },
-  {
-    name: "William Martinez",
-    mobile: 777777777,
-    vehicleMark: "Tesla Model S",
-    vehicleNo: "WA9876",
-    vehicleModel: 2023,
-    vehicleColor: "Red",
-    pricePerDay: 2500,
-    priceArrDep: 2500,
-    vehicleFromDate: "08/01/24",
-    vehicleToDate: "08/08/24",
-    status: "Active",
-    updatedBy: "JaffarSaleem.com",
-    updatedOn: "03/10/24",
-  },
-  {
-    name: "Olivia Rodriguez",
-    mobile: 444444444,
-    vehicleMark: "Mercedes-Benz",
-    vehicleNo: "IL3456",
-    vehicleModel: 2022,
-    vehicleColor: "Silver",
-    pricePerDay: 1900,
-    priceArrDep: 1900,
-    vehicleFromDate: "09/01/24",
-    vehicleToDate: "09/05/24",
-    status: "Active",
-    updatedBy: "JaffarSaleem.com",
-    updatedOn: "03/20/24",
-  },
-  {
-    name: "James Lee",
-    mobile: 222222222,
-    vehicleMark: "Lexus RX",
-    vehicleNo: "OR6543",
-    vehicleModel: 2024,
-    vehicleColor: "Black",
-    pricePerDay: 2100,
-    priceArrDep: 2100,
-    vehicleFromDate: "10/01/24",
-    vehicleToDate: "10/02/24",
-    status: "Active",
-    updatedBy: "JaffarSaleem.com",
-    updatedOn: "04/01/24",
-  },
-  {
-    name: "Sophia Hernandez",
-    mobile: 888888888,
-    vehicleMark: "Hyundai Sonata",
-    vehicleNo: "NV2345",
-    vehicleModel: 2023,
-    vehicleColor: "Blue",
-    pricePerDay: 1600,
-    priceArrDep: 1600,
-    vehicleFromDate: "11/01/24",
-    vehicleToDate: "11/03/24",
-    status: "inactive",
-    updatedBy: "JaffarSaleem.com",
-    updatedOn: "04/10/24",
-  },
-];
+let vehicle_Mark = [];
 
 function Driver() {
+  const [able, setAble] = useState(false);
+  const [id, setId] = useState("");
+  const [reload, setReload] = useState(false);
+
   const [search, setSearch] = useState("");
-  const [row, setRow] = useState(data);
+  const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
   const handleClose = () => setOpen(false);
   const [gridApi, setGridApi] = useState(null);
 
@@ -193,7 +48,11 @@ function Driver() {
   const [LicenseCopyModal, setLicenseCopyModal] = useState(false);
   const [IdCardModal, setIdCardModal] = useState(false);
 
-  const [vehicleMarkVal , setvehicleMarkVal] = useState("");
+  const [showFromDate, setShowFromDate] = useState(dayjs());
+  const [showToDate, setShowToDate] = useState(dayjs());
+
+  const [vehicleMarkVal, setvehicleMarkVal] = useState("");
+  const [passengerCapacity, setPassengerCapacity] = useState("");
 
   const [driverFields, setDriverFields] = useState({
     name: "",
@@ -205,15 +64,15 @@ function Driver() {
     veh_price_non_ac: "",
     price_valid_from: "",
     price_valid_to: "",
-    // veh_img: "",
+    veh_img: "",
     mob_no_1: "",
     mob_no_2: "",
     address: "",
     aadher_no: "",
-    // driver_img: "",
-    // driver_id_card: "",
-    // license_copy: "",
-    status: "0",
+    driver_img: "",
+    driver_id_card: "",
+    license_copy: "",
+    status: "1",
   });
 
   const handleChange = (event) => {
@@ -254,7 +113,10 @@ function Driver() {
               {params.data.name}
             </div>
             <div className="h-[90%] w-[48%]">
-              <img className="h-full w-full object-contain" src={dummyDriver} />
+              <img
+                className="h-full w-full object-contain"
+                src={`${params.data.driver_img}`}
+              />
             </div>
           </div>
         );
@@ -262,7 +124,7 @@ function Driver() {
     },
     {
       headerName: "Mobile",
-      field: "mobile",
+      field: "mob_no_1",
       flex: 1.35,
     },
     {
@@ -276,25 +138,25 @@ function Driver() {
               <div className="text-sm ">
                 Mark :
                 <span className="text-black font-bold">
-                  {` ` + params.data.vehicleMark}
+                  {` ` + params.data.vehicle.veh_mark}
                 </span>
               </div>
               <div className="text-sm mt-[-1px]">
                 No :
                 <span className="text-black font-bold">
-                  {` ` + params.data.vehicleNo}
+                  {` ` + params.data.veh_no}
                 </span>
               </div>
               <div className="text-sm mt-[-1px]">
                 Model :
                 <span className="text-black font-bold">
-                  {` ` + params.data.vehicleModel}
+                  {` ` + params.data.veh_model}
                 </span>
               </div>
               <div className="text-sm mt-[-1px]">
                 Color :
                 <span className="text-black font-bold">
-                  {` ` + params.data.vehicleColor}
+                  {` ` + params.data.veh_color}
                 </span>
               </div>
             </div>
@@ -305,20 +167,20 @@ function Driver() {
     {
       headerName: "Vehicle Price",
       filter: false,
-      flex: 1.85,
+      flex: 1.7,
       cellRenderer: (params) => {
         return (
           <div className="ml-[-10px] flex flex-col items-start justify-center w-full h-full">
             <div className="text-sm mt-[-1px]">
               {`(AC) : `}
-              <span className="text-black font-bold">
-                {`₹` + params.data.pricePerDay}
+              <span className="text-black text-xs font-bold">
+                {`₹` + params.data.veh_price_ac}
               </span>
             </div>
             <div className="text-sm mt-[-1px]">
               {`(Non - AC) : `}
-              <span className="text-black font-bold">
-                {`₹` + params.data.priceArrDep}
+              <span className="text-black  text-xs font-bold">
+                {`₹` + params.data.veh_price_non_ac}
               </span>
             </div>
           </div>
@@ -329,17 +191,17 @@ function Driver() {
       headerName: "Price Valid From",
       flex: 1.75,
       filter: false,
-      field: "vehicleFromDate",
+      field: "price_valid_from",
       cellRenderer: (params) => {
         return (
           <div
-            className={`flex items-center justify-center w-full h-6 text-white font-bold rounded-md ${
-              dayjs(params.data.vehicleToDate, "DD/MM/YY").isBefore(
+            className={`flex items-center justify-center w-full h-6 text-white text-xs rounded-md ${
+              dayjs(params.data.price_valid_to, "DD/MM/YY").isBefore(
                 dayjs(),
                 "day"
               )
-                ? "bg-red-500"
-                : "bg-green-500"
+                ? "bg-red-600"
+                : "bg-green-600"
             } `}
           >
             {params.value}
@@ -351,14 +213,14 @@ function Driver() {
       headerName: "Price Valid To",
       filter: false,
       flex: 1.5,
-      field: "vehicleToDate",
+      field: "price_valid_to",
       cellRenderer: (params) => {
         return (
           <div
-            className={`flex items-center justify-center w-full h-6 text-white font-bold rounded-md ${
+            className={`flex items-center justify-center w-full h-6 text-white text-xs rounded-md ${
               dayjs(params.value, "DD/MM/YY").isBefore(dayjs(), "day")
-                ? "bg-red-500"
-                : "bg-green-500"
+                ? "bg-red-600"
+                : "bg-green-600"
             } `}
           >
             {params.value}
@@ -370,19 +232,15 @@ function Driver() {
       headerName: "Status",
       field: "status",
       flex: 1.1,
-      filter: false,
       cellRenderer: (params) => {
         return (
-          <div className=" flex items-center justify-center w-full h-10">
+          <div className="flex items-center justify-center w-full h-[35px]">
             <div
-              className={`flex items-center justify-center w-full px-7 ${
-                params.value.toLowerCase() === "Active".toLowerCase()
-                  ? "bg-green-500"
-                  : "bg-red-500"
-              }  text-white font-bold rounded-md h-[70%]`}
+              className={`flex items-center justify-center w-14 px-8 ${
+                params.value === "1" ? "bg-green-600" : "bg-red-600"
+              }  text-white rounded-md h-[70%]`}
             >
-              {params.value[0].toUpperCase()}
-              {params.value.substring(1)}
+              {params.value == "1" ? "Active" : "Inactive"}
             </div>
           </div>
         );
@@ -390,16 +248,14 @@ function Driver() {
     },
     {
       headerName: "Updated By",
-      field: "updatedBy",
-      filter: false,
       flex: 2.2,
       cellRenderer: (params) => {
         return (
-          <div className="ml-[-10px] flex items-center justify-start gap-2 w-full h-full">
+          <div className="flex items-center justify-start gap-2 w-full h-full">
             <div className="p-1 rounded-full border border-black h-6 w-6 flex items-center justify-center">
-              {params.value[0]}
+              J
             </div>
-            <div className="w-1">{params.value}</div>
+            <div className="w-0">JaffarSaleem@gmail.com</div>
           </div>
         );
       },
@@ -407,19 +263,51 @@ function Driver() {
     {
       headerName: "Updated On",
       filter: false,
-      field: "updatedOn",
+      field: "updated_at",
       flex: 1.2,
+      valueGetter: (params) => {
+        return `${params.data.updated_at}`;
+      },
     },
     {
       sortable: false,
       filter: false,
-      flex: 0.6,
+      flex: 0.5,
       cellRenderer: (params) => {
         return (
           <div
             onClick={() => {
+              const mark = vehicle_Mark.find((obj) => {
+                return obj.id == params.data.transfer_id;
+              });
               setOpen(true);
               setStat("Edit");
+              setDriverFields({
+                name: params.data.name,
+                transfer_id: params.data.transfer_id,
+                veh_no: params.data.veh_no,
+                veh_model: params.data.veh_model,
+                veh_color: params.data.veh_color,
+                veh_price_ac: params.data.veh_price_non_ac,
+                veh_price_non_ac: params.data.veh_price_non_ac,
+                veh_img: params.data.veh_img,
+                mob_no_1: params.data.mob_no_1,
+                mob_no_2: params.data.mob_no_2,
+                address: params.data.address,
+                aadher_no: params.data.aadher_no,
+                driver_img: params.data.driver_img,
+                driver_id_card: params.data.driver_id_card,
+                license_copy: params.data.licenseCopy,
+                status: params.data.status,
+              });
+              setShowFromDate(
+                dayjs(params.data.price_valid_from, "YYYY-MM-DD")
+              );
+              setShowToDate(dayjs(params.data.price_valid_to, "YYYY-MM-DD"));
+              setStat("Edit");
+              setvehicleMarkVal(mark.veh_mark);
+              setPassengerCapacity(mark.passenger_capacity);
+              setId(params.data.id);
             }}
             className="flex items-center justify-center w-full h-full"
           >
@@ -440,32 +328,144 @@ function Driver() {
       reader.onload = () => {
         if (str === "driver") {
           setDriverPhoto(reader.result);
+          console.log(reader.result);
+          setDriverFields({ ...driverFields, driver_img: file });
         }
         if (str === "id") {
           setIdCardImg(reader.result);
+          setDriverFields({ ...driverFields, driver_id_card: file });
         }
         if (str === "vehicle") {
           setVehiclePhoto(reader.result);
+          setDriverFields({ ...driverFields, veh_img: file });
         }
         if (str === "liscense") {
           setLicenseCopy(reader.result);
+          setDriverFields({ ...driverFields, license_copy: file });
         }
       };
       reader.readAsDataURL(file);
-    } else {
-      func("");
     }
+  };
+
+  const handleUpdate = () => {};
+
+  const payload = new FormData();
+
+  const handleSave = () => {
+    setAble(true);
+    if (
+      driverFields.name !== "" &&
+      driverFields.transfer_id !== "" &&
+      driverFields.veh_no !== "" &&
+      driverFields.veh_model !== "" &&
+      driverFields.veh_color !== "" &&
+      driverFields.veh_price_ac !== "" &&
+      driverFields.veh_price_non_ac !== "" &&
+      driverFields.price_valid_from !== "" &&
+      driverFields.price_valid_to !== "" &&
+      driverFields.veh_img !== "" &&
+      driverFields.mob_no_1 !== "" &&
+      driverFields.mob_no_2 !== "" &&
+      driverFields.address !== "" &&
+      driverFields.aadher_no !== "" &&
+      driverFields.driver_img !== "" &&
+      driverFields.driver_id_card !== "" &&
+      driverFields.license_copy !== "" &&
+      driverFields.status !== ""
+    ) {
+      for (var key in driverFields) {
+        if (driverFields.hasOwnProperty(key)) {
+          if (driverFields[key] instanceof File) {
+            payload.append(key, driverFields[key]);
+          } else {
+            payload.append(key, driverFields[key]);
+          }
+        }
+      }
+
+      axios
+        .post("https://jajasend.site/api/v1/driver", payload, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "x-rapidapi-host": "file-upload8.p.rapidapi.com",
+            "x-rapidapi-key": "your-rapidapi-key-here",
+          },
+        })
+        .then((res) => {
+          setAble(false);
+          toast.success("Driver Added Successfully");
+          setReload(!reload);
+          setOpen(false);
+        })
+        .catch((err) => {
+          setAble(false);
+          console.log(err);
+        });
+    } else {
+      toast.error("Please Fill All Fields Correctly");
+      setAble(false);
+    }
+
+    console.log(driverFields);
+  };
+
+  const handleDelete = () => {
+    const confirmationToastId = toast.warning(
+      <div className="flex flex-col">
+        <p>You want to delete this item?</p>
+        <div className="flex items-center justify-start gap-2">
+          <button
+            className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
+            onClick={() => {
+              axios
+                .delete(
+                  `https://jajasend.site/api/v1/driver/${id}`
+                )
+                .then((response) => {
+                  toast.dismiss(confirmationToastId);
+                  toast.success("Accommodation Deleted Successfully");
+                  setReload(!reload);
+                  setOpen(false);
+                })
+                .catch((err) => {
+                  console.log(err.response.data);
+                });
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="w-8 h-6 text-xs bg-green-500 rounded-md text-white "
+            onClick={() => {
+              toast.dismiss(confirmationToastId);
+            }}
+          >
+            No
+          </button>
+        </div>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const onGridReady = (params) => {
     setGridApi(params.api);
-    setRow(data);
   };
 
   const ExportData = () => {
     if (gridApi) {
       gridApi.exportDataAsCsv();
     }
+  };
+
+  const showMatches = (input) => {
+    return vehicle_Mark.filter((item) => {
+      if (input == "") {
+        return false;
+      }
+      return item.veh_mark.toLowerCase().includes(input.toLowerCase());
+    });
   };
 
   const quickFilter = (search) => {
@@ -483,6 +483,27 @@ function Driver() {
     flex: 1,
     tooltipField: "name",
   };
+
+  const matchArr = showMatches(vehicleMarkVal);
+
+  useEffect(() => {
+    axios
+      .get("https://jajasend.site/api/v1/driver")
+      .then((response) => {
+        setRow(response.data.reverse());
+      })
+      .catch((err) => {
+        console.log("Error --> ", err);
+      });
+
+    const getVehicleMarks = () => {
+      axios.get("https://jajasend.site/api/v1/vehicle").then((response) => {
+        vehicle_Mark = response.data;
+      });
+    };
+
+    getVehicleMarks();
+  }, [reload]);
 
   return (
     <div className="h-full">
@@ -511,6 +532,30 @@ function Driver() {
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
+                setShowFromDate(dayjs());
+                setShowToDate(dayjs());
+                setvehicleMarkVal("");
+                setPassengerCapacity("")
+                setDriverFields({
+                  name: "",
+                  transfer_id: "",
+                  veh_no: "",
+                  veh_model: "",
+                  veh_color: "",
+                  veh_price_ac: "",
+                  veh_price_non_ac: "",
+                  price_valid_from: "",
+                  price_valid_to: "",
+                  veh_img: "",
+                  mob_no_1: "",
+                  mob_no_2: "",
+                  address: "",
+                  aadher_no: "",
+                  driver_img: "",
+                  driver_id_card: "",
+                  license_copy: "",
+                  status: "1",
+                });
               }}
               className="border w-full border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
@@ -569,7 +614,7 @@ function Driver() {
 
                   <div className="mt-4 w-full">
                     <PhoneInput
-                      international
+                      defaultCountry="IN"
                       value={driverFields.mob_no_1}
                       onChange={(e) => {
                         setDriverFields({ ...driverFields, mob_no_1: e });
@@ -581,7 +626,7 @@ function Driver() {
 
                   <div className="mt-4 w-full">
                     <PhoneInput
-                      international
+                      defaultCountry="IN"
                       value={driverFields.mob_no_2}
                       onChange={(e) => {
                         setDriverFields({ ...driverFields, mob_no_2: e });
@@ -619,27 +664,47 @@ function Driver() {
                     />
                   </div>
 
-                  <select
-                    defaultValue={"DEFAULT"}
-                    value={vehicleMarkVal}
-                    onChange={(e) => {
-                      setvehicleMarkVal(e.target.value);
-                    }}
-                    className="px-2 mt-4 text-slate-600 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-sm"
-                  >
-                    <option value="DEFAULT" disabled={true}>
-                      Vehicle Mark
-                    </option>
-                    <option value="1">Toyota Camry</option>
-                    <option value="2">Ford Mustang</option>
-                    <option value="3">Hyundai Sonata</option>
-                    <option value="4">Honda Accord</option>
-                    <option value="5">Chevrolet Tahoe</option>
-                  </select>
+                  <div className=" relative mt-4 w-full">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Vehicle Mark"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                      value={vehicleMarkVal}
+                      onChange={(e) => {
+                        setvehicleMarkVal(e.target.value);
+                        setShowPicker(true);
+                        setPassengerCapacity("");
+                      }}
+                    />
+                    {showPicker && vehicleMarkVal && matchArr.length > 0 && (
+                      <ul className="absolute z-10 bg-[#f9f9f9] h-[100px] overflow-y-auto w-full border rounded-b-lg p-1 border-black">
+                        {matchArr.map((match, index) => (
+                          <li
+                            className="hover:bg-blue-200 cursor-pointer rounded-sm p-1 border-b"
+                            key={index}
+                            onClick={() => {
+                              setvehicleMarkVal(match.veh_mark);
+                              setPassengerCapacity(match.passenger_capacity);
+                              setDriverFields({
+                                ...driverFields,
+                                transfer_id: match.id,
+                              });
+                              setShowPicker(false);
+                            }}
+                          >
+                            {match.veh_mark}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
 
                   <div className="mt-4 w-full">
                     <input
                       type="number"
+                      value={passengerCapacity}
                       className="focus:outline-none w-full border border-[#b9b9b9] h-10 px-2 rounded-md p-1 text-black"
                       placeholder="Passanger Capacity"
                       disabled={true}
@@ -650,6 +715,9 @@ function Driver() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      name="veh_no"
+                      value={driverFields.veh_no}
+                      onChange={handleChange}
                       label="Vehicle No"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -662,6 +730,9 @@ function Driver() {
                       <TextField
                         id="outlined-basic"
                         size="small"
+                        value={driverFields.veh_model}
+                        onChange={handleChange}
+                        name="veh_model"
                         label="Vehicle Model"
                         variant="outlined"
                         sx={{ width: "100%" }}
@@ -671,6 +742,9 @@ function Driver() {
                       <TextField
                         id="outlined-basic"
                         size="small"
+                        value={driverFields.veh_color}
+                        onChange={handleChange}
+                        name="veh_color"
                         label="Vehicle Color"
                         variant="outlined"
                         sx={{ width: "100%" }}
@@ -682,10 +756,12 @@ function Driver() {
                     <div className=" w-[49%]">
                       <TextField
                         id="outlined-basic"
+                        value={driverFields.veh_price_ac}
+                        name="veh_price_ac"
+                        onChange={handleChange}
                         size="small"
                         label={
                           <>
-                            {" "}
                             <CurrencyRupeeIcon />
                             Vehicle Price (AC)
                           </>
@@ -698,10 +774,12 @@ function Driver() {
                     <div className=" w-[49%]">
                       <TextField
                         id="outlined-basic"
+                        value={driverFields.veh_price_non_ac}
+                        name="veh_price_non_ac"
+                        onChange={handleChange}
                         size="small"
                         label={
                           <>
-                            {" "}
                             <CurrencyRupeeIcon />
                             Vehicle Price (Non AC)
                           </>
@@ -717,8 +795,17 @@ function Driver() {
                     <div className="mt-4 w-[48%] custom-date-picker">
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <MobileDatePicker
+                          format="DD-MM-YYYY"
                           label="Price Valid From"
-                          defaultValue={dayjs("2022-04-17")}
+                          value={showFromDate}
+                          onAccept={(e) => {
+                            const fromDate = dayjs(e).format("YYYY-MM-DD");
+                            setShowFromDate(e);
+                            setDriverFields({
+                              ...driverFields,
+                              price_valid_from: fromDate,
+                            });
+                          }}
                         />
                       </LocalizationProvider>
                     </div>
@@ -726,8 +813,17 @@ function Driver() {
                     <div className="mt-4 w-[48%] custom-date-picker">
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <MobileDatePicker
+                          format="DD-MM-YYYY"
                           label="Price Valid To"
-                          defaultValue={dayjs("2022-04-17")}
+                          value={showToDate}
+                          onAccept={(e) => {
+                            const toDate = dayjs(e).format("YYYY-MM-DD");
+                            setShowToDate(e);
+                            setDriverFields({
+                              ...driverFields,
+                              price_valid_to: toDate,
+                            });
+                          }}
                         />
                       </LocalizationProvider>
                     </div>
@@ -863,28 +959,44 @@ function Driver() {
                   </div>
 
                   <select
-                    defaultValue={"DEFAULT"}
                     className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
+                    value={driverFields.status}
+                    name="status"
+                    onChange={handleChange}
                   >
-                    <option value="DEFAULT" disabled={true}>
-                      Status
-                    </option>
-                    <option value="active">active</option>
-                    <option value="inactive">inactive</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
                   </select>
                 </div>
               </div>
 
               <div className="mt-4 flex justify-between items-center">
-                <div onClick={handleClose} className=" w-[48%] rounded-md h-10">
-                  <button className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center">
-                    Cancel
+                <div
+                  onClick={
+                    stat === "Edit"
+                      ? handleDelete
+                      : () => {
+                          handleClose("modal");
+                        }
+                  }
+                  className=" w-[48%] rounded-md h-10"
+                >
+                  <button
+                    className={` bg-red-600 hover:bg-red-900 w-full rounded-md  text-white h-full flex items-center justify-center`}
+                  >
+                    {stat === "Edit" ? "Delete" : "Cancel"}
                   </button>
                 </div>
 
                 <div className=" w-[48%] rounded-md h-10  ">
-                  <button className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]">
-                    Save
+                  <button
+                    disabled={able}
+                    onClick={stat === "Edit" ? handleUpdate : handleSave}
+                    className={`w-full rounded-md h-full flex items-center
+                         hover:bg-green-900 bg-green-600
+                    justify-center text-white`}
+                  >
+                    {stat === "Edit" ? "Update" : "Save"}
                   </button>
                 </div>
               </div>

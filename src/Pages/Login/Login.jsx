@@ -4,6 +4,9 @@ import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
+import { toast } from "react-toastify";
+import axios from "axios";
+
 
 const Login = () => {
   const [isActive, setIsActive] = useState(false);
@@ -12,10 +15,20 @@ const Login = () => {
 
   const pass = "1221";
 
-  const handleChange = (value) => {
+  const handlePin = (value) => {
     if (pin.length < 4) {
       return setPin([...pin, value]);
     }
+  };
+
+  const [fields, setFields] = useState({
+    email: "",
+    password: "",
+    pin: "",
+  });
+
+  const handleChange = (event) => {
+    setFields({ ...fields, [event.target.name]: event.target.value });
   };
 
   const handleDelete = () => {
@@ -23,10 +36,18 @@ const Login = () => {
     setPin([...pin]);
   };
 
-  console.log(pin);
+  const handleSubmit = () => {
+    if (fields.email === "" || fields.password === "") {
+      toast.error("Fill All Fields Correctly");
+    } else {
+      axios.post('https://task.jajasoft.online/api/v1/login',fields)
+    }
+  };
+
+  console.log(fields);
 
   return (
-    <div className="w-full h-screen flex justify-center items-center" >
+    <div className="w-full h-screen flex justify-center items-center">
       <div className="!w-[90%] sm:!w-[70%]" id="container">
         <style>{`
 
@@ -397,7 +418,7 @@ const Login = () => {
                 <div className="flex flex-row justify-evenly mt-2">
                   <div
                     onClick={() => {
-                      handleChange("1");
+                      handlePin("1");
                     }}
                     className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
                   >
@@ -405,7 +426,7 @@ const Login = () => {
                   </div>
                   <div
                     onClick={() => {
-                      handleChange("2");
+                      handlePin("2");
                     }}
                     className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
                   >
@@ -413,7 +434,7 @@ const Login = () => {
                   </div>
                   <div
                     onClick={() => {
-                      handleChange("3");
+                      handlePin("3");
                     }}
                     className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
                   >
@@ -424,7 +445,7 @@ const Login = () => {
                 <div className="flex flex-row  justify-evenly mt-2">
                   <div
                     onClick={() => {
-                      handleChange("4");
+                      handlePin("4");
                     }}
                     className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
                   >
@@ -432,7 +453,7 @@ const Login = () => {
                   </div>
                   <div
                     onClick={() => {
-                      handleChange("5");
+                      handlePin("5");
                     }}
                     className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
                   >
@@ -440,7 +461,7 @@ const Login = () => {
                   </div>
                   <div
                     onClick={() => {
-                      handleChange("6");
+                      handlePin("6");
                     }}
                     className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
                   >
@@ -451,7 +472,7 @@ const Login = () => {
                 <div className="flex flex-row justify-evenly  mt-2">
                   <div
                     onClick={() => {
-                      handleChange("7");
+                      handlePin("7");
                     }}
                     className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
                   >
@@ -459,7 +480,7 @@ const Login = () => {
                   </div>
                   <div
                     onClick={() => {
-                      handleChange("8");
+                      handlePin("8");
                     }}
                     className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
                   >
@@ -467,7 +488,7 @@ const Login = () => {
                   </div>
                   <div
                     onClick={() => {
-                      handleChange("9");
+                      handlePin("9");
                     }}
                     className="border select-none cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
                   >
@@ -478,7 +499,7 @@ const Login = () => {
                 <div className="flex flex-row  justify-evenly mt-2">
                   <div
                     onClick={() => {
-                      handleChange("0");
+                      handlePin("0");
                     }}
                     className="border select-none  cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
                   >
@@ -510,7 +531,9 @@ const Login = () => {
             >
               <PersonAddAltOutlinedIcon style={{ fontSize: 100 }} />
               <h1>Hello,friend!</h1>
-              <p className="!text-3xl" >Enter your personal details and start your journey with us</p>
+              <p className="!text-3xl">
+                Enter your personal details and start your journey with us
+              </p>
               <button
                 onClick={(e) => {
                   setIsActive(true);
@@ -526,9 +549,7 @@ const Login = () => {
         </div>
 
         <div
-          className={`flex  lg:block h-full  ${
-            isActive ? "active" : "close"
-          }`}
+          className={`flex  lg:block h-full  ${isActive ? "active" : "close"}`}
         >
           <div className="page back  w-[50%] absolute top-0">
             <div
@@ -541,7 +562,7 @@ const Login = () => {
             >
               <LogoutOutlinedIcon style={{ fontSize: 100 }} />
               <h1>Welcome Back!</h1>
-              <p className="!text-3xl" >
+              <p className="!text-3xl">
                 To stay connected with us, please login with your personal info
               </p>
               <button
@@ -561,14 +582,27 @@ const Login = () => {
             <div className="h-full content">
               <h1>Log In</h1>
               <form className="mt-10">
-                <input type="email" placeholder="email" />
-                <input type="password" placeholder="password" />
+                <input
+                  onChange={handleChange}
+                  value={fields.email}
+                  name="email"
+                  type="email"
+                  placeholder="email"
+                />
+                <input
+                  onChange={handleChange}
+                  value={fields.password}
+                  name="password"
+                  type="text"
+                  placeholder="password"
+                />
                 <span className="forget">Forgot password?</span>
                 <span className="clearfix"></span>
                 <button
                   className="h-20"
                   onClick={(e) => {
                     e.preventDefault();
+                    handleSubmit(e);
                   }}
                 >
                   Log In

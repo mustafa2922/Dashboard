@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:main": "env-cmd -f .env.main react-scripts build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -21,6 +22,7 @@
     "ag-grid-community": "^31.1.1",
     "ag-grid-enterprise": "^31.1.1",
     "ag-grid-react": "^31.1.1",
+    "antd": "^5.16.1",
     "axios": "^1.6.8",
     "dayjs": "^1.11.10",
     "formik": "^2.4.5",

@@ -6,31 +6,30 @@ import "react-phone-number-input/style.css";
 import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
-import EditNoteIcon from "@mui/icons-material/EditNote";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { toast } from "react-toastify";
+import EditIcon from "@mui/icons-material/Edit";
 import dayjs from "dayjs";
 
 function Destinations() {
+  const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
   const handleClose = () => {
-    setClick(true);
     setOpen(false);
   };
   const [gridApi, setGridApi] = useState(null);
   const [stat, setStat] = useState("");
-  const [click, setClick] = useState(true);
 
   const [reload, setReload] = useState(false);
 
   const [fields, setFields] = useState({
     id: "",
     name: "",
-    status: "DEFAULT",
+    status: "1",
   });
 
   const handleChange = (event) => {
@@ -38,18 +37,22 @@ function Destinations() {
   };
 
   const handleSave = () => {
-    if (fields.status === "DEFAULT" || fields.name === "") {
+    setAble(true);
+    if (fields.status === "" || fields.name === "") {
+      setAble(false);
       toast.error("Please Fill All the Fields Correctly");
     } else {
       if (stat == "Add") {
         axios
-          .post("https://task.jajasoft.online/api/v1/destination", fields)
+          .post("https://jajasend.site/api/v1/destination", fields)
           .then((response) => {
+            setAble(false);
             setReload(!reload);
             toast.success("Destination Added Successfully");
             setOpen(false);
           })
           .catch((error) => {
+            setAble(false);
             console.log(error);
           });
       }
@@ -57,31 +60,59 @@ function Destinations() {
   };
 
   const handleDelete = () => {
-    axios
-      .delete(`https://task.jajasoft.online/api/v1/destination/${fields.id}`)
-      .then((response) => {
-        toast.success("Destination Deleted Successfully");
-        setReload(!reload);
-        setOpen(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+    const confirmationToastId = toast.warning(
+      <div className="flex flex-col">
+        <p>You want to delete this item?</p>
+        <div className="flex items-center justify-start gap-2">
+          <button
+            className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
+            onClick={() => {
+              axios
+                .delete(
+                  `https://jajasend.site/api/v1/destination/${fields.id}`
+                )
+                .then((response) => {
+                  toast.dismiss(confirmationToastId);
+                  toast.success("Destination Deleted Successfully");
+                  setReload(!reload);
+                  setOpen(false);
+                })
+                .catch((err) => {
+                  console.log(err.response.data);
+                });
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="w-8 h-6 text-xs bg-green-500 rounded-md text-white "
+            onClick={() => {
+              toast.dismiss(confirmationToastId);
+            }}
+          >
+            No
+          </button>
+        </div>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const handleUpdate = () => {
+    setAble(true);
     axios
-      .put(`https://task.jajasoft.online/api/v1/destination/${fields.id}`, {
+      .put(`https://jajasend.site/api/v1/destination/${fields.id}`, {
         name: fields.name,
         status: fields.status,
       })
       .then((response) => {
         toast.success("Destination Updated Successfully");
+        setAble(false);
         setReload(!reload);
-        setClick(true);
         setOpen(false);
       })
       .catch((err) => {
+        setAble(false);
         console.log(err.response.data);
       });
   };
@@ -89,7 +120,7 @@ function Destinations() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("https://task.jajasoft.online/api/v1/destination")
+        .get("https://jajasend.site/api/v1/destination")
         .then((response) => {
           setRow(response.data.reverse());
         });
@@ -172,7 +203,7 @@ function Destinations() {
             }}
             className="flex items-center justify-center w-full h-full"
           >
-            <EditNoteIcon
+            <EditIcon
               className="hover:bg-black hover:text-white rounded-full border p-1 border-black"
               style={{ fontSize: "25px" }}
             />
@@ -231,7 +262,7 @@ function Destinations() {
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
-                setFields({ name: "", status: "DEFAULT" });
+                setFields({ name: "", status: "1" });
               }}
               className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white text-xs rounded-md px-2 "
             >
@@ -263,7 +294,7 @@ function Destinations() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[80%] md:w-[30%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[80%] md:w-[25%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Destination </div>
                 <div className="cursor-pointer" onClick={handleClose}>
@@ -277,7 +308,6 @@ function Destinations() {
                     size="small"
                     label="Name"
                     name="name"
-                    disabled={stat === "Edit" ? click : false}
                     value={fields.name}
                     onChange={(e) => {
                       handleChange(e);
@@ -288,7 +318,7 @@ function Destinations() {
                 </div>
 
                 <select
-                  disabled={stat === "Edit" ? click : false}
+          
                   name="status"
                   value={fields.status}
                   onChange={(e) => {
@@ -313,30 +343,13 @@ function Destinations() {
 
                   <div className=" w-[48%] rounded-md h-10  ">
                     <button
-                      onClick={
-                        stat === "Edit"
-                          ? click
-                            ? () => {
-                                setClick(false);
-                              }
-                            : handleUpdate
-                          : handleSave
-                      }
-                      className={`w-full rounded-md h-full flex ${
-                        stat === "Edit"
-                          ? click
-                            ? "hover:bg-blue-900"
-                            : "hover:bg-green-900"
-                          : "hover:bg-green-900"
-                      } items-center justify-center text-white ${
-                        stat === "Edit"
-                          ? click
-                            ? "bg-blue-600"
-                            : "bg-green-600"
-                          : "bg-green-600"
-                      }`}
+                      disabled={able}
+                      onClick={stat === "Edit" ? handleUpdate : handleSave}
+                      className={`w-full rounded-md h-full flex items-center
+                         hover:bg-green-900 bg-green-600
+                    justify-center text-white`}
                     >
-                      {stat === "Edit" ? (click ? "Edit" : "Update") : "Save"}
+                      {stat === "Edit" ? "Update" : "Save"}
                     </button>
                   </div>
                 </div>

@@ -6,7 +6,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useState, useEffect } from "react";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
-import EditNoteIcon from "@mui/icons-material/EditNote";
+import EditIcon from "@mui/icons-material/Edit";
 import { Link } from "react-router-dom";
 import "react-phone-number-input/style.css";
 import Modal from "@mui/material/Modal";
@@ -18,6 +18,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 function Corporate() {
+  const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
@@ -53,6 +54,7 @@ function Corporate() {
   };
 
   const handleSave = () => {
+    setAble(true);
     if (
       fields.first_name === "" ||
       fields.title === "DEFAULT" ||
@@ -67,6 +69,7 @@ function Corporate() {
       fields.sec_mob === ""
     ) {
       toast.error("Please Fill All Fields Correctly");
+      setAble(false);
     } else {
       if (stat == "Add") {
         axios
@@ -74,41 +77,70 @@ function Corporate() {
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
+              setAble(false);
               toast.success("Corporate Added Successfully");
               setOpen(false);
             }
           })
           .catch((error) => {
             console.log(error);
+            setAble(false);
           });
       }
     }
   };
 
   const handleDelete = () => {
-    axios
-      .delete(`https://task.jajasoft.online/api/v1/corporate/${id}`)
-      .then((response) => {
-        toast.success("Corporate Deleted Successfully");
-        setReload(!reload);
-        setOpen(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+    const confirmationToastId = toast.warning(
+      <div className="flex flex-col">
+        <p>You want to delete this item?</p>
+        <div className="flex items-center justify-start gap-2">
+          <button
+            className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
+            onClick={() => {
+              axios
+                .delete(`https://task.jajasoft.online/api/v1/corporate/${id}`)
+                .then((response) => {
+                  toast.dismiss(confirmationToastId);
+                  toast.success("Client Deleted Successfully");
+                  setReload(!reload);
+                  setOpen(false);
+                })
+                .catch((err) => {
+                  console.log(err.response.data);
+                });
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="w-8 h-6 text-xs bg-green-500 rounded-md text-white "
+            onClick={() => {
+              toast.dismiss(confirmationToastId);
+            }}
+          >
+            No
+          </button>
+        </div>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const handleUpdate = () => {
+    setAble(true);
     axios
       .put(`https://task.jajasoft.online/api/v1/corporate/${id}`, fields)
       .then((response) => {
         toast.success("Corporate Updated Successfully");
+        setAble(false);
         setReload(!reload);
         setClick(true);
         setOpen(false);
       })
       .catch((err) => {
         console.log(err.response.data);
+        setAble(false);
       });
   };
 
@@ -179,7 +211,7 @@ function Corporate() {
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
-            <EditNoteIcon
+            <EditIcon
               onClick={() => {
                 setOpen(true);
                 setStat("Edit");
@@ -312,7 +344,7 @@ function Corporate() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[70%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[50%] h-fit">
               <div className="flex justify-between items-center h-[10%] px-2">
                 <div className="font-bold text-lg">{stat} Corporate</div>
                 <div className="cursor-pointer" onClick={handleClose}>
@@ -327,7 +359,6 @@ function Corporate() {
                     onChange={(e) => {
                       handleChange(e);
                     }}
-                    disabled={stat === "Edit" ? click : false}
                     name="title"
                     className="px-2 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                   >
@@ -344,7 +375,6 @@ function Corporate() {
                       <TextField
                         fullWidth
                         id="outlined-basic"
-                        disabled={stat === "Edit" ? click : false}
                         size="small"
                         value={fields.first_name}
                         name="first_name"
@@ -361,7 +391,6 @@ function Corporate() {
                         fullWidth
                         id="outlined-basic"
                         value={fields.last_name}
-                        disabled={stat === "Edit" ? click : false}
                         name="last_name"
                         onChange={(e) => {
                           handleChange(e);
@@ -378,7 +407,6 @@ function Corporate() {
                       fullWidth
                       id="outlined-basic"
                       value={fields.email}
-                      disabled={stat === "Edit" ? click : false}
                       name="email"
                       onChange={(e) => {
                         handleChange(e);
@@ -391,12 +419,11 @@ function Corporate() {
 
                   <div className="mt-4">
                     <PhoneInput
-                      international
+                      defaultCountry="IN"
                       value={fields.mob}
                       onChange={(e) => {
                         setFields({ ...fields, mob: e });
                       }}
-                      disabled={stat === "Edit" ? click : false}
                       placeholder="Number-1"
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
@@ -407,7 +434,6 @@ function Corporate() {
                       fullWidth
                       id="outlined-basic"
                       value={fields.sec_email}
-                      disabled={stat === "Edit" ? click : false}
                       name="sec_email"
                       onChange={(e) => {
                         handleChange(e);
@@ -421,12 +447,11 @@ function Corporate() {
                 <div className="w-[48%]">
                   <div>
                     <PhoneInput
-                      international
+                      defaultCountry="IN"
                       value={fields.sec_mob}
                       onChange={(e) => {
                         setFields({ ...fields, sec_mob: e });
                       }}
-                      disabled={stat === "Edit" ? click : false}
                       placeholder="Number-2"
                       className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
                     />
@@ -438,7 +463,6 @@ function Corporate() {
                       id="outlined-basic"
                       value={fields.city}
                       name="city"
-                      disabled={stat === "Edit" ? click : false}
                       onChange={(e) => {
                         handleChange(e);
                       }}
@@ -453,7 +477,6 @@ function Corporate() {
                       fullWidth
                       id="outlined-basic"
                       size="small"
-                      disabled={stat === "Edit" ? click : false}
                       value={fields.address}
                       name="address"
                       onChange={(e) => {
@@ -469,7 +492,6 @@ function Corporate() {
                       fullWidth
                       id="outlined-basic"
                       size="small"
-                      disabled={stat === "Edit" ? click : false}
                       value={fields.company}
                       name="company"
                       onChange={(e) => {
@@ -485,7 +507,6 @@ function Corporate() {
                       fullWidth
                       id="outlined-basic"
                       value={fields.gst}
-                      disabled={stat === "Edit" ? click : false}
                       name="gst"
                       onChange={(e) => {
                         handleChange(e);
@@ -512,30 +533,13 @@ function Corporate() {
 
                 <div className=" w-[48%] rounded-md h-10  ">
                   <button
-                    onClick={
-                      stat === "Edit"
-                        ? click
-                          ? () => {
-                              setClick(false);
-                            }
-                          : handleUpdate
-                        : handleSave
-                    }
-                    className={`w-full rounded-md h-full flex ${
-                      stat === "Edit"
-                        ? click
-                          ? "hover:bg-blue-900"
-                          : "hover:bg-green-900"
-                        : "hover:bg-green-900"
-                    } items-center justify-center text-white ${
-                      stat === "Edit"
-                        ? click
-                          ? "bg-blue-600"
-                          : "bg-green-600"
-                        : "bg-green-600"
-                    }`}
+                    disabled={able}
+                    onClick={stat === "Edit" ? handleUpdate : handleSave}
+                    className={`w-full rounded-md h-full flex items-center
+                         hover:bg-green-900 bg-green-600
+                    justify-center text-white`}
                   >
-                    {stat === "Edit" ? (click ? "Edit" : "Update") : "Save"}
+                    {stat === "Edit" ? "Update" : "Save"}
                   </button>
                 </div>
               </div>
