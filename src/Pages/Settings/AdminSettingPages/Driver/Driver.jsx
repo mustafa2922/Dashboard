@@ -328,7 +328,6 @@ function Driver() {
       reader.onload = () => {
         if (str === "driver") {
           setDriverPhoto(reader.result);
-          console.log(reader.result);
           setDriverFields({ ...driverFields, driver_img: file });
         }
         if (str === "id") {

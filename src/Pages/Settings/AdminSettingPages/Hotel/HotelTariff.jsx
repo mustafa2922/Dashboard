@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useState } from "react";
-import EditNoteIcon from "@mui/icons-material/EditNote";
+import EditIcon from "@mui/icons-material/Edit";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
@@ -95,10 +95,10 @@ let data = [
     CWB: 110,
     CNB: 55,
   },
- 
 ];
 
 function HotelPrice({ name, MainSetOpen }) {
+  const [reload, setReload] = useState(false);
   const [row, setRow] = useState(data);
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
@@ -110,7 +110,8 @@ function HotelPrice({ name, MainSetOpen }) {
     {
       headerName: "Room Category",
       field: "RoomType",
-      flex: 0.55,
+      filter: false,
+      flex: 0.6,
     },
     {
       headerName: "Meal Plan",
@@ -121,68 +122,68 @@ function HotelPrice({ name, MainSetOpen }) {
       headerName: "Single",
       field: "Single",
       flex: 0.4,
-      cellRenderer:(params)=>{return (
-        <div>{`₹ ${params.data.CNB}`}</div>
-      )}
+      cellRenderer: (params) => {
+        return <div>{`₹ ${params.data.CNB}`}</div>;
+      },
     },
     {
       headerName: "Double",
       field: "Double",
       flex: 0.45,
-      cellRenderer:(params)=>{return (
-        <div>{`₹ ${params.data.CNB}`}</div>
-      )}
+      cellRenderer: (params) => {
+        return <div>{`₹ ${params.data.CNB}`}</div>;
+      },
     },
     {
       headerName: "Triple",
       field: "Triple",
       flex: 0.4,
-      cellRenderer:(params)=>{return (
-        <div>{`₹ ${params.data.CNB}`}</div>
-      )}
+      cellRenderer: (params) => {
+        return <div>{`₹ ${params.data.CNB}`}</div>;
+      },
     },
     {
       headerName: "Quad",
       field: "Quad",
       flex: 0.35,
-      cellRenderer:(params)=>{return (
-        <div>{`₹ ${params.data.CNB}`}</div>
-      )}
+      cellRenderer: (params) => {
+        return <div>{`₹ ${params.data.CNB}`}</div>;
+      },
     },
     {
       headerName: "CWB",
       field: "CWB",
       flex: 0.35,
-      cellRenderer:(params)=>{return (
-        <div>{`₹ ${params.data.CNB}`}</div>
-      )}
+      cellRenderer: (params) => {
+        return <div>{`₹ ${params.data.CNB}`}</div>;
+      },
     },
     {
       headerName: "CNB (Above 5 yrs)",
-      filter:false,
+      filter: false,
       field: "CNB",
       flex: 0.7,
-      cellRenderer:(params)=>{return (
-        <div>{`₹ ${params.data.CNB}`}</div>
-      )}
+      cellRenderer: (params) => {
+        return <div>{`₹ ${params.data.CNB}`}</div>;
+      },
     },
     {
       headerName: "CNB (Below 5 yrs)",
-      filter:false,
+      filter: false,
       field: "CNB",
       flex: 0.7,
-      cellRenderer:(params)=>{return (
-        <div>{`₹ ${params.data.CNB}`}</div>
-      )}
+      cellRenderer: (params) => {
+        return <div>{`₹ ${params.data.CNB}`}</div>;
+      },
     },
     {
       headerName: "INF (Below 3 yrs)",
-      filter:false,
+      filter: false,
       field: "CNB",
       flex: 0.7,
-      cellRenderer:(params)=>{return (
-        <div>{`₹ ${params.data.CNB}`}</div>
-      )}
+      cellRenderer: (params) => {
+        return <div>{`₹ ${params.data.CNB}`}</div>;
+      },
     },
     {
       sortable: false,
@@ -191,7 +192,7 @@ function HotelPrice({ name, MainSetOpen }) {
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
-            <EditNoteIcon
+            <EditIcon
               onClick={() => {
                 setOpen(true);
                 setStat("Edit");
@@ -217,6 +218,10 @@ function HotelPrice({ name, MainSetOpen }) {
     flex: 1,
     tooltipField: "name",
   };
+
+  useEffect(() => {
+    
+  }, [reload]);
 
   return (
     <div className="h-full">
@@ -272,7 +277,10 @@ function HotelPrice({ name, MainSetOpen }) {
               </div>
               <div className="flex justify-between w-full mt-4 h-[90%]">
                 <div className="flex flex-col w-[48%]">
-                  <select defaultValue={'DEFAULT'} className="px-2 focus:outline-none mt-2 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                  <select
+                    defaultValue={"DEFAULT"}
+                    className="px-2 focus:outline-none mt-2 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
+                  >
                     <option value="DEFAULT" disabled={true}>
                       Room Types
                     </option>
@@ -283,7 +291,10 @@ function HotelPrice({ name, MainSetOpen }) {
                     <option value="5">5 Star</option>
                   </select>
 
-                  <select defaultValue={'DEFAULT'} className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md">
+                  <select
+                    defaultValue={"DEFAULT"}
+                    className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
+                  >
                     <option value="DEFAULT" disabled={true}>
                       Meal Types
                     </option>

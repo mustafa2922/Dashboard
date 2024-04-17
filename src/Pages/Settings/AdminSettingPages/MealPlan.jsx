@@ -44,7 +44,7 @@ function MealPlan() {
     } else {
       if (stat == "Add") {
         axios
-          .post("https://task.jajasoft.online/api/v1/mealplan", {
+          .post("https://jajasend.site/api/v1/mealplan", {
             name: fields.name,
             status: fields.status,
           })
@@ -74,7 +74,7 @@ function MealPlan() {
             onClick={() => {
               axios
                 .delete(
-                  `https://task.jajasoft.online/api/v1/mealplan/${fields.id}`
+                  `https://jajasend.site/api/v1/mealplan/${fields.id}`
                 )
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
@@ -106,7 +106,7 @@ function MealPlan() {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://task.jajasoft.online/api/v1/mealplan/${fields.id}`, {
+      .put(`https://jajasend.site/api/v1/mealplan/${fields.id}`, {
         name: fields.name,
         status: fields.status,
       })
@@ -125,7 +125,7 @@ function MealPlan() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("https://task.jajasoft.online/api/v1/mealplan")
+        .get("https://jajasend.site/api/v1/mealplan")
         .then((response) => {
           setRow(response.data.reverse());
         });

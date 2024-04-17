@@ -4,12 +4,13 @@ import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
+import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-
 const Login = () => {
   const [isActive, setIsActive] = useState(false);
+  const [check, setCheck] = useState(false);
 
   const [pin, setPin] = useState([]);
 
@@ -34,17 +35,22 @@ const Login = () => {
   const handleDelete = () => {
     pin.pop();
     setPin([...pin]);
+    setCheck(false);
   };
 
   const handleSubmit = () => {
     if (fields.email === "" || fields.password === "") {
       toast.error("Fill All Fields Correctly");
     } else {
-      axios.post('https://task.jajasoft.online/api/v1/login',fields)
+      axios.post("https://task.jajasoft.online/api/v1/login", fields);
     }
   };
 
-  console.log(fields);
+  const handlePinUpload = () => {
+    if (pin.join("") !== pass) {
+      setCheck(true);
+    }
+  };
 
   return (
     <div className="w-full h-screen flex justify-center items-center">
@@ -382,15 +388,14 @@ const Login = () => {
 
         <div className={`flex h-full ${isActive ? "active" : "close"}`}>
           <div className=" w-full lg:w-[50%]">
-            <div className=" px-1 lg:px-5  py-5 lg:py-16 w-full">
-              <div className="text-slate-800 p-10 text-center text-4xl font-bold">
+            <div className=" px-1 lg:px-5  py-10 lg:py-12 w-full">
+              <div className="text-slate-800 py-1 text-center text-4xl font-bold">
                 Login With Pin
               </div>
 
               <div
-                className={` ${
-                  pin.length > 3 ? (pin.join("") === pass ? "" : "shake") : ""
-                } flex flex-row w-[45%] sm:w-[30%] lg:w-[40%] m-auto justify-evenly`}
+                className={` ${check ? "shake" : ""}
+               flex flex-row w-[45%] sm:w-[30%] lg:w-[40%] m-auto justify-evenly mt-8`}
               >
                 <div
                   className={` ${
@@ -414,8 +419,8 @@ const Login = () => {
                 ></div>
               </div>
 
-              <div className="flex flex-col min-[200px]:w-[70%] w-[50%] sm:w-[40%] lg:w-[50%] m-auto mt-7">
-                <div className="flex flex-row justify-evenly mt-2">
+              <div className="flex flex-col min-[200px]:w-[70%] w-[60%] sm:w-[40%] lg:w-[60%] m-auto mt-7">
+                <div className="flex flex-row justify-evenly mt-6">
                   <div
                     onClick={() => {
                       handlePin("1");
@@ -442,7 +447,7 @@ const Login = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-row  justify-evenly mt-2">
+                <div className="flex flex-row  justify-evenly mt-6">
                   <div
                     onClick={() => {
                       handlePin("4");
@@ -469,7 +474,7 @@ const Login = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-row justify-evenly  mt-2">
+                <div className="flex flex-row justify-evenly  mt-6">
                   <div
                     onClick={() => {
                       handlePin("7");
@@ -496,7 +501,7 @@ const Login = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-row  justify-evenly mt-2">
+                <div className="flex flex-row  justify-evenly mt-6">
                   <div
                     onClick={() => {
                       handlePin("0");
@@ -512,6 +517,14 @@ const Login = () => {
                     className="border cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
                   >
                     <BackspaceOutlinedIcon style={{ fontSize: 20 }} />
+                  </div>
+                  <div
+                    onClick={() => {
+                      handlePinUpload();
+                    }}
+                    className="border cursor-pointer border-black rounded-full h-24 w-24 text-3xl flex items-center justify-center"
+                  >
+                    <DoneOutlineIcon style={{ fontSize: 20 }} />
                   </div>
                 </div>
               </div>
@@ -594,7 +607,7 @@ const Login = () => {
                   value={fields.password}
                   name="password"
                   type="text"
-                  placeholder="password"
+                  placeholder="pin"
                 />
                 <span className="forget">Forgot password?</span>
                 <span className="clearfix"></span>

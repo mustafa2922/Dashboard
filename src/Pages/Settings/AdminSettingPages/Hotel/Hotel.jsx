@@ -50,6 +50,20 @@ function Hotel() {
     status: "1",
   });
 
+  const [bankFields, setBankFields] = useState({
+    accomodation_id: "",
+    account_name: "",
+    account_no: "",
+    bank_name: "",
+    branch_name: "",
+    ifsci_code: "",
+    account_name_sec: "",
+    account_no_sec: "",
+    bank_name_sec: "",
+    branch_name_sec: "",
+    ifsci_code_sec: "",
+  });
+
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
@@ -130,7 +144,7 @@ function Hotel() {
     {
       headerName: "Tarif Valid From",
       field: "tarif_valid_from",
-      filter:false,
+      filter: false,
       cellStyle: {
         display: "flex",
         alignItems: "center",
@@ -158,7 +172,7 @@ function Hotel() {
     {
       headerName: "Tarif Valid To",
       field: "tarif_valid_to",
-      filter:false,
+      filter: false,
       cellStyle: {
         display: "flex",
         alignItems: "center",
@@ -315,9 +329,7 @@ function Hotel() {
             className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
             onClick={() => {
               axios
-                .delete(
-                  `https://jajasend.site/api/v1/accomodation/${id}`
-                )
+                .delete(`https://jajasend.site/api/v1/accomodation/${id}`)
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
                   toast.success("Accommodation Deleted Successfully");
@@ -348,10 +360,7 @@ function Hotel() {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(
-        `https://jajasend.site/api/v1/accomodation/${id}`,
-        hotelFields
-      )
+      .put(`https://jajasend.site/api/v1/accomodation/${id}`, hotelFields)
       .then((response) => {
         toast.success("Accomodation Updated Successfully");
         setReload(!reload);
@@ -433,7 +442,6 @@ function Hotel() {
       hotelFields.reservation_email !== "" &&
       hotelFields.status !== ""
     ) {
-
       axios
         .post("https://jajasend.site/api/v1/accomodation", hotelFields)
         .then((res) => {
@@ -458,15 +466,13 @@ function Hotel() {
         .get("https://jajasend.site/api/v1/accomodation")
         .then((response) => {
           setRow(response.data.reverse());
-        })
+        });
     };
 
     const getDestinations = () => {
-      axios
-        .get("https://jajasend.site/api/v1/destination")
-        .then((response) => {
-          destinations = response.data;
-        });
+      axios.get("https://jajasend.site/api/v1/destination").then((response) => {
+        destinations = response.data;
+      });
     };
 
     getData();
@@ -660,7 +666,7 @@ function Hotel() {
 
                   <div className=" mt-4 w-full">
                     <Textarea
-                    placeholder="Address"
+                      placeholder="Address"
                       name="address"
                       value={hotelFields.address}
                       onChange={(e) => {
@@ -681,7 +687,6 @@ function Hotel() {
                     <PhoneInput
                       defaultCountry="IN"
                       value={hotelFields.contact_no}
-                     
                       onChange={(e) => {
                         setHotelFields({ ...hotelFields, contact_no: e });
                       }}
@@ -798,7 +803,6 @@ function Hotel() {
 
                   <div className="mt-4">
                     <PhoneInput
-                     
                       defaultCountry="IN"
                       value={hotelFields.mob_no_1}
                       onChange={(e) => {
@@ -811,7 +815,6 @@ function Hotel() {
                   <div className="mt-4">
                     <PhoneInput
                       defaultCountry="IN"
-                      
                       value={hotelFields.mob_no_2}
                       onChange={(e) => {
                         setHotelFields({ ...hotelFields, mob_no_2: e });
@@ -821,35 +824,32 @@ function Hotel() {
                     />
                   </div>
                   <div className="w-full mt-4">
-                 
-                      <TextField
-                        id="outlined-basic"
-                        size="small"
-                        label="Reservation Email ID"
-                        name="reservation_email"
-                        value={hotelFields.reservation_email}
-                        onChange={(e) => {
-                          handleChange(e);
-                        }}
-                        variant="outlined"
-                        sx={{ width: "100%" }}
-                      />
-                      </div>
-                   <div className="w-full mt-4" >
-                   
-                      <TextField
-                        id="outlined-basic"
-                        size="small"
-                        name="website_link"
-                        value={hotelFields.website_link}
-                        onChange={(e) => {
-                          handleChange(e);
-                        }}
-                        label="Website Link"
-                        variant="outlined"
-                        sx={{ width: "100%" }}
-                      />
-                  
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      label="Reservation Email ID"
+                      name="reservation_email"
+                      value={hotelFields.reservation_email}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="w-full mt-4">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      name="website_link"
+                      value={hotelFields.website_link}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
+                      label="Website Link"
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
                   </div>
                   <select
                     value={hotelFields.status}

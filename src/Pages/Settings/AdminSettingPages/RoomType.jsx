@@ -45,7 +45,7 @@ function RoomType() {
     } else {
       if (stat == "Add") {
         axios
-          .post("https://task.jajasoft.online/api/v1/roomtype", fields)
+          .post("https://jajasend.site/api/v1/roomtype", fields)
           .then((response) => {
             setAble(false);
             setReload(!reload);
@@ -70,7 +70,7 @@ function RoomType() {
             onClick={() => {
               axios
                 .delete(
-                  `https://task.jajasoft.online/api/v1/roomtype/${fields.id}`
+                  `https://jajasend.site/api/v1/roomtype/${fields.id}`
                 )
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
@@ -102,7 +102,7 @@ function RoomType() {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://task.jajasoft.online/api/v1/roomtype/${fields.id}`, {
+      .put(`https://jajasend.site/api/v1/roomtype/${fields.id}`, {
         name: fields.name,
         status: fields.status,
       })
@@ -121,7 +121,7 @@ function RoomType() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("https://task.jajasoft.online/api/v1/roomtype")
+        .get("https://jajasend.site/api/v1/roomtype")
         .then((response) => {
           setRow(response.data.reverse());
         });

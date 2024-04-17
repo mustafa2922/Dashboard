@@ -1,7 +1,6 @@
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import IosShareIcon from "@mui/icons-material/IosShare";
 import "react-phone-number-input/style.css";
 import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
@@ -11,7 +10,6 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { toast } from "react-toastify";
-import dayjs from "dayjs";
 
 const TeamManagement = () => {
   const [able, setAble] = useState(false);
@@ -54,7 +52,7 @@ const TeamManagement = () => {
     } else {
       if (stat == "Invite") {
         axios
-          .post("https://task.jajasoft.online/api/v1/team", fields)
+          .post("https://jajasend.site/api/v1/team", fields)
           .then((response) => {
             setReload(!reload);
             toast.success("Team Member Added Successfully");
@@ -78,7 +76,7 @@ const TeamManagement = () => {
             className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
             onClick={() => {
               axios
-                .delete(`https://task.jajasoft.online/api/v1/team/${id}`)
+                .delete(`https://jajasend.site/api/v1/team/${id}`)
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
                   toast.success("Team Member Deleted Successfully");
@@ -109,7 +107,7 @@ const TeamManagement = () => {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://task.jajasoft.online/api/v1/team/${id}`, fields)
+      .put(`https://jajasend.site/api/v1/team/${id}`, fields)
       .then((response) => {
         toast.success("Team Member Updated Successfully");
         setReload(!reload);
@@ -124,7 +122,7 @@ const TeamManagement = () => {
 
   useEffect(() => {
     const getData = () => {
-      axios.get("https://task.jajasoft.online/api/v1/team").then((response) => {
+      axios.get("https://jajasend.site/api/v1/team").then((response) => {
         setRow(response.data.reverse());
       });
     };
