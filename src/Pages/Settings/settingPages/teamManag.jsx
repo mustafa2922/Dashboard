@@ -11,6 +11,8 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+let permissions = [];
+
 const TeamManagement = () => {
   const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
@@ -127,8 +129,17 @@ const TeamManagement = () => {
       });
     };
 
+    const getPermissions = () => {
+      axios.get("https://jajasend.site/api/v1/permission").then((response) => {
+        permissions = response.data;
+      });
+    };
+
+    getPermissions();
     getData();
   }, [reload]);
+
+  console.log(permissions);
 
   const [column, setColumn] = useState([
     {
@@ -246,31 +257,6 @@ const TeamManagement = () => {
     flex: 1,
     tooltipField: "name",
   };
-
-  const permissions = [
-    "Query",
-    "Proposal",
-    "Mails",
-    "Task / Followup's",
-    "Suppliers Communication",
-    "Post Sales Supplier",
-    "Voucher",
-    "Billing",
-    "Guest Docs.",
-    "History",
-    "Itinerary",
-    "Client",
-    "Agent",
-    "Corporate",
-    "Supplier",
-    "Report",
-    "Room Type",
-    "Meal Plan",
-    "Hotel",
-    "Activity",
-    "Transfer",
-    "Show Package Price",
-  ];
 
   return (
     <div className="h-[90vh]">
@@ -421,7 +407,7 @@ const TeamManagement = () => {
                       return (
                         <div key={index} className="flex flex-row">
                           <div className="flex-1 border">
-                            <div className="p-1">{item}</div>
+                            <div className="p-1">{item.name}</div>
                           </div>
 
                           <label

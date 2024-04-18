@@ -57,20 +57,20 @@ const App = () => {
     return (
       <div className="main h-screen w-full">
         <Navbar sendDataToApp={getStatusFromSideBar} />
-        <div className="wrapper flex h-[92.3vh]">
+        <div className="wrapper flex h-[92.4vh]">
           <div
             className={`sideBar-Wrapper md:block ${
               show ? "hidden" : ""
-            } w-[4rem] md:static absolute z-20 h-full bg-[#12344d] text-white`}
+            } w-[4rem] md:static absolute z-20  bg-[#12344d] text-white`}
           >
             <SideBar />
           </div>
 
-          <div className="content-Wrapper w-full relative h-full overflow-y-auto">
+          <div className="content-Wrapper w-full  relative overflow-y-auto">
             <Outlet />
           </div>
         </div>
-        <ToastContainer autoClose={2000} />
+        <ToastContainer position="bottom-right" autoClose={2000} />
       </div>
     );
   };

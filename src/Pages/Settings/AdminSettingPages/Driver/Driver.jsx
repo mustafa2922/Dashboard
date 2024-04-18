@@ -23,6 +23,10 @@ import "./Driver.css";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 let vehicle_Mark = [];
 
@@ -30,6 +34,8 @@ function Driver() {
   const [able, setAble] = useState(false);
   const [id, setId] = useState("");
   const [reload, setReload] = useState(false);
+
+  const [Editopen, setEditOpen] = useState(false);
 
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
@@ -62,8 +68,8 @@ function Driver() {
     veh_color: "",
     veh_price_ac: "",
     veh_price_non_ac: "",
-    price_valid_from: "",
-    price_valid_to: "",
+    price_valid_from: dayjs().format("YYYY-MM-DD"),
+    price_valid_to: dayjs().format("YYYY-MM-DD"),
     veh_img: "",
     mob_no_1: "",
     mob_no_2: "",
@@ -113,10 +119,20 @@ function Driver() {
               {params.data.name}
             </div>
             <div className="h-[90%] w-[48%]">
-              <img
-                className="h-full w-full object-contain"
-                src={`${params.data.driver_img}`}
-              />
+              <div className="group relative">
+                <div
+                  onClick={() => {
+                    setEditOpen(true);
+                  }}
+                  className="cursor-pointer hidden group-hover:flex bg-black h-5 rounded-full p-3 w-5 justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
+                >
+                  <EditIcon style={{ color: "#fff", fontSize: 18 }} />
+                </div>
+                <img
+                  className="w-full h-full object-contain"
+                  src={params.data.driver_img_url}
+                />
+              </div>
             </div>
           </div>
         );
@@ -125,12 +141,19 @@ function Driver() {
     {
       headerName: "Mobile",
       field: "mob_no_1",
-      flex: 1.35,
+      flex: 1.5,
+      cellRenderer: (params) => {
+        return (
+          <div className="flex items-center justify-start gap-2 w-full h-full">
+            <div className="-ml-2">{params.value}</div>
+          </div>
+        );
+      },
     },
     {
       headerName: "Vehicle Details",
       filter: false,
-      flex: 2.5,
+      flex: 2,
       cellRenderer: (params) => {
         return (
           <div className="ml-[-10px] flex items-center justify-between p-1 h-full w-full">
@@ -189,14 +212,18 @@ function Driver() {
     },
     {
       headerName: "Price Valid From",
-      flex: 1.75,
+      flex: 1.65,
       filter: false,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+      },
       field: "price_valid_from",
       cellRenderer: (params) => {
         return (
           <div
             className={`flex items-center justify-center w-full h-6 text-white text-xs rounded-md ${
-              dayjs(params.data.price_valid_to, "DD/MM/YY").isBefore(
+              dayjs(params.data.price_valid_to, "YYYY-MM-DD").isBefore(
                 dayjs(),
                 "day"
               )
@@ -204,7 +231,7 @@ function Driver() {
                 : "bg-green-600"
             } `}
           >
-            {params.value}
+            {dayjs(params.value).format("DD-MM-YYYY")}
           </div>
         );
       },
@@ -213,17 +240,21 @@ function Driver() {
       headerName: "Price Valid To",
       filter: false,
       flex: 1.5,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+      },
       field: "price_valid_to",
       cellRenderer: (params) => {
         return (
           <div
             className={`flex items-center justify-center w-full h-6 text-white text-xs rounded-md ${
-              dayjs(params.value, "DD/MM/YY").isBefore(dayjs(), "day")
+              dayjs(params.value, "YYYY-MM-DD").isBefore(dayjs(), "day")
                 ? "bg-red-600"
                 : "bg-green-600"
             } `}
           >
-            {params.value}
+            {dayjs(params.value).format("DD-MM-YYYY")}
           </div>
         );
       },
@@ -231,12 +262,17 @@ function Driver() {
     {
       headerName: "Status",
       field: "status",
-      flex: 1.1,
+      filter: false,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+      },
+      flex: 0.85,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-[35px]">
             <div
-              className={`flex items-center justify-center w-14 px-8 ${
+              className={`flex items-center justify-center px-1 ${
                 params.value === "1" ? "bg-green-600" : "bg-red-600"
               }  text-white rounded-md h-[70%]`}
             >
@@ -248,14 +284,12 @@ function Driver() {
     },
     {
       headerName: "Updated By",
-      flex: 2.2,
+      filter: false,
+      flex: 2.1,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-start gap-2 w-full h-full">
-            <div className="p-1 rounded-full border border-black h-6 w-6 flex items-center justify-center">
-              J
-            </div>
-            <div className="w-0">JaffarSaleem@gmail.com</div>
+            <div className="-ml-2">JaffarSaleem@gmail.com</div>
           </div>
         );
       },
@@ -264,9 +298,19 @@ function Driver() {
       headerName: "Updated On",
       filter: false,
       field: "updated_at",
-      flex: 1.2,
-      valueGetter: (params) => {
-        return `${params.data.updated_at}`;
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+      },
+      flex: 1.3,
+      cellRenderer: (params) => {
+        return (
+          <div className="flex items-center justify-start gap-2 w-full h-full">
+            <div className="-ml-3">
+              {dayjs(params.data.updated_at).format("DD-MM-YYYY")}
+            </div>
+          </div>
+        );
       },
     },
     {
@@ -347,7 +391,25 @@ function Driver() {
     }
   };
 
-  const handleUpdate = () => {};
+  const handleUpdate = () => {
+    setAble(true);
+    delete driverFields.driver_id_card;
+    delete driverFields.driver_img;
+    delete driverFields.license_copy;
+    delete driverFields.veh_img;
+    axios
+      .put(`https://jajasend.site/api/v1/driver/${id}`, driverFields)
+      .then((response) => {
+        toast.success("Driver Updated Successfully");
+        setReload(!reload);
+        setAble(false);
+        setOpen(false);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        setAble(false);
+      });
+  };
 
   const payload = new FormData();
 
@@ -384,13 +446,7 @@ function Driver() {
       }
 
       axios
-        .post("https://jajasend.site/api/v1/driver", payload, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            "x-rapidapi-host": "file-upload8.p.rapidapi.com",
-            "x-rapidapi-key": "your-rapidapi-key-here",
-          },
-        })
+        .post("https://jajasend.site/api/v1/driver", payload)
         .then((res) => {
           setAble(false);
           toast.success("Driver Added Successfully");
@@ -405,47 +461,38 @@ function Driver() {
       toast.error("Please Fill All Fields Correctly");
       setAble(false);
     }
-
-    console.log(driverFields);
   };
 
   const handleDelete = () => {
-    const confirmationToastId = toast.warning(
-      <div className="flex flex-col">
-        <p>You want to delete this item?</p>
-        <div className="flex items-center justify-start gap-2">
-          <button
-            className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
-            onClick={() => {
-              axios
-                .delete(
-                  `https://jajasend.site/api/v1/driver/${id}`
-                )
-                .then((response) => {
-                  toast.dismiss(confirmationToastId);
-                  toast.success("Accommodation Deleted Successfully");
-                  setReload(!reload);
-                  setOpen(false);
-                })
-                .catch((err) => {
-                  console.log(err.response.data);
-                });
-            }}
-          >
-            Yes
-          </button>
-          <button
-            className="w-8 h-6 text-xs bg-green-500 rounded-md text-white "
-            onClick={() => {
-              toast.dismiss(confirmationToastId);
-            }}
-          >
-            No
-          </button>
-        </div>
-      </div>,
-      { autoClose: false }
-    );
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      customClass: {
+        container: "custom-swal-container",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`https://jajasend.site/api/v1/driver/${id}`)
+          .then((response) => {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your Item has been deleted.",
+              icon: "success",
+            });
+            setReload(!reload);
+            setOpen(false);
+          })
+          .catch((err) => {
+            console.log(err.response.data);
+          });
+      }
+    });
   };
 
   const onGridReady = (params) => {
@@ -476,8 +523,6 @@ function Driver() {
     filter: true,
     cellStyle: {
       borderRight: "1px solid #d9d9db",
-      display: "flex",
-      alignItems: "center",
     },
     flex: 1,
     tooltipField: "name",
@@ -534,7 +579,7 @@ function Driver() {
                 setShowFromDate(dayjs());
                 setShowToDate(dayjs());
                 setvehicleMarkVal("");
-                setPassengerCapacity("")
+                setPassengerCapacity("");
                 setDriverFields({
                   name: "",
                   transfer_id: "",
@@ -543,8 +588,8 @@ function Driver() {
                   veh_color: "",
                   veh_price_ac: "",
                   veh_price_non_ac: "",
-                  price_valid_from: "",
-                  price_valid_to: "",
+                  price_valid_from: dayjs().format("YYYY-MM-DD"),
+                  price_valid_to: dayjs().format("YYYY-MM-DD"),
                   veh_img: "",
                   mob_no_1: "",
                   mob_no_2: "",
@@ -828,135 +873,158 @@ function Driver() {
                     </div>
                   </div>
 
-                  <div className=" flex items-center mt-4 w-full justify-between">
-                    <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
-                      <Input
-                        id="file-input1"
-                        type="file"
-                        inputProps={{ multiple: true }}
-                        onChange={(e) => handleFileSelect(e, "id")}
-                        style={{ display: "none" }}
-                      />
-                      <div className="flex items-center gap-3">
-                        <label htmlFor="file-input1" className="cursor-pointer">
-                          <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
-                        </label>
-                        <div className="hidden md:block text-xs overflow-x-auto">
-                          {idCardImg === "" ? `Driver Id Card` : "Selected  "}
+                  {stat !== "Edit" && (
+                    <>
+                      <div className=" flex items-center mt-4 w-full justify-between">
+                        <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
+                          <Input
+                            id="file-input1"
+                            type="file"
+                            inputProps={{ multiple: true }}
+                            onChange={(e) => handleFileSelect(e, "id")}
+                            style={{ display: "none" }}
+                          />
+                          <div className="flex items-center gap-3">
+                            <label
+                              htmlFor="file-input1"
+                              className="cursor-pointer"
+                            >
+                              <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
+                            </label>
+                            <div className="hidden md:block text-xs overflow-x-auto">
+                              {idCardImg === ""
+                                ? `Driver Id Card`
+                                : "Selected  "}
+                            </div>
+                          </div>
                         </div>
+                        <button
+                          onClick={() => {
+                            setIdCardModal(true);
+                          }}
+                          className="border border-slate-300 rounded-md text-xs flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                        >
+                          View
+                        </button>
+                        <ImageModal
+                          setState={setIdCardModal}
+                          state={IdCardModal}
+                          image={idCardImg}
+                        />
                       </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setIdCardModal(true);
-                      }}
-                      className="border border-slate-300 rounded-md text-xs flex items-center justify-center w-[15%] underline cursor-pointer h-10"
-                    >
-                      View
-                    </button>
-                    <ImageModal
-                      setState={setIdCardModal}
-                      state={IdCardModal}
-                      image={idCardImg}
-                    />
-                  </div>
-                  <div className=" flex items-center mt-4 w-full justify-between">
-                    <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
-                      <Input
-                        id="file-input2"
-                        type="file"
-                        inputProps={{ multiple: true }}
-                        onChange={(e) => handleFileSelect(e, "vehicle")}
-                        style={{ display: "none" }}
-                      />
-                      <div className="flex items-center gap-3">
-                        <label htmlFor="file-input2" className="cursor-pointer">
-                          <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
-                        </label>
-                        <div className="hidden md:block  text-xs overflow-x-auto">
-                          {vehiclePhoto === "" ? `Vehicle Image` : "Selected  "}
+                      <div className=" flex items-center mt-4 w-full justify-between">
+                        <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
+                          <Input
+                            id="file-input2"
+                            type="file"
+                            inputProps={{ multiple: true }}
+                            onChange={(e) => handleFileSelect(e, "vehicle")}
+                            style={{ display: "none" }}
+                          />
+                          <div className="flex items-center gap-3">
+                            <label
+                              htmlFor="file-input2"
+                              className="cursor-pointer"
+                            >
+                              <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
+                            </label>
+                            <div className="hidden md:block  text-xs overflow-x-auto">
+                              {vehiclePhoto === ""
+                                ? `Vehicle Image`
+                                : "Selected  "}
+                            </div>
+                          </div>
                         </div>
+                        <button
+                          onClick={() => {
+                            setVehicleImgModal(true);
+                          }}
+                          className="border border-slate-300 rounded-md text-xs flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                        >
+                          View
+                        </button>
+                        <ImageModal
+                          setState={setVehicleImgModal}
+                          state={vehicleImgModal}
+                          image={vehiclePhoto}
+                        />
                       </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setVehicleImgModal(true);
-                      }}
-                      className="border border-slate-300 rounded-md text-xs flex items-center justify-center w-[15%] underline cursor-pointer h-10"
-                    >
-                      View
-                    </button>
-                    <ImageModal
-                      setState={setVehicleImgModal}
-                      state={vehicleImgModal}
-                      image={vehiclePhoto}
-                    />
-                  </div>
-                  <div className=" flex items-center mt-4 w-full justify-between">
-                    <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
-                      <Input
-                        id="file-input3"
-                        type="file"
-                        inputProps={{ multiple: true }}
-                        onChange={(e) => handleFileSelect(e, "driver")}
-                        style={{ display: "none" }}
-                      />
-                      <div className="flex items-center gap-3">
-                        <label htmlFor="file-input3" className="cursor-pointer">
-                          <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
-                        </label>
-                        <div className="hidden md:block  text-xs overflow-x-auto">
-                          {driverPhoto === "" ? `Driver Image` : "Selected  "}
+                      <div className=" flex items-center mt-4 w-full justify-between">
+                        <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
+                          <Input
+                            id="file-input3"
+                            type="file"
+                            inputProps={{ multiple: true }}
+                            onChange={(e) => handleFileSelect(e, "driver")}
+                            style={{ display: "none" }}
+                          />
+                          <div className="flex items-center gap-3">
+                            <label
+                              htmlFor="file-input3"
+                              className="cursor-pointer"
+                            >
+                              <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
+                            </label>
+                            <div className="hidden md:block  text-xs overflow-x-auto">
+                              {driverPhoto === ""
+                                ? `Driver Image`
+                                : "Selected  "}
+                            </div>
+                          </div>
                         </div>
+                        <button
+                          onClick={() => {
+                            setDriverImgModal(true);
+                          }}
+                          className="border border-slate-300 rounded-md text-xs flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                        >
+                          View
+                        </button>
+                        <ImageModal
+                          setState={setDriverImgModal}
+                          state={driverImgModal}
+                          image={driverPhoto}
+                        />
                       </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setDriverImgModal(true);
-                      }}
-                      className="border border-slate-300 rounded-md text-xs flex items-center justify-center w-[15%] underline cursor-pointer h-10"
-                    >
-                      View
-                    </button>
-                    <ImageModal
-                      setState={setDriverImgModal}
-                      state={driverImgModal}
-                      image={driverPhoto}
-                    />
-                  </div>
-                  <div className=" flex items-center mt-4 w-full justify-between">
-                    <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
-                      <Input
-                        id="file-input4"
-                        type="file"
-                        inputProps={{ multiple: true }}
-                        onChange={(e) => handleFileSelect(e, "liscense")}
-                        style={{ display: "none" }}
-                      />
-                      <div className="flex items-center gap-3">
-                        <label htmlFor="file-input4" className="cursor-pointer">
-                          <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
-                        </label>
-                        <div className="hidden md:block  text-xs overflow-x-auto">
-                          {licenseCopy === "" ? `Liscense Copy` : "Selected  "}
+                      <div className=" flex items-center mt-4 w-full justify-between">
+                        <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
+                          <Input
+                            id="file-input4"
+                            type="file"
+                            inputProps={{ multiple: true }}
+                            onChange={(e) => handleFileSelect(e, "liscense")}
+                            style={{ display: "none" }}
+                          />
+                          <div className="flex items-center gap-3">
+                            <label
+                              htmlFor="file-input4"
+                              className="cursor-pointer"
+                            >
+                              <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
+                            </label>
+                            <div className="hidden md:block  text-xs overflow-x-auto">
+                              {licenseCopy === ""
+                                ? `Liscense Copy`
+                                : "Selected  "}
+                            </div>
+                          </div>
                         </div>
+                        <button
+                          onClick={() => {
+                            setLicenseCopyModal(true);
+                          }}
+                          className="border border-slate-300 rounded-md text-xs flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                        >
+                          View
+                        </button>
+                        <ImageModal
+                          setState={setLicenseCopyModal}
+                          state={LicenseCopyModal}
+                          image={licenseCopy}
+                        />
                       </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setLicenseCopyModal(true);
-                      }}
-                      className="border border-slate-300 rounded-md text-xs flex items-center justify-center w-[15%] underline cursor-pointer h-10"
-                    >
-                      View
-                    </button>
-                    <ImageModal
-                      setState={setLicenseCopyModal}
-                      state={LicenseCopyModal}
-                      image={licenseCopy}
-                    />
-                  </div>
-
+                    </>
+                  )}
                   <select
                     className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                     value={driverFields.status}
@@ -995,8 +1063,32 @@ function Driver() {
                          hover:bg-green-900 bg-green-600
                     justify-center text-white`}
                   >
-                    {stat === "Edit" ? "Update" : "Save"}
+                    {able ? "Loading..." : stat === "Edit" ? "Update" : "Save"}
                   </button>
+                </div>
+              </div>
+            </div>
+          </Modal>
+
+          <Modal
+            keepMounted
+            open={Editopen}
+            onClose={() => {
+             setEditOpen(false)
+            }}
+            aria-labelledby="keep-mounted-modal-title"
+            aria-describedby="keep-mounted-modal-description"
+          >
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[70%] h-fit">
+              <div className="flex justify-between text-3xl items-center h-[10%] px-2">
+                <div className="font-bold text-lg"> {stat} Media Library </div>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setEditOpen(false)
+                  }}
+                >
+                  <CloseIcon />
                 </div>
               </div>
             </div>

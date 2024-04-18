@@ -24,24 +24,37 @@ import axios from "axios";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { toast } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
+const email = "jaffarSaleem@gmail.com"
 
 let destinations = [];
 
 function Hotel() {
   const [able, setAble] = useState(false);
+  const [BankId, setBankId] = useState("");
+
+  const [Editopen, setEditOpen] = useState(false);
+
   const [id, setId] = useState("");
+  const [ShowTariffModal, setShowTariffModal] = useState(false);
+
+  const [bankFirst, setBankFirst] = useState(true);
 
   const [hotelFields, setHotelFields] = useState({
     property_type: "DEFAULT",
     name: "",
     category: "DEFAULT",
-    destination_id: "",
+    destination_id: "DEFAULT",
     address: "",
     contact_no: "",
     details: "",
-    // hotelImage: "",  baad may active karni hay
-    tarif_valid_from: "",
-    tarif_valid_to: "",
+    hotel_img: "",
+    tarif_valid_from: dayjs().format("YYYY-MM-DD"),
+    tarif_valid_to: dayjs().format("YYYY-MM-DD"),
     contact_person: "",
     mob_no_1: "",
     mob_no_2: "",
@@ -69,10 +82,8 @@ function Hotel() {
   const [open, setOpen] = useState(false);
   const [tarifOpen, setTarifOpen] = useState(false);
   const [hotelName, sethotelName] = useState("");
-  const [showPicker, setShowPicker] = useState(false);
   const [bankOpen, setBankOpen] = useState(false);
   const [imgModal, setImgModal] = useState(false);
-  const [destinationVal, setDestinationVal] = useState("");
 
   const [reload, setReload] = useState(false);
   const [click, setClick] = useState(true);
@@ -82,7 +93,7 @@ function Hotel() {
       headerName: "#",
       field: "serialNumber",
       sortable: false,
-      flex: 0.35,
+      flex: 0.25,
       filter: false,
       cellRenderer: (params) => {
         return <div className="ml-[-10px]">{params.rowIndex + 1}</div>;
@@ -91,17 +102,52 @@ function Hotel() {
     {
       headerName: "Name",
       field: "name",
-      flex: 1.4,
+      flex: 2.15,
+      cellStyle: { display: "flex", alignItems: "center" },
+      cellRenderer: (params) => {
+        return (
+          <div className="flex items-center w-full gap-4">
+            <div className=" w-20 h-full">
+              <div className="group relative">
+                <div
+                  onClick={() => {
+                    setEditOpen(true);
+                  }}
+                  className="cursor-pointer hidden group-hover:flex bg-black h-5 rounded-full p-3 w-5 justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
+                >
+                  <EditIcon style={{ color: "#fff", fontSize: 18 }} />
+                </div>
+                <img
+                  className="w-full h-full object-contain"
+                  src={params.data.hotel_img_url}
+                />
+              </div>
+            </div>
+            <div className="h-full font-bold leading-4 w-[40%] whitespace-pre-wrap flex items-center ">
+              {" "}
+              {params.value}{" "}
+            </div>
+          </div>
+        );
+      },
     },
     {
       headerName: "Type",
       field: "property_type",
       flex: 0.8,
+      cellRenderer: (params) => {
+        return (
+          <div className="flex items-center justify-start gap-2 w-full h-full">
+            <div className="-ml-2">{params.value}</div>
+          </div>
+        );
+      },
     },
     {
       headerName: "Category",
       field: "category",
-      flex: 1.1,
+      flex: 1.05,
+      cellStyle: { display: "flex", alignItems: "center" },
       cellRenderer: (params) => {
         return (
           <ReactStars
@@ -116,20 +162,32 @@ function Hotel() {
     },
     {
       headerName: "Destination",
+      filter: false,
+      cellStyle: { display: "flex", alignItems: "center" },
       field: `destination.name`,
-      flex: 1.22,
+      flex: 0.95,
+      cellRenderer: (params) => {
+        return (
+          <div className="flex items-center justify-start gap-2 w-full h-full">
+            <div className="-ml-2">{params.value}</div>
+          </div>
+        );
+      },
     },
     {
       headerName: "Tarif",
       sortable: false,
       filter: false,
-      flex: 0.4,
+      cellStyle: { display: "flex", alignItems: "center" },
+      flex: 0.45,
       cellRenderer: (params) => {
         return (
           <div
             onClick={() => {
               setTarifOpen(true);
               sethotelName(params.data.name);
+              setId(params.data.id);
+              setShowTariffModal(true);
             }}
             className="flex items-center justify-center w-full h-full"
           >
@@ -167,7 +225,7 @@ function Hotel() {
           </div>
         );
       },
-      flex: 1,
+      flex: 1.1,
     },
     {
       headerName: "Tarif Valid To",
@@ -209,6 +267,35 @@ function Hotel() {
             onClick={() => {
               sethotelName(params.data.name);
               setBankOpen(true);
+              params.data.bank ? setBankFirst(false) : setBankFirst(true);
+              setBankId(params.data.bank ? params.data.bank.id : "");
+              setBankFields({
+                accomodation_id: params.data.id,
+                account_name: params.data.bank
+                  ? params.data.bank.account_name
+                  : "",
+                account_no: params.data.bank ? params.data.bank.account_no : "",
+                bank_name: params.data.bank ? params.data.bank.bank_name : "",
+                branch_name: params.data.bank
+                  ? params.data.bank.branch_name
+                  : "",
+                ifsci_code: params.data.bank ? params.data.bank.ifsci_code : "",
+                account_name_sec: params.data.bank
+                  ? params.data.bank.account_name_sec
+                  : "",
+                account_no_sec: params.data.bank
+                  ? params.data.bank.account_no_sec
+                  : "",
+                bank_name_sec: params.data.bank
+                  ? params.data.bank.bank_name_sec
+                  : "",
+                branch_name_sec: params.data.bank
+                  ? params.data.bank.branch_name_sec
+                  : "",
+                ifsci_code_sec: params.data.bank
+                  ? params.data.bank.ifsci_code_sec
+                  : "",
+              });
             }}
             className="underline cursor-pointer font-bold"
           >
@@ -216,7 +303,7 @@ function Hotel() {
           </div>
         );
       },
-      flex: 0.83,
+      flex: 0.9,
     },
     {
       headerName: "Status",
@@ -226,7 +313,7 @@ function Hotel() {
         return (
           <div className="flex items-center justify-center w-full h-full">
             <div
-              className={`flex items-center justify-center w-14 px-8 ${
+              className={`flex items-center justify-center !h-6  w-14 px-8 ${
                 params.value === "1" ? "bg-green-600" : "bg-red-600"
               }  text-white rounded-md h-[70%]`}
             >
@@ -237,11 +324,23 @@ function Hotel() {
       },
     },
     {
+      headerName: "Updated By",
+      filter: false,
+      cellStyle: { marginTop:'16px'  },
+      flex: 0.85,
+      valueGetter:()=>{
+        return email
+      }
+    },
+    {
       headerName: "Updated On",
+      filter:false,
+      flex:0.87,
       field: "updated_at",
+      cellStyle: { display: "flex", alignItems: "center" },
       cellRenderer: (params) => {
         const formattedDate = dayjs(params.value).format("DD-MM-YYYY");
-        return <div>{formattedDate}</div>;
+        return <div className="-ml-2" >{formattedDate}</div>;
       },
     },
     {
@@ -252,9 +351,6 @@ function Hotel() {
         return (
           <div
             onClick={() => {
-              const dest = destinations.find(
-                (obj) => obj.id == params.data.destination_id
-              );
               setHotelFields({
                 property_type: params.data.property_type,
                 name: params.data.name,
@@ -263,7 +359,7 @@ function Hotel() {
                 address: params.data.address,
                 contact_no: params.data.contact_no,
                 details: params.data.details,
-                // hotelImage: "",  baad may active karni hay
+                hotel_img: "",
                 tarif_valid_from: params.data.tarif_valid_from,
                 tarif_valid_to: params.data.tarif_valid_to,
                 contact_person: params.data.contact_person,
@@ -279,7 +375,6 @@ function Hotel() {
               );
               setShowToDate(dayjs(params.data.tarif_valid_to, "YYYY-MM-DD"));
               setStat("Edit");
-              setDestinationVal(dest.name);
               setId(params.data.id);
             }}
             className="flex items-center justify-center w-full h-full"
@@ -297,68 +392,56 @@ function Hotel() {
   const [showFromDate, setShowFromDate] = useState(dayjs());
   const [showToDate, setShowToDate] = useState(dayjs());
 
-  const showMatches = (input) => {
-    return destinations.filter((item) => {
-      if (input == "") {
-        return false;
-      }
-      return item.name.toLowerCase().includes(input.toLowerCase());
-    });
-  };
-
-  const matchArr = showMatches(destinationVal);
-
   const handleClose = (name) => {
     if (name === "modal") {
       setClick(true);
       setOpen(false);
     } else if (name === "tarif") {
       setTarifOpen(false);
+      setShowTariffModal(false);
     } else if (name === "bank") {
       setBankOpen(false);
       setClick(true);
+    } else if (name === "media") {
+      setEditOpen(false);
     }
   };
 
   const handleDelete = () => {
-    const confirmationToastId = toast.warning(
-      <div className="flex flex-col">
-        <p>You want to delete this item?</p>
-        <div className="flex items-center justify-start gap-2">
-          <button
-            className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
-            onClick={() => {
-              axios
-                .delete(`https://jajasend.site/api/v1/accomodation/${id}`)
-                .then((response) => {
-                  toast.dismiss(confirmationToastId);
-                  toast.success("Accommodation Deleted Successfully");
-                  setReload(!reload);
-                  setOpen(false);
-                })
-                .catch((err) => {
-                  console.log(err.response.data);
-                });
-            }}
-          >
-            Yes
-          </button>
-          <button
-            className="w-8 h-6 text-xs bg-green-500 rounded-md text-white "
-            onClick={() => {
-              toast.dismiss(confirmationToastId);
-            }}
-          >
-            No
-          </button>
-        </div>
-      </div>,
-      { autoClose: false }
-    );
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      customClass: {
+        container: "custom-swal-container",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`https://jajasend.site/api/v1/accomodation/${id}`)
+          .then((response) => {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your Item has been deleted.",
+              icon: "success",
+            });
+            setReload(!reload);
+            setOpen(false);
+          })
+          .catch((err) => {
+            console.log(err.response.data);
+          });
+      }
+    });
   };
 
   const handleUpdate = () => {
     setAble(true);
+    delete hotelFields.hotel_img;
     axios
       .put(`https://jajasend.site/api/v1/accomodation/${id}`, hotelFields)
       .then((response) => {
@@ -391,6 +474,13 @@ function Hotel() {
     });
   };
 
+  const handlebankChange = (event) => {
+    return setBankFields({
+      ...bankFields,
+      [event.target.name]: event.target.value,
+    });
+  };
+
   const ExportData = () => {
     if (gridApi) {
       gridApi.exportDataAsCsv();
@@ -411,12 +501,11 @@ function Hotel() {
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
-    console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
         setHotelImage(reader.result);
-        console.log(reader.result);
+        setHotelFields({ ...hotelFields, hotel_img: file });
       };
       reader.readAsDataURL(file);
     } else {
@@ -424,7 +513,39 @@ function Hotel() {
     }
   };
 
-  console.log(hotelFields);
+  const handleBankDelete = () => {
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      customClass: {
+        container: "custom-swal-container",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`https://jajasend.site/api/v1/accomodation-bank/${BankId}`)
+          .then((response) => {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your Item has been deleted.",
+              icon: "success",
+            });
+            setReload(!reload);
+            setOpen(false);
+          })
+          .catch((err) => {
+            console.log(err.response.data);
+          });
+      }
+    });
+  };
+
+  const payload = new FormData();
 
   const handleSave = () => {
     setAble(true);
@@ -442,8 +563,18 @@ function Hotel() {
       hotelFields.reservation_email !== "" &&
       hotelFields.status !== ""
     ) {
+      for (var key in hotelFields) {
+        if (hotelFields.hasOwnProperty(key)) {
+          if (hotelFields[key] instanceof File) {
+            payload.append(key, hotelFields[key]);
+          } else {
+            payload.append(key, hotelFields[key]);
+          }
+        }
+      }
+
       axios
-        .post("https://jajasend.site/api/v1/accomodation", hotelFields)
+        .post("https://jajasend.site/api/v1/accomodation", payload)
         .then((res) => {
           setAble(false);
           toast.success("Accomodation Added Successfully");
@@ -458,6 +589,60 @@ function Hotel() {
       toast.error("Please Fill All Fields Correctly");
       setAble(false);
     }
+  };
+
+  const handlebankSave = () => {
+    console.log(bankFields);
+    setAble(true);
+    if (
+      bankFields.accomodation_id !== "" &&
+      bankFields.account_name !== "" &&
+      bankFields.account_no !== "" &&
+      bankFields.bank_name !== "" &&
+      bankFields.branch_name !== "" &&
+      bankFields.ifsci_code !== "" &&
+      bankFields.account_name_sec !== "" &&
+      bankFields.account_no_sec !== "" &&
+      bankFields.bank_name_sec !== "" &&
+      bankFields.branch_name_sec !== "" &&
+      bankFields.ifsci_code_sec !== ""
+    ) {
+      axios
+        .post("https://jajasend.site/api/v1/accomodation-bank", bankFields)
+        .then((res) => {
+          setAble(false);
+          toast.success("Accomodation Added Successfully");
+          setReload(!reload);
+          handleClose("bank");
+        })
+        .catch((err) => {
+          setAble(false);
+          console.log(err);
+        });
+    } else {
+      toast.error("Please Fill All Fields Correctly");
+      setAble(false);
+    }
+  };
+
+  const handleBankUpdate = () => {
+    setAble(true);
+    axios
+      .put(
+        `https://jajasend.site/api/v1/accomodation-bank/${BankId}`,
+        bankFields
+      )
+      .then((response) => {
+        toast.success("Bank Updated Successfully");
+        setReload(!reload);
+        setAble(false);
+        setClick(true);
+        handleClose("bank");
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        setAble(false);
+      });
   };
 
   useEffect(() => {
@@ -480,7 +665,7 @@ function Hotel() {
   }, [reload]);
 
   return (
-    <div className="h-full">
+    <div className="h-[99%]">
       <div className="flex justify-between items-center h-16 sm:h-12 sm:flex-row flex-col px-2 border-t border-slate-300 border-b bg-[#eff3f7]">
         <div className="font-bold"> Accommodation </div>
         <div className="flex justify-center  sm:w-[65%] md:w-[55%] lg:w-[43%]  w-[90%] items-center gap-3 h-full">
@@ -506,20 +691,19 @@ function Hotel() {
               onClick={() => {
                 setOpen(true);
                 setStat("Add");
-                setDestinationVal("");
                 setShowFromDate(dayjs());
                 setShowToDate(dayjs());
                 setHotelFields({
                   property_type: "DEFAULT",
                   name: "",
                   category: "DEFAULT",
-                  destination_id: "",
+                  destination_id: "DEFAULT",
                   address: "",
                   contact_no: "",
                   details: "",
-                  // hotelImage: "",  baad may active karni hay
-                  tarif_valid_from: "",
-                  tarif_valid_to: "",
+                  hotel_img: "",
+                  tarif_valid_from: dayjs().format("YYYY-MM-DD"),
+                  tarif_valid_to: dayjs().format("YYYY-MM-DD"),
                   contact_person: "",
                   mob_no_1: "",
                   mob_no_2: "",
@@ -549,6 +733,7 @@ function Hotel() {
             enableBrowserTooltips={true}
             pagination={true}
             paginationPageSize={20}
+            rowHeight={80}
           />
 
           <Modal
@@ -630,38 +815,22 @@ function Hotel() {
                   </select>
 
                   <div className="relative mt-4 w-full">
-                    <TextField
+                    <select
                       id="outlined-basic"
+                      className="border-slate-400 w-full hover:border-slate-900 focus:outline-none border h-10 rounded-md"
                       size="small"
                       label="Destination"
                       variant="outlined"
+                      name="destination_id"
                       sx={{ width: "100%" }}
-                      value={destinationVal}
-                      onChange={(e) => {
-                        setDestinationVal(e.target.value);
-                        setShowPicker(true);
-                      }}
-                    />
-                    {showPicker && destinationVal && matchArr.length > 0 && (
-                      <ul className="absolute z-10 bg-[#f9f9f9] h-[100px] overflow-y-auto w-full border rounded-b-lg p-1 border-black">
-                        {matchArr.map((match, index) => (
-                          <li
-                            className="hover:bg-blue-200 cursor-pointer rounded-sm p-1 border-b"
-                            key={index}
-                            onClick={() => {
-                              setDestinationVal(match.name);
-                              setHotelFields({
-                                ...hotelFields,
-                                destination_id: match.id,
-                              });
-                              setShowPicker(false);
-                            }}
-                          >
-                            {match.name}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                      value={hotelFields.destination_id}
+                      onChange={handleChange}
+                    >
+                      <option disabled={true} value={"DEFAULT"}> Destination </option>
+                      {destinations.map((item, index) => {
+                        return <option key={index} value={item.id}>{item.name}</option>;
+                      })}
+                    </select>
                   </div>
 
                   <div className=" mt-4 w-full">
@@ -715,38 +884,45 @@ function Hotel() {
                   </div>
                 </div>
                 <div className="flex flex-col w-[48%]">
-                  <div className=" flex items-center w-full justify-between">
-                    <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
-                      <Input
-                        id="file-input"
-                        type="file"
-                        inputProps={{ multiple: true }}
-                        onChange={(e) => handleFileSelect(e)}
-                        style={{ display: "none" }}
-                      />
-                      <div className="flex items-center gap-3">
-                        <label className="cursor-pointer" htmlFor="file-input">
-                          <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
-                        </label>
-                        <div className="hidden text-sm md:block overflow-x-auto">
-                          {hotelImage === "" ? `Select Hotel` : "Selected  "}
+                  {stat === "Edit" ? (
+                    ""
+                  ) : (
+                    <div className=" flex items-center w-full justify-between">
+                      <div className="border border-slate-300 rounded-md flex justify-start items-center px-2 h-10 w-[84%]">
+                        <Input
+                          id="file-input"
+                          type="file"
+                          inputProps={{ multiple: true }}
+                          onChange={(e) => handleFileSelect(e)}
+                          style={{ display: "none" }}
+                        />
+                        <div className="flex items-center gap-3">
+                          <label
+                            className="cursor-pointer"
+                            htmlFor="file-input"
+                          >
+                            <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
+                          </label>
+                          <div className="hidden text-sm md:block overflow-x-auto">
+                            {hotelImage === "" ? `Select Hotel` : "Selected  "}
+                          </div>
                         </div>
                       </div>
+                      <button
+                        onClick={() => {
+                          setImgModal(true);
+                        }}
+                        className="border border-slate-300 text-xs rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
+                      >
+                        View
+                      </button>
+                      <ImageModal
+                        setState={setImgModal}
+                        state={imgModal}
+                        image={hotelImage}
+                      />
                     </div>
-                    <button
-                      onClick={() => {
-                        setImgModal(true);
-                      }}
-                      className="border border-slate-300 text-xs rounded-md flex items-center justify-center w-[15%] underline cursor-pointer h-10"
-                    >
-                      View
-                    </button>
-                    <ImageModal
-                      setState={setImgModal}
-                      state={imgModal}
-                      image={hotelImage}
-                    />
-                  </div>
+                  )}
 
                   <div className="flex mt-4 items-center w-full justify-between">
                     <div className="custom-date-picker w-[48%]">
@@ -896,21 +1072,27 @@ function Hotel() {
             </div>
           </Modal>
 
-          <Modal
-            keepMounted
-            open={tarifOpen}
-            onClose={() => {
-              handleClose("tarif");
-            }}
-            aria-labelledby="keep-mounted-modal-title"
-            aria-describedby="keep-mounted-modal-description"
-          >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[85%] h-fit">
-              <div className="h-full overflow-x-auto">
-                <HotelPrice name={hotelName} MainSetOpen={handleClose} />
+          {ShowTariffModal && (
+            <Modal
+              keepMounted
+              open={tarifOpen}
+              onClose={() => {
+                handleClose("tarif");
+              }}
+              aria-labelledby="keep-mounted-modal-title"
+              aria-describedby="keep-mounted-modal-description"
+            >
+              <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[88%] h-fit">
+                <div className="h-full overflow-x-auto">
+                  <HotelPrice
+                    name={hotelName}
+                    MainSetOpen={handleClose}
+                    hotelId={id}
+                  />
+                </div>
               </div>
-            </div>
-          </Modal>
+            </Modal>
+          )}
 
           <Modal
             keepMounted
@@ -925,7 +1107,7 @@ function Hotel() {
               <div className="flex justify-between text-3xl items-center px-1">
                 <div className="font-bold text-lg">
                   {" "}
-                  {hotelName} Bank Details
+                  {hotelName} - Bank Details
                 </div>
                 <div
                   className="cursor-pointer"
@@ -943,9 +1125,12 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      disabled={click}
+                      disabled={bankFirst ? false : click}
                       label="Account Name"
                       variant="outlined"
+                      name="account_name"
+                      value={bankFields.account_name}
+                      onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -953,9 +1138,12 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      disabled={click}
+                      disabled={bankFirst ? false : click}
                       label="Account No"
                       variant="outlined"
+                      name="account_no"
+                      value={bankFields.account_no}
+                      onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -963,9 +1151,12 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      disabled={click}
+                      disabled={bankFirst ? false : click}
                       label="Bank Name"
                       variant="outlined"
+                      name="bank_name"
+                      value={bankFields.bank_name}
+                      onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -974,8 +1165,11 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Branch Name"
-                      disabled={click}
+                      disabled={bankFirst ? false : click}
                       variant="outlined"
+                      name="branch_name"
+                      value={bankFields.branch_name}
+                      onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -984,8 +1178,11 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="IFSCI Code"
-                      disabled={click}
+                      disabled={bankFirst ? false : click}
                       variant="outlined"
+                      name="ifsci_code"
+                      value={bankFields.ifsci_code}
+                      onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -997,8 +1194,11 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Account Name"
-                      disabled={click}
+                      disabled={bankFirst ? false : click}
                       variant="outlined"
+                      name="account_name_sec"
+                      value={bankFields.account_name_sec}
+                      onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -1006,9 +1206,12 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      disabled={click}
+                      disabled={bankFirst ? false : click}
                       label="Account No"
                       variant="outlined"
+                      name="account_no_sec"
+                      value={bankFields.account_no_sec}
+                      onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -1017,8 +1220,11 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="Bank Name"
-                      disabled={click}
+                      disabled={bankFirst ? false : click}
                       variant="outlined"
+                      name="bank_name_sec"
+                      value={bankFields.bank_name_sec}
+                      onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -1026,9 +1232,12 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
-                      disabled={click}
+                      disabled={bankFirst ? false : click}
                       label="Branch Name"
                       variant="outlined"
+                      name="branch_name_sec"
+                      value={bankFields.branch_name_sec}
+                      onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -1037,8 +1246,11 @@ function Hotel() {
                       id="outlined-basic"
                       size="small"
                       label="IFSCI Code"
-                      disabled={click}
+                      disabled={bankFirst ? false : click}
                       variant="outlined"
+                      name="ifsci_code_sec"
+                      value={bankFields.ifsci_code_sec}
+                      onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -1047,12 +1259,12 @@ function Hotel() {
               <div className="mt-4 flex justify-between items-center">
                 <div
                   onClick={() => {
-                    handleClose("bank");
+                    bankFirst ? handleClose("bank") : handleBankDelete();
                   }}
                   className=" w-[49%] rounded-md h-10"
                 >
                   <button className="hover:bg-red-900 w-full rounded-md  text-white bg-red-600 h-full flex items-center justify-center">
-                    Cancel
+                    {bankFirst ? "Cancel" : "Delete"}
                   </button>
                 </div>
 
@@ -1060,15 +1272,46 @@ function Hotel() {
                   <button
                     onClick={() => {
                       setClick(false);
+                      bankFirst
+                        ? handlebankSave()
+                        : click
+                        ? ""
+                        : handleBankUpdate();
                     }}
                     className={`w-full rounded-md h-full flex ${
-                      click
+                      bankFirst
+                        ? "hover:bg-green-900 bg-green-700"
+                        : click
                         ? "hover:bg-blue-900 bg-blue-700"
                         : "hover:bg-green-900 bg-green-700"
                     }  items-center justify-center text-white `}
                   >
-                    {click ? "Edit" : "Save"}
+                    {bankFirst ? "Save" : click ? "Edit" : "Update"}
                   </button>
+                </div>
+              </div>
+            </div>
+          </Modal>
+
+          <Modal
+            keepMounted
+            open={Editopen}
+            onClose={() => {
+              handleClose("media");
+            }}
+            aria-labelledby="keep-mounted-modal-title"
+            aria-describedby="keep-mounted-modal-description"
+          >
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[70%] h-fit">
+              <div className="flex justify-between text-3xl items-center h-[10%] px-2">
+                <div className="font-bold text-lg"> {stat} Media Library </div>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    handleClose("media");
+                  }}
+                >
+                  <CloseIcon />
                 </div>
               </div>
             </div>

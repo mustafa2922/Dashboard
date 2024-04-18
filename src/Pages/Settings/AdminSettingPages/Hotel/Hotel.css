@@ -17,3 +17,7 @@
 .ag-header-cell{
   padding-left: 0.4rem !important;
 }
+
+.custom-swal-container {
+  z-index: 9999; /* Replace 9999 with your desired z-index value */
+}
