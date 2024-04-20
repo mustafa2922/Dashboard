@@ -24,7 +24,10 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
   const [reload, setReload] = useState(false);
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setErrors({ name: null, helperTxt: null });
+    setOpen(false);
+  };
 
   const [tarifFirst, setTariffFirst] = useState(true);
 
@@ -174,20 +177,77 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
     },
   ]);
 
+  const [errors, setErrors] = useState({ name: null, helperTxt: null });
+
+  const validateFields = () => {
+    if (fields.room_type_id === "DEFAULT") {
+      return setErrors({
+        name: "room_type_id",
+        helperTxt: "Please Select Room Category",
+      });
+    }
+    if (fields.meal_plan_id === "DEFAULT") {
+      return setErrors({
+        name: "meal_plan_id",
+        helperTxt: "Please Select Meal PLan",
+      });
+    }
+    if (fields.single.trim() === "") {
+      return setErrors({
+        name: "single",
+        helperTxt: "Price Cannot Be Empty",
+      });
+    }
+    if (fields.double.trim() === "") {
+      return setErrors({
+        name: "double",
+        helperTxt: "Price Cannot Be Empty",
+      });
+    }
+    if (fields.triple.trim() === "") {
+      return setErrors({
+        name: "triple",
+        helperTxt: "Price Cannot Be Empty",
+      });
+    }
+    if (fields.quad.trim() === "") {
+      return setErrors({
+        name: "quad",
+        helperTxt: "Price Cannot Be Empty",
+      });
+    }
+    if (fields.cwb.trim() === "") {
+      return setErrors({
+        name: "cwb",
+        helperTxt: "Price Cannot Be Empty",
+      });
+    }
+    if (fields.cwb_above_5_yrs.trim() === "") {
+      return setErrors({
+        name: "cwb_above_5_yrs",
+        helperTxt: "Price Cannot Be Empty",
+      });
+    }
+    if (fields.cwb_below_5_yrs.trim() === "") {
+      return setErrors({
+        name: "cwb_below_5_yrs",
+        helperTxt: "Price Cannot Be Empty",
+      });
+    }
+    if (fields.inf_below_3_yrs.trim() === "") {
+      return setErrors({
+        name: "inf_below_3_yrs",
+        helperTxt: "Price Cannot Be Empty",
+      });
+    }
+    return true;
+  };
+
   const handleSave = () => {
     setAble(true);
-    if (
-      fields.room_type_id !== "DEFAULT" &&
-      fields.meal_plan_id !== "DEFAULT" &&
-      fields.single !== "" &&
-      fields.double !== "" &&
-      fields.triple !== "" &&
-      fields.quad !== "" &&
-      fields.cwb !== "" &&
-      fields.cwb_above_5_yrs !== "" &&
-      fields.cwb_below_5_yrs !== "" &&
-      fields.inf_below_3_yrs !== ""
-    ) {
+    const validate = validateFields();
+
+    if (validate) {
       axios
         .post("https://jajasend.site/api/v1/accomodation-tariff", fields)
         .then((res) => {
@@ -201,7 +261,6 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
           console.log(err);
         });
     } else {
-      toast.error("Please Fill All Fields Correctly");
       setAble(false);
     }
   };
@@ -267,6 +326,7 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
   };
 
   const handleChange = (event) => {
+    setErrors({ name: null, helperTxt: null });
     setFields({ ...fields, [event.target.name]: event.target.value });
   };
 
@@ -362,22 +422,25 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
           <Modal
             keepMounted
             open={open}
-            onClose={handleClose}
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[44  %] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[40%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Tariff </div>
                 <div className="cursor-pointer" onClick={handleClose}>
                   <CloseIcon />
                 </div>
               </div>
-              <div className="flex justify-between w-full mt-4 h-[90%]">
+              <div className="flex justify-between w-full h-[90%]">
                 <div className="flex flex-col w-[48%]">
                   <div className="relative mt-2 w-full">
                     <select
-                      className="border-slate-400 w-full focus:outline-none border h-10 rounded-md"
+                      className={`px-2 focus:outline-none w-full border h-10  focus:border  ${
+                        errors.name === "room_type_id"
+                          ? "border-red-600"
+                          : "hover:border-black border-[#d8d8d8]"
+                      }  rounded-md`}
                       value={fields.room_type_id}
                       variant="outlined"
                       name="room_type_id"
@@ -397,11 +460,18 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                         );
                       })}
                     </select>
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "room_type_id" && errors.helperTxt}
+                    </p>
                   </div>
 
-                  <div className="relative mt-4 w-full">
+                  <div className="relative mt-3 w-full">
                     <select
-                      className="border-slate-400 w-full focus:outline-none border h-10 rounded-md"
+                      className={`px-2 focus:outline-none w-full border h-10  focus:border  ${
+                        errors.name === "meal_plan_id"
+                          ? "border-red-600"
+                          : "hover:border-black border-[#d8d8d8]"
+                      }  rounded-md`}
                       value={fields.meal_plan_id}
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -421,13 +491,17 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                         );
                       })}
                     </select>
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "meal_plan_id" && errors.helperTxt}
+                    </p>
                   </div>
 
-                  <div className="mt-4 flex items-center justify-between w-full">
+                  <div className="mt-5 flex items-center justify-between w-full">
                     <div className=" w-[48%]">
                       <TextField
                         id="outlined-basic"
                         size="small"
+                        error={errors.name === "single"}
                         label="Single"
                         variant="outlined"
                         sx={{ width: "100%" }}
@@ -436,10 +510,14 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                         name="single"
                         onChange={handleChange}
                       />
+                      <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                        {errors.name === "single" && errors.helperTxt}
+                      </p>
                     </div>
                     <div className="w-[48%]">
                       <TextField
                         id="outlined-basic"
+                        error={errors.name === "double"}
                         size="small"
                         label="Double"
                         variant="outlined"
@@ -449,6 +527,9 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                         onChange={handleChange}
                         name="double"
                       />
+                      <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                        {errors.name === "double" && errors.helperTxt}
+                      </p>
                     </div>
                   </div>
 
@@ -458,6 +539,7 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                         id="outlined-basic"
                         size="small"
                         label="Triple"
+                        error={errors.name === "triple"}
                         variant="outlined"
                         sx={{ width: "100%" }}
                         type="number"
@@ -465,10 +547,14 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                         onChange={handleChange}
                         value={fields.triple}
                       />
+                      <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                        {errors.name === "triple" && errors.helperTxt}
+                      </p>
                     </div>
                     <div className="w-[48%]">
                       <TextField
                         id="outlined-basic"
+                        error={errors.name === "quad"}
                         size="small"
                         label="Quad"
                         variant="outlined"
@@ -478,6 +564,9 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                         name="quad"
                         onChange={handleChange}
                       />
+                      <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                        {errors.name === "quad" && errors.helperTxt}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -486,6 +575,7 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      error={errors.name === "cwb"}
                       label="CWB"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -495,9 +585,13 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                       name="cwb"
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "cwb" && errors.helperTxt}
+                  </p>
                   <div className="w-full mt-4">
                     <TextField
                       id="outlined-basic"
+                      error={errors.name === "cwb_above_5_yrs"}
                       size="small"
                       label="CNB (above 5 yrs)"
                       variant="outlined"
@@ -508,11 +602,15 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                       type="number"
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "cwb_above_5_yrs" && errors.helperTxt}
+                  </p>
 
                   <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      error={errors.name === "cwb_below_5_yrs"}
                       label="CNB (below 5 yrs)"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -522,10 +620,14 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                       name="cwb_below_5_yrs"
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "cwb_below_5_yrs" && errors.helperTxt}
+                  </p>
                   <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      error={errors.name === "inf_below_3_yrs"}
                       label="INF (below 3 yrs)"
                       variant="outlined"
                       sx={{ width: "100%" }}
@@ -535,6 +637,9 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                       name="inf_below_3_yrs"
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "inf_below_3_yrs" && errors.helperTxt}
+                  </p>
                 </div>
               </div>
 

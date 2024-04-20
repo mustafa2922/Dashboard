@@ -29,7 +29,7 @@ import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
 
-const email = "jaffarSaleem@gmail.com"
+const email = "jaffarSaleem@gmail.com";
 
 let destinations = [];
 
@@ -102,13 +102,13 @@ function Hotel() {
     {
       headerName: "Name",
       field: "name",
-      flex: 2.15,
-      cellStyle: { display: "flex", alignItems: "center" },
+      flex: 2.1,
+      cellStyle: { display: "flex", alignItems: "center"  },
       cellRenderer: (params) => {
         return (
           <div className="flex items-center w-full gap-4">
-            <div className=" w-20 h-full">
-              <div className="group relative">
+            <div className=" w-24 h-full">
+              <div className="group w-full rounded-lg overflow-hidden !h-20  relative">
                 <div
                   onClick={() => {
                     setEditOpen(true);
@@ -326,21 +326,21 @@ function Hotel() {
     {
       headerName: "Updated By",
       filter: false,
-      cellStyle: { marginTop:'16px'  },
+      cellStyle: { marginTop: "24px" , border:'none' },
       flex: 0.85,
-      valueGetter:()=>{
-        return email
-      }
+      valueGetter: () => {
+        return email;
+      },
     },
     {
       headerName: "Updated On",
-      filter:false,
-      flex:0.87,
+      filter: false,
+      flex: 0.87,
       field: "updated_at",
-      cellStyle: { display: "flex", alignItems: "center" },
+      cellStyle: { display: "flex", alignItems: "center" , borderLeft:'1px solid #d9d9db' },
       cellRenderer: (params) => {
         const formattedDate = dayjs(params.value).format("DD-MM-YYYY");
-        return <div className="-ml-2" >{formattedDate}</div>;
+        return <div className="-ml-2">{formattedDate}</div>;
       },
     },
     {
@@ -355,7 +355,7 @@ function Hotel() {
                 property_type: params.data.property_type,
                 name: params.data.name,
                 category: params.data.category,
-                destination_id: dest.id,
+                destination_id: params.data.destination_id,
                 address: params.data.address,
                 contact_no: params.data.contact_no,
                 details: params.data.details,
@@ -392,14 +392,172 @@ function Hotel() {
   const [showFromDate, setShowFromDate] = useState(dayjs());
   const [showToDate, setShowToDate] = useState(dayjs());
 
+  const [errors, setErrors] = useState({ name: null, helperTxt: null });
+
+  const ValidateFields = (MODE) => {
+    // === Accommodation ===
+
+    if (MODE === "Accommodation") {
+      // property Type
+      if (hotelFields.property_type === "DEFAULT") {
+        return setErrors({
+          name: "property_type",
+          helperTxt: "Please Select Property Type",
+        });
+      }
+      // hotel name
+      if (
+        hotelFields.name.trim() === "" ||
+        hotelFields.name.split(" ").length < 2
+      ) {
+        return setErrors({
+          name: "name",
+          helperTxt: "Name Must Contain 2 Words",
+        });
+      }
+      // category
+      if (hotelFields.category === "DEFAULT") {
+        return setErrors({
+          name: "category",
+          helperTxt: "Please Select Category",
+        });
+      }
+      // destination
+      if (hotelFields.destination_id === "DEFAULT") {
+        return setErrors({
+          name: "destination_id",
+          helperTxt: "Please Select Destination",
+        });
+      }
+      // address
+      if (hotelFields.address.trim() === "") {
+        return setErrors({
+          name: "address",
+          helperTxt: "Address Cannot Be Empty",
+        });
+      }
+      // contact no
+      if (hotelFields.contact_no.length !== 13) {
+        return setErrors({
+          name: "contact_no",
+          helperTxt: "Number Must Contain 10 Digits",
+        });
+      }
+      // contact person
+      if (hotelFields.contact_person.trim() === "") {
+        return setErrors({
+          name: "contact_person",
+          helperTxt: "Contact Person Cannot Be Empty",
+        });
+      }
+      // mobile no
+      if (hotelFields.mob_no_1.length !== 13) {
+        return setErrors({
+          name: "mob_no_1",
+          helperTxt: "Number Must Contain 10 Digits",
+        });
+      }
+      // alternative no
+      if (hotelFields.mob_no_2.length !== 13) {
+        return setErrors({
+          name: "mob_no_2",
+          helperTxt: "Number Must Contain 10 Digits",
+        });
+      }
+      // reservation email id
+      if (hotelFields.reservation_email.trim() === "") {
+        return setErrors({
+          name: "reservation_email",
+          helperTxt: "Reservation Email Id Cannot Be Empty",
+        });
+      }
+      // website link
+      if (hotelFields.website_link.trim() === "") {
+        return setErrors({
+          name: "website_link",
+          helperTxt: "Website Link Cannot Be Empty",
+        });
+      }
+    }
+
+    // === Bank ===
+
+    if (MODE === "Bank") {
+      if (bankFields.account_name.trim() === "") {
+        return setErrors({
+          name: "account_name",
+          helperTxt: "Account Name Cannot Be Empty",
+        });
+      }
+      if (bankFields.account_no.length !== 16) {
+        return setErrors({
+          name: "account_no",
+          helperTxt: "Account No Must Contain 16 Digits",
+        });
+      }
+      if (bankFields.bank_name.trim() === "") {
+        return setErrors({
+          name: "bank_name",
+          helperTxt: "Bank Name Cannot Be Empty",
+        });
+      }
+      if (bankFields.branch_name.trim() === "") {
+        return setErrors({
+          name: "branch_name",
+          helperTxt: "Branch Name Cannot Be Empty",
+        });
+      }
+      if (bankFields.ifsci_code.length !== 11) {
+        return setErrors({
+          name: "ifsci_code",
+          helperTxt: "IFSCI Code Must Contain 11 Characters",
+        });
+      }
+      if (bankFields.account_name_sec.trim() === "") {
+        return setErrors({
+          name: "account_name_sec",
+          helperTxt: "Account Name Cannot Be Empty",
+        });
+      }
+      if (bankFields.account_no_sec.length !== 16) {
+        return setErrors({
+          name: "account_no_sec",
+          helperTxt: "Account No Must Contain 16 Digits",
+        });
+      }
+      if (bankFields.bank_name_sec.trim() === "") {
+        return setErrors({
+          name: "bank_name_sec",
+          helperTxt: "Bank Name Cannot Be Empty",
+        });
+      }
+      if (bankFields.branch_name_sec.trim() === "") {
+        return setErrors({
+          name: "branch_name_sec",
+          helperTxt: "Branch Name Cannot Be Empty",
+        });
+      }
+      if (bankFields.ifsci_code_sec.length !== 11) {
+        return setErrors({
+          name: "ifsci_code_sec",
+          helperTxt: "IFSCI Code Must Contain 11 Characters",
+        });
+      }
+    }
+
+    return true;
+  };
+
   const handleClose = (name) => {
     if (name === "modal") {
       setClick(true);
+      setErrors({ name: null, helperTxt: null });
       setOpen(false);
     } else if (name === "tarif") {
       setTarifOpen(false);
       setShowTariffModal(false);
     } else if (name === "bank") {
+      setErrors({ name: null, helperTxt: null });
       setBankOpen(false);
       setClick(true);
     } else if (name === "media") {
@@ -468,6 +626,7 @@ function Hotel() {
   };
 
   const handleChange = (event) => {
+    setErrors({ name: null, helperTxt: null });
     return setHotelFields({
       ...hotelFields,
       [event.target.name]: event.target.value,
@@ -475,6 +634,7 @@ function Hotel() {
   };
 
   const handlebankChange = (event) => {
+    setErrors({ name: null, helperTxt: null });
     return setBankFields({
       ...bankFields,
       [event.target.name]: event.target.value,
@@ -530,13 +690,16 @@ function Hotel() {
         axios
           .delete(`https://jajasend.site/api/v1/accomodation-bank/${BankId}`)
           .then((response) => {
+            setBankOpen(false)
             Swal.fire({
               title: "Deleted!",
               text: "Your Item has been deleted.",
               icon: "success",
+              customClass: {
+                container: "custom-swal-container",
+              },
             });
             setReload(!reload);
-            setOpen(false);
           })
           .catch((err) => {
             console.log(err.response.data);
@@ -549,20 +712,9 @@ function Hotel() {
 
   const handleSave = () => {
     setAble(true);
-    if (
-      hotelFields.address !== "" &&
-      hotelFields.category !== "DEFAULT" &&
-      hotelFields.contact_no !== "" &&
-      hotelFields.contact_person !== "" &&
-      hotelFields.destination_id !== "" &&
-      hotelFields.details !== "" &&
-      hotelFields.mob_no_1 !== "" &&
-      hotelFields.mob_no_2 !== "" &&
-      hotelFields.name !== "" &&
-      hotelFields.property_type !== "DEFAULT" &&
-      hotelFields.reservation_email !== "" &&
-      hotelFields.status !== ""
-    ) {
+    const validate = ValidateFields("Accommodation");
+
+    if (validate) {
       for (var key in hotelFields) {
         if (hotelFields.hasOwnProperty(key)) {
           if (hotelFields[key] instanceof File) {
@@ -586,32 +738,20 @@ function Hotel() {
           console.log(err);
         });
     } else {
-      toast.error("Please Fill All Fields Correctly");
       setAble(false);
     }
   };
 
   const handlebankSave = () => {
-    console.log(bankFields);
     setAble(true);
-    if (
-      bankFields.accomodation_id !== "" &&
-      bankFields.account_name !== "" &&
-      bankFields.account_no !== "" &&
-      bankFields.bank_name !== "" &&
-      bankFields.branch_name !== "" &&
-      bankFields.ifsci_code !== "" &&
-      bankFields.account_name_sec !== "" &&
-      bankFields.account_no_sec !== "" &&
-      bankFields.bank_name_sec !== "" &&
-      bankFields.branch_name_sec !== "" &&
-      bankFields.ifsci_code_sec !== ""
-    ) {
+
+    const validate = ValidateFields("Bank");
+    if (validate) {
       axios
         .post("https://jajasend.site/api/v1/accomodation-bank", bankFields)
         .then((res) => {
           setAble(false);
-          toast.success("Accomodation Added Successfully");
+          toast.success("Bank Details Added Successfully");
           setReload(!reload);
           handleClose("bank");
         })
@@ -620,7 +760,6 @@ function Hotel() {
           console.log(err);
         });
     } else {
-      toast.error("Please Fill All Fields Correctly");
       setAble(false);
     }
   };
@@ -733,19 +872,16 @@ function Hotel() {
             enableBrowserTooltips={true}
             pagination={true}
             paginationPageSize={20}
-            rowHeight={80}
+            rowHeight={90}
           />
 
           <Modal
             keepMounted
             open={open}
-            onClose={() => {
-              handleClose("modal");
-            }}
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-3 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[90%] lg:w-[60%] h-fit">
+            <div className="p-3 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[90%] lg:w-[48%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Accommodation </div>
                 <div
@@ -757,7 +893,7 @@ function Hotel() {
                   <CloseIcon />
                 </div>
               </div>
-              <div className="flex justify-between w-full mt-3 h-[90%]">
+              <div className="flex justify-between w-full mt-2 h-[90%]">
                 <div className="flex flex-col w-[48%]">
                   <select
                     value={hotelFields.property_type}
@@ -765,7 +901,11 @@ function Hotel() {
                     onChange={(e) => {
                       handleChange(e);
                     }}
-                    className="px-2 focus:outline-none w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
+                    className={`px-2 focus:outline-none w-full border h-10  focus:border  ${
+                      errors.name === "property_type"
+                        ? "border-red-600"
+                        : "hover:border-black border-[#d8d8d8]"
+                    }  rounded-md`}
                   >
                     <option value="DEFAULT" disabled={true}>
                       Property Type
@@ -781,11 +921,17 @@ function Hotel() {
                     <option value="Villa">Villa</option>
                     <option value="Camping">Camping</option>
                   </select>
-                  <div className="mt-4 w-full">
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "property_type" && errors.helperTxt}
+                  </p>
+
+                  <div className="mt-2 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
                       label="Name"
+                      error={errors.name === "name"}
+                      autoComplete="off"
                       name="name"
                       value={hotelFields.name}
                       onChange={(e) => {
@@ -795,6 +941,9 @@ function Hotel() {
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "name" && errors.helperTxt}
+                  </p>
 
                   <select
                     value={hotelFields.category}
@@ -802,7 +951,11 @@ function Hotel() {
                     onChange={(e) => {
                       handleChange(e);
                     }}
-                    className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-sm"
+                    className={`px-2 focus:outline-none w-full border h-10 mt-2 focus:border  ${
+                      errors.name === "category"
+                        ? "border-red-600"
+                        : "hover:border-black border-[#d8d8d8]"
+                    }  rounded-md`}
                   >
                     <option value="DEFAULT" disabled={true}>
                       Category
@@ -813,11 +966,18 @@ function Hotel() {
                     <option value="4">4 Star</option>
                     <option value="5">5 Star</option>
                   </select>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "category" && errors.helperTxt}
+                  </p>
 
-                  <div className="relative mt-4 w-full">
+                  <div className="relative mt-2 w-full">
                     <select
                       id="outlined-basic"
-                      className="border-slate-400 w-full hover:border-slate-900 focus:outline-none border h-10 rounded-md"
+                      className={`px-2 focus:outline-none w-full border h-10  focus:border  ${
+                        errors.name === "destination_id"
+                          ? "border-red-600"
+                          : "hover:border-black border-[#d8d8d8]"
+                      }  rounded-md`}
                       size="small"
                       label="Destination"
                       variant="outlined"
@@ -826,17 +986,27 @@ function Hotel() {
                       value={hotelFields.destination_id}
                       onChange={handleChange}
                     >
-                      <option disabled={true} value={"DEFAULT"}> Destination </option>
+                      <option disabled={true} value={"DEFAULT"}>
+                        Destination
+                      </option>
                       {destinations.map((item, index) => {
-                        return <option key={index} value={item.id}>{item.name}</option>;
+                        return (
+                          <option key={index} value={item.id}>
+                            {item.name}
+                          </option>
+                        );
                       })}
                     </select>
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "destination_id" && errors.helperTxt}
+                    </p>
                   </div>
 
-                  <div className=" mt-4 w-full">
+                  <div className=" mt-2 w-full">
                     <Textarea
                       placeholder="Address"
                       name="address"
+                      autoComplete="off"
                       value={hotelFields.address}
                       onChange={(e) => {
                         handleChange(e);
@@ -846,28 +1016,52 @@ function Hotel() {
                       sx={{
                         width: "100%",
                         backgroundColor: "#fff",
-                        borderColor: "#d3d3d3",
+                        borderColor: `${
+                          errors.name === "address" ? "red" : "#d3d3d3"
+                        }`,
                         height: "60px",
                       }}
                     />
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "address" && errors.helperTxt}
+                    </p>
                   </div>
 
-                  <div className="mt-4">
+                  <div className="mt-2">
                     <PhoneInput
                       defaultCountry="IN"
+                      autoComplete=""
                       value={hotelFields.contact_no}
                       onChange={(e) => {
+                        setErrors({ name: null, helperTxt: null });
                         setHotelFields({ ...hotelFields, contact_no: e });
                       }}
+                      onKeyDown={(e) => {
+                        if (
+                          hotelFields.contact_no &&
+                          hotelFields.contact_no.length >= 13 &&
+                          e.key !== "Backspace"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                       placeholder="Contact No"
-                      className={`border border-[#b9b9b9]  rounded-sm p-2 hover:border-black h-10`}
+                      className={`border ${
+                        errors.name === "contact_no"
+                          ? "border-red-600"
+                          : "hover:border-black border-[#b9b9b9]"
+                      }  rounded-sm p-2 h-10`}
                     />
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "contact_no" && errors.helperTxt}
+                    </p>
                   </div>
 
-                  <div className="mt-4 w-full h-fit">
+                  <div className="mt-3 w-full h-fit">
                     <Textarea
                       placeholder="Details"
                       minRows={2}
+                      autoComplete="off"
                       maxRows={5}
                       name="details"
                       value={hotelFields.details}
@@ -924,7 +1118,11 @@ function Hotel() {
                     </div>
                   )}
 
-                  <div className="flex mt-4 items-center w-full justify-between">
+                  <div
+                    className={`flex ${
+                      stat === "Edit" ? "mt-0" : "mt-5"
+                    } items-center w-full justify-between`}
+                  >
                     <div className="custom-date-picker w-[48%]">
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <MobileDatePicker
@@ -966,6 +1164,8 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      autoComplete="off"
+                      error={errors.name === "contact_person"}
                       label="Contact Person"
                       name="contact_person"
                       variant="outlined"
@@ -975,35 +1175,76 @@ function Hotel() {
                       }}
                       sx={{ width: "100%" }}
                     />
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "contact_person" && errors.helperTxt}
+                    </p>
                   </div>
 
-                  <div className="mt-4">
+                  <div className="mt-2">
                     <PhoneInput
                       defaultCountry="IN"
                       value={hotelFields.mob_no_1}
+                      autoComplete="off"
                       onChange={(e) => {
+                        setErrors({ name: null, helperTxt: null });
                         setHotelFields({ ...hotelFields, mob_no_1: e });
                       }}
+                      onKeyDown={(e) => {
+                        if (
+                          hotelFields.mob_no_1 &&
+                          hotelFields.mob_no_1.length >= 13 &&
+                          e.key !== "Backspace"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                       placeholder="Mobile No *"
-                      className={`border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10`}
+                      className={`border ${
+                        errors.name === "mob_no_1"
+                          ? "border-red-600"
+                          : "hover:border-black border-[#b9b9b9]"
+                      }  rounded-sm p-2 h-10`}
                     />
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "mob_no_1" && errors.helperTxt}
+                    </p>
                   </div>
-                  <div className="mt-4">
+                  <div className="mt-2">
                     <PhoneInput
                       defaultCountry="IN"
                       value={hotelFields.mob_no_2}
+                      autoComplete="off"
                       onChange={(e) => {
+                        setErrors({ name: null, helperTxt: null });
                         setHotelFields({ ...hotelFields, mob_no_2: e });
                       }}
+                      onKeyDown={(e) => {
+                        if (
+                          hotelFields.mob_no_2 &&
+                          hotelFields.mob_no_2.length >= 13 &&
+                          e.key !== "Backspace"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                       placeholder="Alternative No"
-                      className={`border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10`}
+                      className={`border ${
+                        errors.name === "mob_no_2"
+                          ? "border-red-600"
+                          : "hover:border-black border-[#b9b9b9]"
+                      }  rounded-sm p-2 h-10`}
                     />
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "mob_no_2" && errors.helperTxt}
+                    </p>
                   </div>
-                  <div className="w-full mt-4">
+                  <div className="w-full mt-2">
                     <TextField
                       id="outlined-basic"
+                      error={errors.name === "reservation_email"}
                       size="small"
                       label="Reservation Email ID"
+                      autoComplete="off"
                       name="reservation_email"
                       value={hotelFields.reservation_email}
                       onChange={(e) => {
@@ -1013,11 +1254,16 @@ function Hotel() {
                       sx={{ width: "100%" }}
                     />
                   </div>
-                  <div className="w-full mt-4">
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "reservation_email" && errors.helperTxt}
+                  </p>
+                  <div className="w-full mt-2">
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      error={errors.name === "website_link"}
                       name="website_link"
+                      autoComplete="off"
                       value={hotelFields.website_link}
                       onChange={(e) => {
                         handleChange(e);
@@ -1027,11 +1273,14 @@ function Hotel() {
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "website_link" && errors.helperTxt}
+                  </p>
                   <select
                     value={hotelFields.status}
                     name="status"
                     onChange={(e) => handleChange(e)}
-                    className="px-2 focus:outline-none mt-4 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
+                    className="px-2 focus:outline-none mt-3 w-full border h-10 hover:border-black focus:border border-[#d8d8d8] rounded-md"
                   >
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
@@ -1039,7 +1288,7 @@ function Hotel() {
                 </div>
               </div>
 
-              <div className="mt-4 flex justify-between items-center">
+              <div className="mt-3 flex justify-between items-center">
                 <div
                   onClick={
                     stat === "Edit"
@@ -1097,9 +1346,6 @@ function Hotel() {
           <Modal
             keepMounted
             open={bankOpen}
-            onClose={() => {
-              handleClose("bank");
-            }}
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
@@ -1125,8 +1371,10 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      error={errors.name === "account_name"}
                       disabled={bankFirst ? false : click}
                       label="Account Name"
+                      autoComplete="off"
                       variant="outlined"
                       name="account_name"
                       value={bankFields.account_name}
@@ -1134,32 +1382,55 @@ function Hotel() {
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "account_name" && errors.helperTxt}
+                  </p>
                   <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      autoComplete="off"
                       disabled={bankFirst ? false : click}
                       label="Account No"
+                      error={errors.name === "account_no"}
                       variant="outlined"
                       name="account_no"
                       value={bankFields.account_no}
+                      type="number"
                       onChange={handlebankChange}
+                      onKeyDown={(e) => {
+                        if (
+                          bankFields.account_no &&
+                          bankFields.account_no.length >= 16 &&
+                          e.key !== "Backspace"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "account_no" && errors.helperTxt}
+                  </p>
                   <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      autoComplete="off"
                       disabled={bankFirst ? false : click}
                       label="Bank Name"
                       variant="outlined"
+                      error={errors.name === "bank_name"}
                       name="bank_name"
                       value={bankFields.bank_name}
                       onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "bank_name" && errors.helperTxt}
+                  </p>
                   <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
@@ -1167,12 +1438,17 @@ function Hotel() {
                       label="Branch Name"
                       disabled={bankFirst ? false : click}
                       variant="outlined"
+                      autoComplete="off"
                       name="branch_name"
+                      error={errors.name === "branch_name"}
                       value={bankFields.branch_name}
                       onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "branch_name" && errors.helperTxt}
+                  </p>
                   <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
@@ -1180,12 +1456,26 @@ function Hotel() {
                       label="IFSCI Code"
                       disabled={bankFirst ? false : click}
                       variant="outlined"
+                      autoComplete="off"
                       name="ifsci_code"
                       value={bankFields.ifsci_code}
+                      error={errors.name === "ifsci_code"}
                       onChange={handlebankChange}
+                      onKeyDown={(e) => {
+                        if (
+                          bankFields.ifsci_code &&
+                          bankFields.ifsci_code.length >= 11 &&
+                          e.key !== "Backspace"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "ifsci_code" && errors.helperTxt}
+                  </p>
                 </div>
                 <div className="flex flex-col w-[49%]">
                   <div className="font-bold   text-black ">Bank 2</div>
@@ -1193,6 +1483,8 @@ function Hotel() {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      autoComplete="off"
+                      error={errors.name === "account_name_sec"}
                       label="Account Name"
                       disabled={bankFirst ? false : click}
                       variant="outlined"
@@ -1202,58 +1494,100 @@ function Hotel() {
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "account_name_sec" && errors.helperTxt}
+                  </p>
                   <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
+                      error={errors.name === "account_no_sec"}
                       size="small"
                       disabled={bankFirst ? false : click}
                       label="Account No"
+                      autoComplete="off"
                       variant="outlined"
                       name="account_no_sec"
+                      type="number"
                       value={bankFields.account_no_sec}
                       onChange={handlebankChange}
+                      onKeyDown={(e) => {
+                        if (
+                          bankFields.account_no_sec &&
+                          bankFields.account_no_sec.length >= 16 &&
+                          e.key !== "Backspace"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "account_no_sec" && errors.helperTxt}
+                  </p>
                   <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      autoComplete="off"
                       label="Bank Name"
                       disabled={bankFirst ? false : click}
                       variant="outlined"
                       name="bank_name_sec"
+                      error={errors.name === "bank_name_sec"}
                       value={bankFields.bank_name_sec}
                       onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "bank_name_sec" && errors.helperTxt}
+                  </p>
                   <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
                       disabled={bankFirst ? false : click}
                       label="Branch Name"
+                      autoComplete="off"
                       variant="outlined"
+                      error={errors.name === "branch_name_sec"}
                       name="branch_name_sec"
                       value={bankFields.branch_name_sec}
                       onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "branch_name_sec" && errors.helperTxt}
+                  </p>
                   <div className="mt-4 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      error={errors.name === "ifsci_code_sec"}
                       label="IFSCI Code"
                       disabled={bankFirst ? false : click}
                       variant="outlined"
+                      autoComplete="off"
                       name="ifsci_code_sec"
                       value={bankFields.ifsci_code_sec}
                       onChange={handlebankChange}
+                      onKeyDown={(e) => {
+                        if (
+                          bankFields.ifsci_code_sec &&
+                          bankFields.ifsci_code_sec.length >= 11 &&
+                          e.key !== "Backspace"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "ifsci_code_sec" && errors.helperTxt}
+                  </p>
                 </div>
               </div>
               <div className="mt-4 flex justify-between items-center">
