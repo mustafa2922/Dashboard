@@ -39,11 +39,16 @@ function Driver() {
 
   const [Editopen, setEditOpen] = useState(false);
 
+  const [errors, setErrors] = useState({ name: null, helperTxt: null });
+
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setErrors({ name: null, helperTxt: null });
+    setOpen(false);
+  };
   const [gridApi, setGridApi] = useState(null);
 
   const [driverPhoto, setDriverPhoto] = useState("");
@@ -61,8 +66,6 @@ function Driver() {
 
   const [vehicleMarkVal, setvehicleMarkVal] = useState("");
   const [passengerCapacity, setPassengerCapacity] = useState("");
-
-  const [errors, setErrors] = useState({ name: null, helperText: null });
 
   const [driverFields, setDriverFields] = useState({
     name: "",
@@ -86,63 +89,81 @@ function Driver() {
   });
 
   const validateFields = () => {
-    if (driverFields.name.trim) {
-      return setErrors({ name: "name", helperText: "Name Cannot Be Empty" });
+    if (driverFields.name.trim() === "") {
+      return setErrors({ name: "name", helperTxt: "Name Cannot Be Empty" });
     }
 
     if (driverFields.mob_no_1.length !== 13) {
       return setErrors({
         name: "mob_no_1",
-        helperText: "Number Must Contain 10 Digts",
+        helperTxt: "Number Must Contain 10 Digts",
       });
     }
     if (driverFields.mob_no_2.length !== 13) {
       return setErrors({
         name: "mob_no_2",
-        helperText: "Number Must Conatain 10 Digits",
+        helperTxt: "Number Must Conatain 10 Digits",
       });
     }
     if (driverFields.address.trim() === "") {
       return setErrors({
         name: "address",
-        helperText: "Address Cannot Be Empty",
+        helperTxt: "Address Cannot Be Empty",
       });
     }
-    if (driverFields.aadher_no.length < 14) {
+
+    if (driverFields.aadher_no.includes(" ") || driverFields.aadher_no === "") {
       return setErrors({
         name: "aadher_no",
-        helperText: "Aadhar No Must Contain 12 Digits",
+        helperTxt: "Aadhar No Must Contain 12 Digits",
+      });
+    }
+    if (driverFields.transfer_id === "DEFAULT") {
+      return setErrors({
+        name: "transfer_id",
+        helperTxt: "Please Select Vehicle Mark",
       });
     }
     if (driverFields.veh_no.trim() === "") {
       return setErrors({
         name: "veh_no",
-        helperText: "Vehicle No Cannot Be Empty",
+        helperTxt: "Vehicle No Cannot Be Empty",
       });
     }
     if (driverFields.veh_model.trim() === "") {
       return setErrors({
         name: "veh_model",
-        helperText: "Vehicle Model Cannot Be Empty",
+        helperTxt: "Vehicle Model Cannot Be Empty",
       });
     }
     if (driverFields.veh_color.trim() === "") {
       return setErrors({
         name: "veh_color",
-        helperText: "Vehicle Color Cannot Be Empty",
+        helperTxt: "Vehicle Color Cannot Be Empty",
+      });
+    }
+    if (driverFields.veh_price_non_ac.trim() === "") {
+      return setErrors({
+        name: "veh_price_non_ac",
+        helperTxt: "Vehicle Price Cannot Be Empty",
+      });
+    }
+    if (driverFields.veh_price_ac.trim() === "") {
+      return setErrors({
+        name: "veh_price_ac",
+        helperTxt: "Vehicle Price Cannot Be Empty",
       });
     }
     return true;
   };
 
   const handleChange = (event) => {
+    setErrors({ name: null, helperTxt: null });
     return setDriverFields({
       ...driverFields,
       [event.target.name]: event.target.value,
     });
   };
-
-  const [value, setValue] = useState();
 
   const [stat, setStat] = useState("");
 
@@ -169,10 +190,10 @@ function Driver() {
       cellRenderer: (params) => {
         return (
           <div className="ml-[-10px] flex w-full items-center justify-between h-full p-1">
-            <div className="h-full leading-4 w-[40%] whitespace-pre-wrap flex items-center ">
+            <div className="h-full leading-4 w-[40%] whitespace-pre-wrap font-bold flex items-center ">
               {params.data.name}
             </div>
-            <div className="h-full w-28">
+            <div className="h-full w-20">
               <div className="h-full w-full rounded-md overflow-hidden group relative">
                 <div
                   onClick={() => {
@@ -452,44 +473,35 @@ function Driver() {
     delete driverFields.driver_img;
     delete driverFields.license_copy;
     delete driverFields.veh_img;
-    axios
-      .put(`https://jajasend.site/api/v1/driver/${id}`, driverFields)
-      .then((response) => {
-        toast.success("Driver Updated Successfully");
-        setReload(!reload);
-        setAble(false);
-        setOpen(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        setAble(false);
-      });
+
+    const validate = validateFields();
+
+    if (validate) {
+      axios
+        .put(`https://jajasend.site/api/v1/driver/${id}`, driverFields)
+        .then((response) => {
+          toast.success("Driver Updated Successfully");
+          setReload(!reload);
+          setAble(false);
+          setOpen(false);
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+          setAble(false);
+        });
+    } else {
+      setAble(false);
+    }
   };
 
   const payload = new FormData();
 
   const handleSave = () => {
     setAble(true);
-    if (
-      driverFields.name !== "" &&
-      driverFields.transfer_id !== "" &&
-      driverFields.veh_no !== "" &&
-      driverFields.veh_model !== "" &&
-      driverFields.veh_color !== "" &&
-      driverFields.veh_price_ac !== "" &&
-      driverFields.veh_price_non_ac !== "" &&
-      driverFields.price_valid_from !== "" &&
-      driverFields.price_valid_to !== "" &&
-      driverFields.veh_img !== "" &&
-      driverFields.mob_no_1 !== "" &&
-      driverFields.mob_no_2 !== "" &&
-      driverFields.address !== "" &&
-      driverFields.aadher_no !== "" &&
-      driverFields.driver_img !== "" &&
-      driverFields.driver_id_card !== "" &&
-      driverFields.license_copy !== "" &&
-      driverFields.status !== ""
-    ) {
+
+    const validate = validateFields();
+
+    if (validate) {
       for (var key in driverFields) {
         if (driverFields.hasOwnProperty(key)) {
           if (driverFields[key] instanceof File) {
@@ -510,10 +522,12 @@ function Driver() {
         })
         .catch((err) => {
           setAble(false);
-          console.log(err);
+          console.log(err.response.data.message);
+          if (err.response.data.message.includes("drivers_veh_no_unique")) {
+            toast.error("Vehicle No must be unique");
+          }
         });
     } else {
-      toast.error("Please Fill All Fields Correctly");
       setAble(false);
     }
   };
@@ -560,15 +574,6 @@ function Driver() {
     }
   };
 
-  const showMatches = (input) => {
-    return vehicle_Mark.filter((item) => {
-      if (input == "") {
-        return false;
-      }
-      return item.veh_mark.toLowerCase().includes(input.toLowerCase());
-    });
-  };
-
   const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
   };
@@ -582,8 +587,6 @@ function Driver() {
     flex: 1,
     tooltipField: "name",
   };
-
-  const matchArr = showMatches(vehicleMarkVal);
 
   useEffect(() => {
     axios
@@ -681,11 +684,10 @@ function Driver() {
           <Modal
             keepMounted
             open={open}
-            onClose={handleClose}
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[60%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[48%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Driver </div>
                 <div className="cursor-pointer" onClick={handleClose}>
@@ -700,6 +702,7 @@ function Driver() {
                       id="outlined-basic"
                       size="small"
                       label="Driver Name"
+                      error={errors.name === "name"}
                       name="name"
                       value={driverFields.name}
                       onChange={(e) => {
@@ -709,36 +712,74 @@ function Driver() {
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "name" && errors.helperTxt}
+                  </p>
 
-                  <div className="mt-4 w-full">
+                  <div className="mt-3 w-full">
                     <PhoneInput
                       defaultCountry="IN"
                       value={driverFields.mob_no_1}
                       onChange={(e) => {
                         setDriverFields({ ...driverFields, mob_no_1: e });
+                        setErrors({ name: null, helperTxt: null });
+                      }}
+                      onKeyDown={(e) => {
+                        if (
+                          driverFields.mob_no_1 &&
+                          driverFields.mob_no_1.length >= 13 &&
+                          e.key !== "Backspace"
+                        ) {
+                          e.preventDefault();
+                        }
                       }}
                       placeholder="Mobile No"
-                      className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                      className={`border ${
+                        errors.name === "mob_no_1"
+                          ? "border-red-600"
+                          : "hover:border-black border-[#b9b9b9]"
+                      }  rounded-sm p-2 h-10`}
                     />
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "mob_no_1" && errors.helperTxt}
+                    </p>
                   </div>
 
-                  <div className="mt-4 w-full">
+                  <div className="mt-3 w-full">
                     <PhoneInput
                       defaultCountry="IN"
                       value={driverFields.mob_no_2}
                       onChange={(e) => {
                         setDriverFields({ ...driverFields, mob_no_2: e });
+                        setErrors({ name: null, helperTxt: null });
+                      }}
+                      onKeyDown={(e) => {
+                        if (
+                          driverFields.mob_no_2 &&
+                          driverFields.mob_no_2.length >= 13 &&
+                          e.key !== "Backspace"
+                        ) {
+                          e.preventDefault();
+                        }
                       }}
                       placeholder="Alternative No"
-                      className="border border-[#b9b9b9] rounded-sm p-2 hover:border-black h-10"
+                      className={`border ${
+                        errors.name === "mob_no_2"
+                          ? "border-red-600"
+                          : "hover:border-black border-[#b9b9b9]"
+                      }  rounded-sm p-2 h-10`}
                     />
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "mob_no_2" && errors.helperTxt}
+                    </p>
                   </div>
 
-                  <div className="mt-4 w-full">
+                  <div className="mt-3 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
                       value={driverFields.address}
+                      error={errors.name === "address"}
                       name="address"
                       onChange={(e) => {
                         handleChange(e);
@@ -748,11 +789,18 @@ function Driver() {
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                    {errors.name === "address" && errors.helperTxt}
+                  </p>
 
-                  <div className="mt-4 w-full">
+                  <div className="mt-3 w-full">
                     <PatternFormat
                       format="####_####_####"
-                      className="focus:outline-none w-full border border-[#b9b9b9] h-10 px-2 rounded-md p-1 text-black"
+                      className={`focus:outline-none w-full border ${
+                        errors.name === "aadher_no"
+                          ? "border-red-600"
+                          : "border-slate-400"
+                      } h-10 px-2 rounded-md p-1 text-black`}
                       placeholder="Aadhar No"
                       name="aadher_no"
                       value={driverFields.aadher_no}
@@ -760,6 +808,9 @@ function Driver() {
                         handleChange(e);
                       }}
                     />
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "aadher_no" && errors.helperTxt}
+                    </p>
                   </div>
 
                   <div className=" relative mt-4 w-full">
@@ -778,9 +829,9 @@ function Driver() {
                       onChange={(e) => {
                         handleChange(e);
                         const selectedOption = e.target.value;
-                        const selectedVehicle = vehicle_Mark.find(
-                          (item) => {return item.id == selectedOption}
-                        );
+                        const selectedVehicle = vehicle_Mark.find((item) => {
+                          return item.id == selectedOption;
+                        });
                         if (selectedVehicle) {
                           setPassengerCapacity(
                             selectedVehicle.passenger_capacity
@@ -800,6 +851,9 @@ function Driver() {
                         );
                       })}
                     </select>
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "transfer_id" && errors.helperTxt}
+                    </p>
                   </div>
 
                   <div className="mt-4 w-full">
@@ -818,13 +872,20 @@ function Driver() {
                       size="small"
                       name="veh_no"
                       value={driverFields.veh_no}
-                      onChange={(e)=>{
-                        setDriverFields({...driverFields , veh_no:e.target.value.toUpperCase()})
+                      onChange={(e) => {
+                        setDriverFields({
+                          ...driverFields,
+                          veh_no: e.target.value.toUpperCase(),
+                        });
                       }}
+                      error={errors.name === "veh_no"}
                       label="Vehicle No"
                       variant="outlined"
                       sx={{ width: "100%" }}
                     />
+                    <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "veh_no" && errors.helperTxt}
+                    </p>
                   </div>
                 </div>
                 <div className="flex flex-col items-start justify-center h-full w-[48%]">
@@ -834,12 +895,16 @@ function Driver() {
                         id="outlined-basic"
                         size="small"
                         value={driverFields.veh_model}
+                        error={errors.name === "veh_model"}
                         onChange={handleChange}
                         name="veh_model"
                         label="Vehicle Model"
                         variant="outlined"
                         sx={{ width: "100%" }}
                       />
+                      <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                        {errors.name === "veh_model" && errors.helperTxt}
+                      </p>
                     </div>
                     <div className=" w-[49%]">
                       <TextField
@@ -847,49 +912,65 @@ function Driver() {
                         size="small"
                         value={driverFields.veh_color}
                         onChange={handleChange}
+                        error={errors.name === "veh_color"}
                         name="veh_color"
                         label="Vehicle Color"
                         variant="outlined"
                         sx={{ width: "100%" }}
                       />
+                      <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                        {errors.name === "veh_color" && errors.helperTxt}
+                      </p>
                     </div>
                   </div>
-                  <div className="flex w-full mt-4 justify-between items-center">
+                  <div className="flex w-full mt-3 justify-between items-center">
+                    <div className=" w-[50%]">
+                      <TextField
+                        id="outlined-basic"
+                        value={driverFields.veh_price_non_ac}
+                        name="veh_price_non_ac"
+                        onChange={handleChange}
+                        error={errors.name === "veh_price_non_ac"}
+                        size="small"
+                        label={
+                          <>
+                            <CurrencyRupeeIcon style={{ fontSize: 14 }} />
+                            <span className="text-[0.66rem]">
+                              Vehicle Price (Non AC)
+                            </span>
+                          </>
+                        }
+                        variant="outlined"
+                        sx={{ width: "100%" }}
+                        type="number"
+                      />
+                      <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                        {errors.name === "veh_price_non_ac" && errors.helperTxt}
+                      </p>
+                    </div>
                     <div className=" w-[49%]">
                       <TextField
                         id="outlined-basic"
                         value={driverFields.veh_price_ac}
                         name="veh_price_ac"
                         onChange={handleChange}
+                        error={errors.name === "veh_price_ac"}
                         size="small"
                         label={
                           <>
-                            <CurrencyRupeeIcon />
-                            Vehicle Price (AC)
+                            <CurrencyRupeeIcon style={{ fontSize: 14 }} />
+                            <span className="text-[0.7rem]">
+                              Vehicle Price (AC)
+                            </span>
                           </>
                         }
                         variant="outlined"
                         sx={{ width: "100%" }}
                         type="number"
                       />
-                    </div>
-                    <div className=" w-[49%]">
-                      <TextField
-                        id="outlined-basic"
-                        value={driverFields.veh_price_non_ac}
-                        name="veh_price_non_ac"
-                        onChange={handleChange}
-                        size="small"
-                        label={
-                          <>
-                            <CurrencyRupeeIcon />
-                            Vehicle Price (Non AC)
-                          </>
-                        }
-                        variant="outlined"
-                        sx={{ width: "100%" }}
-                        type="number"
-                      />
+                      <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                        {errors.name === "veh_price_ac" && errors.helperTxt}
+                      </p>
                     </div>
                   </div>
                   <div className="flex justify-between items-center w-full">
@@ -1103,7 +1184,7 @@ function Driver() {
                          hover:bg-green-900 bg-green-600
                     justify-center text-white`}
                   >
-                    {able ? "Loading..." : stat === "Edit" ? "Update" : "Save"}
+                    {able ? "Processing..." : stat === "Edit" ? "Update" : "Save"}
                   </button>
                 </div>
               </div>
@@ -1121,7 +1202,7 @@ function Driver() {
           >
             <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[70%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
-                <div className="font-bold text-lg"> {stat} Media Library </div>
+                <div className="font-bold text-lg"> Media Library </div>
                 <div
                   className="cursor-pointer"
                   onClick={() => {

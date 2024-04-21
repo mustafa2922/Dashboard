@@ -9,6 +9,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { FaWhatsapp } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function Queries() {
   const [search, setSearch] = useState("");
@@ -17,6 +18,24 @@ function Queries() {
   const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
   };
+
+  const data = [
+    {
+      id: "102498",
+    },
+    {
+      id: "102499",
+    },
+    {
+      id: "102500",
+    },
+    {
+      id: "102501",
+    },
+    {
+      id: "102502",
+    },
+  ];
 
   const onGridReady = (params) => {
     setGridApi(params.api);
@@ -36,7 +55,7 @@ function Queries() {
           <div className="flex flex-col h-full w-full">
             <div className="flex w-full flex-col justify-evenly   h-[45%]">
               <p className="h-5 text-blue-600 text-base hover:text-blue-800 font-semibold cursor-pointer">
-                102498
+                {params.data.id}
               </p>
               <div className="w-fit h-5 px-2 flex justify-center items-center  rounded-md bg-[#0cb5b5]">
                 <span className="text-xs font-bold text-white">Active</span>
@@ -187,21 +206,32 @@ function Queries() {
           <div className="flex flex-col h-full w-full">
             <div className="flex w-full flex-col justify-center items-start  h-[45%]">
               <div className=" w-full h-8 flex items-center">
-
-                <div className="group cursor-pointer hover:bg-black border border-black h-6 w-6 rounded-full flex justify-center items-center">                  
-                  <NorthEastIcon className="group-hover:text-white" style={{ fontSize: 17 }} />
-                </div>
+                <Link to={`/queries/${params.data.id}`}>
+                  <div className="group cursor-pointer hover:bg-black border border-black h-6 w-6 rounded-full flex justify-center items-center">
+                    <NorthEastIcon
+                      className="group-hover:text-white"
+                      style={{ fontSize: 17 }}
+                    />
+                  </div>
+                </Link>
 
                 <div className="group cursor-pointer hover:bg-black border border-black h-6 w-6 ml-1 rounded-full flex justify-center items-center">
-                  <FaWhatsapp className="group-hover:text-white"  style={{ fontSize: 17 }} />
+                  <FaWhatsapp
+                    className="group-hover:text-white"
+                    style={{ fontSize: 17 }}
+                  />
                 </div>
                 <div className="group cursor-pointer hover:bg-black border border-black h-6 w-6 ml-1 rounded-full flex justify-center items-center">
-
-                  <EmailOutlinedIcon className="group-hover:text-white"  style={{ fontSize: 17 }} />
+                  <EmailOutlinedIcon
+                    className="group-hover:text-white"
+                    style={{ fontSize: 17 }}
+                  />
                 </div>
                 <div className="group cursor-pointer hover:bg-black border border-black h-6 w-6 ml-1 rounded-full flex justify-center items-center">
-                  
-                  <EditOutlinedIcon className="group-hover:text-white"  style={{ fontSize: 17 }} />
+                  <EditOutlinedIcon
+                    className="group-hover:text-white"
+                    style={{ fontSize: 17 }}
+                  />
                 </div>
               </div>
             </div>
@@ -227,7 +257,7 @@ function Queries() {
     },
   ]);
 
-  const [row, setRow] = useState([{}, {}, {}]);
+  const [row, setRow] = useState(data);
 
   const defaultColDef = {
     sortable: true,

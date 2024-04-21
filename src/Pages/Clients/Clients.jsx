@@ -76,7 +76,7 @@ const Clients = () => {
     } else {
       if (stat == "Add") {
         axios
-          .post("https://task.jajasoft.online/api/v1/client", fields)
+          .post("https://jajasend.site/api/v1/client", fields)
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -102,7 +102,7 @@ const Clients = () => {
             className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
             onClick={() => {
               axios
-                .delete(`https://task.jajasoft.online/api/v1/client/${id}`)
+                .delete(`https://jajasend.site/api/v1/client/${id}`)
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
                   toast.success("Client Deleted Successfully");
@@ -133,7 +133,7 @@ const Clients = () => {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://task.jajasoft.online/api/v1/client/${id}`, fields)
+      .put(`https://jajasend.site/api/v1/client/${id}`, fields)
       .then((response) => {
         toast.success("Client Updated Successfully");
         setReload(!reload);
@@ -263,7 +263,7 @@ const Clients = () => {
   useEffect(() => {
     const getdata = () => {
       axios
-        .get("https://task.jajasoft.online/api/v1/client")
+        .get("https://jajasend.site/api/v1/client")
         .then((response) => {
           setRow(response.data.reverse());
         });

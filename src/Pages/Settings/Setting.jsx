@@ -14,7 +14,6 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import "./setting.css";
 
-
 function Setting() {
   const navigate = useNavigate();
   const [show, setShow] = React.useState(false);
@@ -25,9 +24,8 @@ function Setting() {
   React.useEffect(() => {
     if (path == "/settings") {
       setPageName("Team Management");
-    };
+    }
   });
-
 
   return (
     <div className="flex flex-col h-full w-full">

@@ -103,7 +103,7 @@ function Hotel() {
       headerName: "Name",
       field: "name",
       flex: 2.1,
-      cellStyle: { display: "flex", alignItems: "center"  },
+      cellStyle: { display: "flex", alignItems: "center" },
       cellRenderer: (params) => {
         return (
           <div className="flex items-center w-full gap-4">
@@ -326,7 +326,7 @@ function Hotel() {
     {
       headerName: "Updated By",
       filter: false,
-      cellStyle: { marginTop: "24px" , border:'none' },
+      cellStyle: { marginTop: "24px", border: "none" },
       flex: 0.85,
       valueGetter: () => {
         return email;
@@ -337,7 +337,11 @@ function Hotel() {
       filter: false,
       flex: 0.87,
       field: "updated_at",
-      cellStyle: { display: "flex", alignItems: "center" , borderLeft:'1px solid #d9d9db' },
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        borderLeft: "1px solid #d9d9db",
+      },
       cellRenderer: (params) => {
         const formattedDate = dayjs(params.value).format("DD-MM-YYYY");
         return <div className="-ml-2">{formattedDate}</div>;
@@ -690,7 +694,7 @@ function Hotel() {
         axios
           .delete(`https://jajasend.site/api/v1/accomodation-bank/${BankId}`)
           .then((response) => {
-            setBankOpen(false)
+            setBankOpen(false);
             Swal.fire({
               title: "Deleted!",
               text: "Your Item has been deleted.",
@@ -729,13 +733,16 @@ function Hotel() {
         .post("https://jajasend.site/api/v1/accomodation", payload)
         .then((res) => {
           setAble(false);
+          console.log(res.data);
           toast.success("Accomodation Added Successfully");
           setReload(!reload);
           handleClose("modal");
         })
         .catch((err) => {
           setAble(false);
-          console.log(err);
+          if (err.response.data.message.includes("accomodations_name_unique")) {
+            toast.error("Accommodation name must be unique")
+          }
         });
     } else {
       setAble(false);
@@ -991,9 +998,11 @@ function Hotel() {
                       </option>
                       {destinations.map((item, index) => {
                         return (
-                          <option key={index} value={item.id}>
-                            {item.name}
-                          </option>
+                          item.status == "1" && (
+                            <option key={index} value={item.id}>
+                              {item.name}
+                            </option>
+                          )
                         );
                       })}
                     </select>
@@ -1638,7 +1647,7 @@ function Hotel() {
           >
             <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[70%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
-                <div className="font-bold text-lg"> {stat} Media Library </div>
+                <div className="font-bold text-lg"> Media Library </div>
                 <div
                   className="cursor-pointer"
                   onClick={() => {

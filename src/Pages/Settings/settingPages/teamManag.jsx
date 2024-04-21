@@ -12,13 +12,16 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 let permissions = [];
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const TeamManagement = () => {
   const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
+  const [errors, setErrors] = useState({ name: null, helperTxt: null });
   const handleClose = () => {
+    setErrors({ name: null, helperTxt: null });
     setOpen(false);
   };
   const [gridApi, setGridApi] = useState(null);
@@ -27,6 +30,33 @@ const TeamManagement = () => {
   const [reload, setReload] = useState(false);
 
   const [id, setId] = useState("");
+
+  const validateFields = () => {
+    if (fields.first_name.trim() === "") {
+      return setErrors({
+        name: "first_name",
+        helperTxt: "First Name Cannot Be Empty",
+      });
+    }
+    if (fields.last_name.trim() === "") {
+      return setErrors({
+        name: "last_name",
+        helperTxt: "Last Name Cannot Be Empty",
+      });
+    }
+    if (emailRegex.test(fields.email)) {
+      return setErrors({
+        name: "email",
+        helperTxt: "Please Enter Valid Email",
+      });
+    }
+    if (fields.pin.length !== 4) {
+      return setErrors({
+        name: "pin",
+        helperTxt: "Pin Must Contain 4 Digits",
+      });
+    }
+  };
 
   const [fields, setFields] = useState({
     first_name: "",
@@ -312,7 +342,6 @@ const TeamManagement = () => {
           <Modal
             keepMounted
             open={open}
-            onClose={handleClose}
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
@@ -329,6 +358,7 @@ const TeamManagement = () => {
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      error={errors.name === "first_name"}
                       label="First Name"
                       value={fields.first_name}
                       onChange={handleChange}
@@ -337,11 +367,15 @@ const TeamManagement = () => {
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "first_name" && errors.helperTxt}
+                    </p>
 
-                  <div className="mt-5 w-full">
+                  <div className="mt-3 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
+                      error={errors.name === "last_name"}
                       label="Last Name"
                       onChange={handleChange}
                       value={fields.last_name}
@@ -350,12 +384,16 @@ const TeamManagement = () => {
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "last_name" && errors.helperTxt}
+                    </p>
 
-                  <div className="mt-5 w-full">
+                  <div className="mt-3 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
                       onChange={handleChange}
+                      error={errors.name === "email"}
                       value={fields.email}
                       label="Email"
                       name="email"
@@ -363,13 +401,26 @@ const TeamManagement = () => {
                       sx={{ width: "100%" }}
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "email" && errors.helperTxt}
+                    </p>
 
-                  <div className="mt-5 w-full">
+                  <div className="mt-3 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
                       label="Pin"
                       onChange={handleChange}
+                      error={errors.name === "pin"}
+                      onKeyDown={(e) => {
+                        if (
+                          fields.pin &&
+                          fields.pin.length >= 4 &&
+                          e.key !== "Backspace"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                       value={fields.pin}
                       name="pin"
                       variant="outlined"
@@ -377,12 +428,15 @@ const TeamManagement = () => {
                       type="number"
                     />
                   </div>
+                  <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                      {errors.name === "pin" && errors.helperTxt}
+                    </p>
 
                   <select
                     onChange={handleChange}
                     name="status"
                     value={fields.status}
-                    className="w-full hover:border-slate-600 focus:outline-none border-slate-300 border mt-5 h-10 rounded-[0.3rem]"
+                    className="w-full hover:border-slate-600 focus:outline-none border-slate-300 border mt-3 h-10 rounded-[0.3rem]"
                   >
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>

@@ -6,6 +6,7 @@ import Navbar from "./Components/Navbar/Navbar";
 import SideBar from "./Components/SideBar";
 import Itineraries from "./Pages/Itineraries/Itineraries";
 import Queries from "./Pages/Queries/Queries";
+import QueriesDetail from "./Pages/Queries/QueriesDetail";
 import Corporate from "./Pages/Corporate/Corporate";
 import Dashboard from "./Pages/Home/Dashboard";
 import Expense from "./Pages/Expense/Expense";
@@ -91,6 +92,7 @@ const App = () => {
         { path: "/agents/:agentId", element: <AgentDetails /> },
         { path: "/itineraries", element: <Itineraries /> },
         { path: "/queries", element: <Queries /> },
+        { path: "/queries/:queryId/*", element: <QueriesDetail/> },
         { path: "/corporate", element: <Corporate /> },
         { path: "/corporate/:corporateId", element: <CorporateDetail /> },
         { path: "/settings/*", element: <Setting /> },
