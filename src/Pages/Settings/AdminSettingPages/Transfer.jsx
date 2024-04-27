@@ -13,6 +13,8 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 function Transfer() {
   const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
@@ -140,7 +142,7 @@ function Transfer() {
     } else {
       if (stat == "Add") {
         axios
-          .post("https://jajasend.site/api/v1/vehicle", vehFields)
+          .post(`${BASE_URL}api/v1/vehicle`, vehFields)
           .then((response) => {
             if (response.data == "success") {
               setAble(false);
@@ -167,7 +169,7 @@ function Transfer() {
             className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
             onClick={() => {
               axios
-                .delete(`https://jajasend.site/api/v1/vehicle/${id}`)
+                .delete(`${BASE_URL}api/v1/vehicle/${id}`)
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
                   toast.success("Vehicle Deleted Successfully");
@@ -201,7 +203,7 @@ function Transfer() {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://jajasend.site/api/v1/vehicle/${id}`, vehFields)
+      .put(`${BASE_URL}api/v1/vehicle/${id}`, vehFields)
       .then((response) => {
         setAble(false);
         toast.success("Vehicle Updated Successfully");
@@ -216,7 +218,7 @@ function Transfer() {
 
   useEffect(() => {
     const getData = () => {
-      axios.get("https://jajasend.site/api/v1/vehicle").then((response) => {
+      axios.get(`${BASE_URL}api/v1/vehicle`).then((response) => {
         setRow(response.data.reverse());
       });
     };

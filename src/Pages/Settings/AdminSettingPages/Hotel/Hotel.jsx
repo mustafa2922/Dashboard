@@ -26,6 +26,9 @@ import { toast } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { Blurhash } from "react-blurhash";
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const MySwal = withReactContent(Swal);
 
@@ -121,9 +124,10 @@ function Hotel() {
                   className="w-full h-full object-contain"
                   src={params.data.hotel_img_url}
                 />
+                {/* <Blurhash  className="w-full h-full object-contain" hash="LEHV6nWB2yk8pyo0adR*.7kCMdnj" /> */}
               </div>
             </div>
-            <div className="h-full font-bold leading-4 w-[40%] whitespace-pre-wrap flex items-center ">
+            <div className="h-full font-bold leading-4 w-[40%] text-[0.95rem] whitespace-pre-wrap flex items-center ">
               {" "}
               {params.value}{" "}
             </div>
@@ -314,7 +318,7 @@ function Hotel() {
           <div className="flex items-center justify-center w-full h-full">
             <div
               className={`flex items-center justify-center !h-6  w-14 px-8 ${
-                params.value === "1" ? "bg-green-600" : "bg-red-600"
+                params.value == "1" ? "bg-green-600" : "bg-red-600"
               }  text-white rounded-md h-[70%]`}
             >
               {params.value == "1" ? "Active" : "Inactive"}
@@ -584,7 +588,7 @@ function Hotel() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`https://jajasend.site/api/v1/accomodation/${id}`)
+          .delete(`${BASE_URL}api/v1/accomodation/${id}`)
           .then((response) => {
             Swal.fire({
               title: "Deleted!",
@@ -604,19 +608,26 @@ function Hotel() {
   const handleUpdate = () => {
     setAble(true);
     delete hotelFields.hotel_img;
-    axios
-      .put(`https://jajasend.site/api/v1/accomodation/${id}`, hotelFields)
-      .then((response) => {
-        toast.success("Accomodation Updated Successfully");
-        setReload(!reload);
-        setAble(false);
-        setClick(true);
-        handleClose("modal");
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        setAble(false);
-      });
+    const validate = ValidateFields("Accommodation");
+    if (validate) {
+      axios
+        .put(`${BASE_URL}api/v1/accomodation/${id}`, hotelFields)
+        .then((response) => {
+          toast.success("Accomodation Updated Successfully");
+          setReload(!reload);
+          setAble(false);
+          setClick(true);
+          handleClose("modal");
+        })
+        .catch((err) => {
+          err.response.data.message.includes("accomodations_name_unique")
+            ? toast.error("Accomodation Name must be unique")
+            : "";
+          setAble(false);
+        });
+    } else {
+      setAble(false);
+    }
   };
 
   const [gridApi, setGridApi] = useState(null);
@@ -692,7 +703,7 @@ function Hotel() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`https://jajasend.site/api/v1/accomodation-bank/${BankId}`)
+          .delete(`${BASE_URL}api/v1/accomodation-bank/${BankId}`)
           .then((response) => {
             setBankOpen(false);
             Swal.fire({
@@ -730,19 +741,19 @@ function Hotel() {
       }
 
       axios
-        .post("https://jajasend.site/api/v1/accomodation", payload)
+        .post(`${BASE_URL}api/v1/accomodation`, payload)
         .then((res) => {
           setAble(false);
-          console.log(res.data);
           toast.success("Accomodation Added Successfully");
           setReload(!reload);
           handleClose("modal");
         })
         .catch((err) => {
           setAble(false);
-          if (err.response.data.message.includes("accomodations_name_unique")) {
-            toast.error("Accommodation name must be unique")
-          }
+          console.log(err.response.data);
+          err.response.data == "name must be unique"
+            ? toast.error("Accommodation name must be unique")
+            : "";
         });
     } else {
       setAble(false);
@@ -752,10 +763,14 @@ function Hotel() {
   const handlebankSave = () => {
     setAble(true);
 
-    const validate = ValidateFields("Bank");
-    if (validate) {
+    // const validate = ValidateFields("Bank");
+
+    if (
+      // validate
+      true // bank details removed by admin
+    ) {
       axios
-        .post("https://jajasend.site/api/v1/accomodation-bank", bankFields)
+        .post(`${BASE_URL}api/v1/accomodation-bank`, bankFields)
         .then((res) => {
           setAble(false);
           toast.success("Bank Details Added Successfully");
@@ -774,10 +789,7 @@ function Hotel() {
   const handleBankUpdate = () => {
     setAble(true);
     axios
-      .put(
-        `https://jajasend.site/api/v1/accomodation-bank/${BankId}`,
-        bankFields
-      )
+      .put(`${BASE_URL}api/v1/accomodation-bank/${BankId}`, bankFields)
       .then((response) => {
         toast.success("Bank Updated Successfully");
         setReload(!reload);
@@ -793,15 +805,13 @@ function Hotel() {
 
   useEffect(() => {
     const getData = () => {
-      axios
-        .get("https://jajasend.site/api/v1/accomodation")
-        .then((response) => {
-          setRow(response.data.reverse());
-        });
+      axios.get(`${BASE_URL}api/v1/accomodation`).then((response) => {
+        setRow(response.data.reverse());
+      });
     };
 
     const getDestinations = () => {
-      axios.get("https://jajasend.site/api/v1/destination").then((response) => {
+      axios.get(`${BASE_URL}api/v1/destination`).then((response) => {
         destinations = response.data;
       });
     };
@@ -902,6 +912,8 @@ function Hotel() {
               </div>
               <div className="flex justify-between w-full mt-2 h-[90%]">
                 <div className="flex flex-col w-[48%]">
+                  {" "}
+                  {/* Pre-defined */}
                   <select
                     value={hotelFields.property_type}
                     name="property_type"
@@ -931,8 +943,7 @@ function Hotel() {
                   <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
                     {errors.name === "property_type" && errors.helperTxt}
                   </p>
-
-                  <div className="mt-2 w-full">
+                  <div className="mt-3 w-full">
                     <TextField
                       id="outlined-basic"
                       size="small"
@@ -951,7 +962,6 @@ function Hotel() {
                   <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
                     {errors.name === "name" && errors.helperTxt}
                   </p>
-
                   <select
                     value={hotelFields.category}
                     name="category"
@@ -976,7 +986,6 @@ function Hotel() {
                   <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
                     {errors.name === "category" && errors.helperTxt}
                   </p>
-
                   <div className="relative mt-2 w-full">
                     <select
                       id="outlined-basic"
@@ -1010,7 +1019,6 @@ function Hotel() {
                       {errors.name === "destination_id" && errors.helperTxt}
                     </p>
                   </div>
-
                   <div className=" mt-2 w-full">
                     <Textarea
                       placeholder="Address"
@@ -1035,7 +1043,6 @@ function Hotel() {
                       {errors.name === "address" && errors.helperTxt}
                     </p>
                   </div>
-
                   <div className="mt-2">
                     <PhoneInput
                       defaultCountry="IN"
@@ -1065,7 +1072,6 @@ function Hotel() {
                       {errors.name === "contact_no" && errors.helperTxt}
                     </p>
                   </div>
-
                   <div className="mt-3 w-full h-fit">
                     <Textarea
                       placeholder="Details"
@@ -1323,7 +1329,11 @@ function Hotel() {
                          hover:bg-green-900 bg-green-600
                     justify-center text-white`}
                   >
-                    {stat === "Edit" ? "Update" : "Save"}
+                    {able
+                      ? "Processing..."
+                      : stat === "Edit"
+                      ? "Update"
+                      : "Save"}
                   </button>
                 </div>
               </div>

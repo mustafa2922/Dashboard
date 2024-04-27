@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 let MealPlan = [];
 let RoomCategory = [];
@@ -249,7 +250,7 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
 
     if (validate) {
       axios
-        .post("https://jajasend.site/api/v1/accomodation-tariff", fields)
+        .post(`${BASE_URL}api/v1/accomodation-tariff`, fields)
         .then((res) => {
           setAble(false);
           toast.success("Tariff Added Successfully");
@@ -280,9 +281,7 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(
-            `https://jajasend.site/api/v1/accomodation-tariff/${tariffId}`
-          )
+          .delete(`${BASE_URL}api/v1/accomodation-tariff/${tariffId}`)
           .then((response) => {
             Swal.fire({
               title: "Deleted!",
@@ -305,10 +304,7 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(
-        `https://jajasend.site/api/v1/accomodation-tariff/${tariffId}`,
-        fields
-      )
+      .put(`${BASE_URL}api/v1/accomodation-tariff/${tariffId}`, fields)
       .then((response) => {
         toast.success("Tariff Updated Successfully");
         setReload(!reload);
@@ -341,7 +337,7 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
   useEffect(() => {
     const getData = () => {
       axios
-        .get(`https://jajasend.site/api/v1/accomodation/${hotelId}`)
+        .get(`${BASE_URL}api/v1/accomodation/${hotelId}`)
         .then((response) => {
           setRow(response.data.tariff.reverse());
           response.data.tariff.length !== 0
@@ -351,14 +347,15 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
     };
 
     const getMealPlans = () => {
-      axios.get("https://jajasend.site/api/v1/mealplan").then((response) => {
+      axios.get(`${BASE_URL}api/v1/mealplan`).then((response) => {
         MealPlan = response.data;
       });
     };
 
     const getRoomCategories = () => {
-      axios.get("https://jajasend.site/api/v1/roomtype").then((response) => {
+      axios.get(`${BASE_URL}api/v1/roomtype`).then((response) => {
         RoomCategory = response.data;
+        console.log("=====",response.data)
       });
     };
 
@@ -452,7 +449,7 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                       </option>
                       {RoomCategory.map((item, index) => {
                         return (
-                          item.status === "1" && (
+                          item.status == "1" && (
                             <option value={item.id} key={index}>
                               {item.name}
                             </option>
@@ -483,7 +480,7 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                       </option>
                       {MealPlan.map((item, index) => {
                         return (
-                          item.status === "1" && (
+                          item.status == "1" && (
                             <option value={item.id} key={index}>
                               {item.name}
                             </option>

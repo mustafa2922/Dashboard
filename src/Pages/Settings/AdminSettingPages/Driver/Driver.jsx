@@ -28,6 +28,8 @@ import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const email = "jaffarSaleem@gmail.com";
 
 let vehicle_Mark = [];
@@ -44,7 +46,6 @@ function Driver() {
   const [search, setSearch] = useState("");
   const [row, setRow] = useState();
   const [open, setOpen] = useState(false);
-  const [showPicker, setShowPicker] = useState(false);
   const handleClose = () => {
     setErrors({ name: null, helperTxt: null });
     setOpen(false);
@@ -64,7 +65,6 @@ function Driver() {
   const [showFromDate, setShowFromDate] = useState(dayjs());
   const [showToDate, setShowToDate] = useState(dayjs());
 
-  const [vehicleMarkVal, setvehicleMarkVal] = useState("");
   const [passengerCapacity, setPassengerCapacity] = useState("");
 
   const [driverFields, setDriverFields] = useState({
@@ -112,7 +112,7 @@ function Driver() {
       });
     }
 
-    if (driverFields.aadher_no.includes(" ") || driverFields.aadher_no === "") {
+    if (driverFields.aadher_no.includes(" ") || driverFields.aadher_no === "" || driverFields.aadher_no.length != 14) {
       return setErrors({
         name: "aadher_no",
         helperTxt: "Aadhar No Must Contain 12 Digits",
@@ -165,6 +165,7 @@ function Driver() {
     });
   };
 
+
   const [stat, setStat] = useState("");
 
   const [column, setColumn] = useState([
@@ -190,7 +191,7 @@ function Driver() {
       cellRenderer: (params) => {
         return (
           <div className="ml-[-10px] flex w-full items-center justify-between h-full p-1">
-            <div className="h-full leading-4 w-[40%] whitespace-pre-wrap font-bold flex items-center ">
+            <div className="h-full leading-4 w-[60%]  text-[0.95rem] whitespace-pre-wrap font-bold flex items-center ">
               {params.data.name}
             </div>
             <div className="h-full w-20">
@@ -206,6 +207,7 @@ function Driver() {
                 <img
                   className="w-full h-full object-contain"
                   src={params.data.driver_img_url}
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -397,9 +399,6 @@ function Driver() {
         return (
           <div
             onClick={() => {
-              const mark = vehicle_Mark.find((obj) => {
-                return obj.id == params.data.transfer_id;
-              });
               setOpen(true);
               setStat("Edit");
               setDriverFields({
@@ -425,8 +424,7 @@ function Driver() {
               );
               setShowToDate(dayjs(params.data.price_valid_to, "YYYY-MM-DD"));
               setStat("Edit");
-              setvehicleMarkVal(mark.veh_mark);
-              setPassengerCapacity(mark.passenger_capacity);
+              setPassengerCapacity(params.data.vehicle.passenger_capacity);
               setId(params.data.id);
             }}
             className="flex items-center justify-center w-full h-full"
@@ -478,7 +476,7 @@ function Driver() {
 
     if (validate) {
       axios
-        .put(`https://jajasend.site/api/v1/driver/${id}`, driverFields)
+        .put(`${BASE_URL}api/v1/driver/${id}`, driverFields)
         .then((response) => {
           toast.success("Driver Updated Successfully");
           setReload(!reload);
@@ -486,7 +484,9 @@ function Driver() {
           setOpen(false);
         })
         .catch((err) => {
-          console.log(err.response.data);
+          err.response.data.message.includes('drivers_veh_no_unique')
+            ? toast.error("Vehivle No must be unique")
+            : "";
           setAble(false);
         });
     } else {
@@ -513,7 +513,7 @@ function Driver() {
       }
 
       axios
-        .post("https://jajasend.site/api/v1/driver", payload)
+        .post(`${BASE_URL}api/v1/driver`, payload)
         .then((res) => {
           setAble(false);
           toast.success("Driver Added Successfully");
@@ -522,10 +522,9 @@ function Driver() {
         })
         .catch((err) => {
           setAble(false);
-          console.log(err.response.data.message);
-          if (err.response.data.message.includes("drivers_veh_no_unique")) {
-            toast.error("Vehicle No must be unique");
-          }
+          err.response.data == "vehicle number must be unique"
+            ? toast.error("Vehivle No must be unique")
+            : "";
         });
     } else {
       setAble(false);
@@ -547,7 +546,7 @@ function Driver() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`https://jajasend.site/api/v1/driver/${id}`)
+          .delete(`${BASE_URL}api/v1/driver/${id}`)
           .then((response) => {
             Swal.fire({
               title: "Deleted!",
@@ -590,7 +589,7 @@ function Driver() {
 
   useEffect(() => {
     axios
-      .get("https://jajasend.site/api/v1/driver")
+      .get(`${BASE_URL}api/v1/driver`)
       .then((response) => {
         setRow(response.data.reverse());
       })
@@ -599,7 +598,7 @@ function Driver() {
       });
 
     const getVehicleMarks = () => {
-      axios.get("https://jajasend.site/api/v1/vehicle").then((response) => {
+      axios.get(`${BASE_URL}api/v1/vehicle`).then((response) => {
         vehicle_Mark = response.data;
       });
     };
@@ -687,7 +686,7 @@ function Driver() {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
           >
-            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[48%] h-fit">
+            <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[40%] h-fit">
               <div className="flex justify-between text-3xl items-center h-[10%] px-2">
                 <div className="font-bold text-lg"> {stat} Driver </div>
                 <div className="cursor-pointer" onClick={handleClose}>
@@ -1184,7 +1183,11 @@ function Driver() {
                          hover:bg-green-900 bg-green-600
                     justify-center text-white`}
                   >
-                    {able ? "Processing..." : stat === "Edit" ? "Update" : "Save"}
+                    {able
+                      ? "Processing..."
+                      : stat === "Edit"
+                      ? "Update"
+                      : "Save"}
                   </button>
                 </div>
               </div>

@@ -13,6 +13,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 function LeadSource() {
   const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
@@ -44,7 +46,7 @@ function LeadSource() {
     } else {
       if (stat == "Add") {
         axios
-          .post("https://task.jajasoft.online/api/v1/leadsource", fields)
+          .post(`${BASE_URL}api/v1/leadsource`, fields)
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -71,7 +73,7 @@ function LeadSource() {
             onClick={() => {
               axios
                 .delete(
-                  `https://task.jajasoft.online/api/v1/leadsource/${fields.id}`
+                  `${BASE_URL}api/v1/leadsource/${fields.id}`
                 )
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
@@ -103,7 +105,7 @@ function LeadSource() {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://task.jajasoft.online/api/v1/leadsource/${fields.id}`, {
+      .put(`${BASE_URL}api/v1/leadsource/${fields.id}`, {
         name: fields.name,
         status: fields.status,
       })
@@ -122,7 +124,7 @@ function LeadSource() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("https://task.jajasoft.online/api/v1/leadsource")
+        .get(`${BASE_URL}api/v1/leadsource`)
         .then((response) => {
           setRow(response.data.reverse());
         });
@@ -156,7 +158,7 @@ function LeadSource() {
           <div className="flex items-center justify-center w-full h-full">
             <div
               className={`flex items-center justify-center w-14 ${
-                params.value === "1" ? "bg-green-600" : "bg-red-600"
+                params.value == "1" ? "bg-green-600" : "bg-red-600"
               }  text-white rounded-md h-[70%]`}
             >
               {params.value == "1" ? "Active" : "Inactive"}

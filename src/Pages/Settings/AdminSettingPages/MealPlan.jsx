@@ -13,6 +13,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 function MealPlan() {
   const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
@@ -44,7 +46,7 @@ function MealPlan() {
     } else {
       if (stat == "Add") {
         axios
-          .post("https://jajasend.site/api/v1/mealplan", {
+          .post(`${BASE_URL}api/v1/mealplan`, {
             name: fields.name,
             status: fields.status,
           })
@@ -74,7 +76,7 @@ function MealPlan() {
             onClick={() => {
               axios
                 .delete(
-                  `https://jajasend.site/api/v1/mealplan/${fields.id}`
+                  `${BASE_URL}api/v1/mealplan/${fields.id}`
                 )
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
@@ -106,7 +108,7 @@ function MealPlan() {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://jajasend.site/api/v1/mealplan/${fields.id}`, {
+      .put(`${BASE_URL}api/v1/mealplan/${fields.id}`, {
         name: fields.name,
         status: fields.status,
       })
@@ -125,7 +127,7 @@ function MealPlan() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("https://jajasend.site/api/v1/mealplan")
+        .get(`${BASE_URL}api/v1/mealplan`)
         .then((response) => {
           setRow(response.data.reverse());
         });
@@ -159,7 +161,7 @@ function MealPlan() {
           <div className="flex items-center justify-center w-full h-full">
             <div
               className={`flex items-center justify-center w-14 ${
-                params.value === "1" ? "bg-green-600" : "bg-red-600"
+                params.value == "1" ? "bg-green-600" : "bg-red-600"
               }  text-white rounded-md h-[70%]`}
             >
               {params.value == "1" ? "Active" : "Inactive"}

@@ -13,6 +13,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 function RoomType() {
   const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
@@ -45,7 +47,7 @@ function RoomType() {
     } else {
       if (stat == "Add") {
         axios
-          .post("https://jajasend.site/api/v1/roomtype", fields)
+          .post(`${BASE_URL}api/v1/roomtype`, fields)
           .then((response) => {
             setAble(false);
             setReload(!reload);
@@ -70,7 +72,7 @@ function RoomType() {
             onClick={() => {
               axios
                 .delete(
-                  `https://jajasend.site/api/v1/roomtype/${fields.id}`
+                  `${BASE_URL}api/v1/roomtype/${fields.id}`
                 )
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
@@ -102,7 +104,7 @@ function RoomType() {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://jajasend.site/api/v1/roomtype/${fields.id}`, {
+      .put(`${BASE_URL}api/v1/roomtype/${fields.id}`, {
         name: fields.name,
         status: fields.status,
       })
@@ -121,7 +123,7 @@ function RoomType() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("https://jajasend.site/api/v1/roomtype")
+        .get(`${BASE_URL}api/v1/roomtype`)
         .then((response) => {
           setRow(response.data.reverse());
         });
@@ -155,7 +157,7 @@ function RoomType() {
           <div className="flex items-center justify-center w-full h-full">
             <div
               className={`flex items-center justify-center w-14 ${
-                params.value === "1" ? "bg-green-600" : "bg-red-600"
+                params.value == "1" ? "bg-green-600" : "bg-red-600"
               }  text-white rounded-md h-[70%]`}
             >
               {params.value == "1" ? "Active" : "Inactive"}

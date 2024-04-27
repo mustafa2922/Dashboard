@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
 import dayjs from "dayjs";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 function Destinations() {
   const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
@@ -44,7 +46,7 @@ function Destinations() {
     } else {
       if (stat == "Add") {
         axios
-          .post("https://jajasend.site/api/v1/destination", fields)
+          .post(`${BASE_URL}api/v1/destination`, fields)
           .then((response) => {
             setAble(false);
             setReload(!reload);
@@ -69,7 +71,7 @@ function Destinations() {
             onClick={() => {
               axios
                 .delete(
-                  `https://jajasend.site/api/v1/destination/${fields.id}`
+                  `${BASE_URL}api/v1/destination/${fields.id}`
                 )
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
@@ -101,7 +103,7 @@ function Destinations() {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://jajasend.site/api/v1/destination/${fields.id}`, {
+      .put(`${BASE_URL}api/v1/destination/${fields.id}`, {
         name: fields.name,
         status: fields.status,
       })
@@ -120,7 +122,7 @@ function Destinations() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("https://jajasend.site/api/v1/destination")
+        .get(`${BASE_URL}api/v1/destination`)
         .then((response) => {
           setRow(response.data.reverse());
         });
@@ -154,7 +156,7 @@ function Destinations() {
           <div className="flex items-center justify-center w-full h-full">
             <div
               className={`flex items-center justify-center w-14 ${
-                params.value === "1" ? "bg-green-600" : "bg-red-600"
+                params.value == "1" ? "bg-green-600" : "bg-red-600"
               }  text-white rounded-md h-[70%]`}
             >
               {params.value == "1" ? "Active" : "Inactive"}
