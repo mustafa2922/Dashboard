@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 const SideBar = () => {
   return (
-    <div className=" relative w-full flex flex-col items-center mt-3 z-10">
+    <div className="fixed w-[4%] flex flex-col items-center mt-3" >
       <Link to={"/"}>
         <div className="group flex">
           <div className="p-2 m-1 cursor-pointer  hover:bg-slate-600 rounded-md">
@@ -79,7 +79,7 @@ const SideBar = () => {
         </div>
       </Link>
 
-      <div className="group w-[115%] flex group justify-center">
+      <div className="group  w-[120%] flex group justify-center ">
         <div className="flex items-center ">
           <div className="p-2 m-1 cursor-pointer  hover:bg-slate-600 rounded-md">
             <AssessmentOutlinedIcon />
@@ -145,7 +145,7 @@ const SideBar = () => {
         </div>
       </div>
 
-      <div className="group w-[115%] flex group justify-center">
+      <div className="group w-[120%] flex group justify-center ">
         <div className="flex items-center ">
           <div className="p-2 m-1 cursor-pointer  hover:bg-slate-600 rounded-md">
             <LayersOutlinedIcon />

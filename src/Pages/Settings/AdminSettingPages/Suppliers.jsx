@@ -14,6 +14,12 @@ import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function Suppliers() {
   const [able, setAble] = useState(false);
@@ -63,7 +69,7 @@ function Suppliers() {
       if (stat == "Add") {
         setAble(true);
         axios
-          .post("https://task.jajasoft.online/api/v1/supplier", fields)
+          .post(`${BASE_URL}api/v1/supplier`, fields)
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -81,55 +87,50 @@ function Suppliers() {
   };
 
   const handleDelete = () => {
-    const confirmationToastId = toast.warning(
-      <div className="flex flex-col">
-        <p>You want to delete this item?</p>
-        <div className="flex items-center justify-start gap-2">
-          <button
-            className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
-            onClick={() => {
-              axios
-                .delete(`https://task.jajasoft.online/api/v1/supplier/${id}`)
-                .then((response) => {
-                  toast.dismiss(confirmationToastId);
-                  toast.success("Supplier Deleted Successfully");
-                  setReload(!reload);
-                  setOpen(false);
-                })
-                .catch((err) => {
-                  console.log(err.response.data);
-                });
-            }}
-          >
-            Yes
-          </button>
-          <button
-            className="w-8 h-6 text-xs bg-green-500 rounded-md text-white "
-            onClick={() => {
-              toast.dismiss(confirmationToastId);
-            }}
-          >
-            No
-          </button>
-        </div>
-      </div>,
-      { autoClose: false }
-    );
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      customClass: {
+        container: "custom-swal-container",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`${BASE_URL}api/v1/supplier/${id}`)
+          .then((response) => {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your Item has been deleted.",
+              icon: "success",
+            });
+            setReload(!reload);
+            setOpen(false);
+          })
+          .catch((err) => {
+            console.log(err.response.data);
+          });
+      }
+    });
   };
 
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://task.jajasoft.online/api/v1/supplier/${id}`, fields)
+      .put(`${BASE_URL}api/v1/supplier/${id}`, fields)
       .then((response) => {
         toast.success("Supplier Updated Successfully");
-        setAble(false)
+        setAble(false);
         setReload(!reload);
         setOpen(false);
       })
       .catch((err) => {
         console.log(err.response.data);
-        setAble(false)
+        setAble(false);
       });
   };
 
@@ -176,7 +177,7 @@ function Suppliers() {
           <div className="flex items-center justify-center w-full h-full">
             <div
               className={`flex items-center justify-center w-14 ${
-                params.value === "1" ? "bg-green-600" : "bg-red-600"
+                params.value == "1" ? "bg-green-600" : "bg-red-600"
               }  text-white rounded-md h-[70%]`}
             >
               {params.value == "1" ? "Active" : "Inactive"}
@@ -267,11 +268,9 @@ function Suppliers() {
 
   useEffect(() => {
     const getData = () => {
-      axios
-        .get("https://task.jajasoft.online/api/v1/supplier")
-        .then((response) => {
-          setRow(response.data.reverse());
-        });
+      axios.get(`${BASE_URL}api/v1/supplier`).then((response) => {
+        setRow(response.data.reverse());
+      });
     };
 
     getData();
@@ -506,7 +505,11 @@ function Suppliers() {
                          hover:bg-green-900 bg-green-600
                     justify-center text-white`}
                   >
-                    {stat === "Edit" ? "Update" : "Save"}
+                    {able
+                      ? "Processing..."
+                      : stat === "Edit"
+                      ? "Update"
+                      : "Save"}
                   </button>
                 </div>
               </div>
@@ -519,17 +522,3 @@ function Suppliers() {
 }
 
 export default Suppliers;
-
-// ${
-//   stat === "Edit"
-//     ? click
-//       ? "hover:bg-blue-900"
-//       : "hover:bg-green-900"
-//     : "hover:bg-green-900"
-// } items-center justify-center text-white ${
-//   stat === "Edit"
-//     ? click
-//       ? "bg-blue-600"
-//       : "bg-green-600"
-//     : "bg-green-600"
-// }

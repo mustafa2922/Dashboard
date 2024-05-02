@@ -28,7 +28,7 @@ function Setting() {
   });
 
   return (
-    <div className="flex flex-col h-full w-full">
+    <div className="flex flex-col h-20 w-full">
       <div className="flex w-full fixed z-10 h-14">
         <div className="border bg-[#f9fbfc] hidden lg:flex w-14 lg:w-[20%] custom-heading text-xl items-center px-4 font-bold text-black h-14">
           Setting
@@ -125,7 +125,7 @@ function Setting() {
           </div>
         </div>
 
-        <div className=" pl-3 pb-0 lg:ml-[20%] w-full lg:w-[80%] h-fit overflow-y-auto ">
+        <div className=" pl-3 lg:ml-[20%] w-full lg:w-[80%] h-fit overflow-y-hidden ">
           <Routes>
             <Route path="/" element={<TeamManagement />} />
             <Route path="/team_management" element={<TeamManagement />} />

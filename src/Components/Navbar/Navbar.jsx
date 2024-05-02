@@ -22,7 +22,7 @@ const Navbar = ({sendDataToApp}) => {
 
 
   return (
-    <div className="flex flex-row justify-between items-center w-full bg-[#eff3f7] px-2 h-[3rem]">
+    <div className="flex sticky top-0 z-50 flex-row justify-between items-center w-full bg-[#eff3f7] px-2 h-[3rem]">
       
       <div className="flex md:justify-start justify-center   items-center lg:w-[50%] w-[4rem] md:w-[60%] h-full ">
 

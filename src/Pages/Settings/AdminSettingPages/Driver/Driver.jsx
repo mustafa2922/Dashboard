@@ -236,29 +236,29 @@ function Driver() {
           <div className="ml-[-10px] flex items-center justify-between p-1 h-full w-full">
             <div className="w-full items-start justify-center h-full flex flex-col">
               <div className="flex flex-row w-full items-center ">
-                <div className="text-sm w-[48%] ">Mark: </div>
-                <div className="text-black w-[48%] font-bold">
+                <div className="text-sm w-[40%] ">Mark: </div>
+                <div className="text-black w-[58%] font-bold">
                   {` ` + params.data.vehicle.veh_mark}
                 </div>
               </div>
 
               <div className="flex flex-row w-full items-center -mt-5">
-                <div className="text-sm w-[48%]">No: </div>
-                <div className="text-black w-[48%] font-bold">
+                <div className="text-sm w-[40%]">Veh No: </div>
+                <div className="text-black w-[58%] font-bold">
                   {` ` + params.data.veh_no}
                 </div>
               </div>
 
               <div className="flex flex-row w-full items-center -mt-5">
-                <div className="text-sm w-[48%]">Model: </div>
-                <div className="text-black w-[48%] font-bold">
+                <div className="text-sm w-[40%]">Model: </div>
+                <div className="text-black w-[58%] font-bold">
                   {` ` + params.data.veh_model}
                 </div>
               </div>
 
               <div className="flex flex-row w-full items-center -mt-5">
-                <div className="text-sm w-[48%]">Color: </div>
-                <div className="text-black w-[48%] font-bold">
+                <div className="text-sm w-[40%]">Color: </div>
+                <div className="text-black w-[58%] font-bold">
                   {` ` + params.data.veh_color}
                 </div>
               </div>
@@ -270,19 +270,19 @@ function Driver() {
     {
       headerName: "Vehicle Price",
       filter: false,
-      flex: 1.7,
+      flex: 1.85,
       cellRenderer: (params) => {
         return (
           <div className="ml-[-10px] flex flex-col items-start justify-center w-full h-full">
             <div className="flex w-full items-center">
-              <div className="text-sm  w-[80%]">{`(Non - AC) : `}</div>
-              <div className="text-black  w-[19%]  text-xs font-bold">
+              <div className="text-sm  w-[55%]">Non-AC :</div>
+              <div className="text-black  w-[36%]  text-sm font-bold">
                 {`₹` + params.data.veh_price_non_ac}
               </div>
             </div>
             <div className="flex w-full items-center">
-              <div className="text-sm  w-[80%]">{`(AC) : `}</div>
-              <div className="text-black text-xs w-[19%] font-bold">
+              <div className="text-sm  w-[55%]">AC : </div>
+              <div className="text-black text-sm w-[36%] font-bold">
                 {`₹` + params.data.veh_price_ac}
               </div>
             </div>
@@ -302,7 +302,7 @@ function Driver() {
       cellRenderer: (params) => {
         return (
           <div
-            className={`flex items-center justify-center w-full h-6 text-white text-xs rounded-md ${
+            className={`flex items-center justify-center w-full h-6 text-white text-sm font-[500] rounded-md ${
               dayjs(params.data.price_valid_to, "YYYY-MM-DD").isBefore(
                 dayjs(),
                 "day"
@@ -328,7 +328,7 @@ function Driver() {
       cellRenderer: (params) => {
         return (
           <div
-            className={`flex items-center justify-center w-full h-6 text-white text-xs rounded-md ${
+            className={`flex items-center justify-center w-full h-6 text-white text-sm font-[500] rounded-md ${
               dayjs(params.value, "YYYY-MM-DD").isBefore(dayjs(), "day")
                 ? "bg-red-600"
                 : "bg-green-600"
@@ -352,8 +352,8 @@ function Driver() {
         return (
           <div className="flex items-center justify-center w-full h-[35px]">
             <div
-              className={`flex items-center justify-center px-1 ${
-                params.value === "1" ? "bg-green-600" : "bg-red-600"
+              className={`flex items-center font-[500] justify-center px-1 ${
+                params.value == "1" ? "bg-green-600" : "bg-red-600"
               }  text-white rounded-md h-[70%]`}
             >
               {params.value == "1" ? "Active" : "Inactive"}

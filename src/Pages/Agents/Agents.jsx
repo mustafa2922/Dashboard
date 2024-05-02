@@ -17,6 +17,8 @@ import axios from "axios";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { toast } from "react-toastify";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 function Agents() {
   const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
@@ -70,7 +72,7 @@ function Agents() {
     } else {
       if (stat == "Add") {
         axios
-          .post("https://task.jajasoft.online/api/v1/agent", fields)
+          .post(`${BASE_URL}api/v1/agent`, fields)
           .then((response) => {
             if (response.data == "success") {
               setAble(false);
@@ -96,7 +98,7 @@ function Agents() {
             className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
             onClick={() => {
               axios
-                .delete(`https://task.jajasoft.online/api/v1/agent/${id}`)
+                .delete(`${BASE_URL}api/v1/agent/${id}`)
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
                   toast.success("Client Deleted Successfully");
@@ -127,7 +129,7 @@ function Agents() {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://task.jajasoft.online/api/v1/agent/${id}`, fields)
+      .put(`${BASE_URL}api/v1/agent/${id}`, fields)
       .then((response) => {
         toast.success("Agent Updated Successfully");
         setAble(false);
@@ -260,7 +262,7 @@ function Agents() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("https://task.jajasoft.online/api/v1/agent")
+        .get(`${BASE_URL}api/v1/agent`)
         .then((response) => {
           setRow(response.data.reverse());
         });

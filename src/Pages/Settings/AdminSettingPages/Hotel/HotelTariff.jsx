@@ -59,12 +59,11 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
       valueGetter: (params) => {
         return params.data.room_type.name;
       },
-      flex: 0.68,
     },
     {
       headerName: "Meal Plan",
-      flex: 1.2,
       filter: false,
+      flex: 2,
       valueGetter: (params) => {
         return params.data.meal_plan.name;
       },
@@ -73,79 +72,54 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
       headerName: "Single",
       field: "single",
       filter: false,
-      flex: 0.35,
-      cellRenderer: (params) => {
-        return <div>{`₹ ${params.data.single}`}</div>;
-      },
+      flex: 0.5,
     },
     {
       headerName: "Double",
       field: "double",
       filter: false,
-      flex: 0.4,
-      cellRenderer: (params) => {
-        return <div>{`₹ ${params.data.double}`}</div>;
-      },
+      flex: 0.5,
     },
     {
       headerName: "Triple",
       field: "triple",
-      flex: 0.4,
       filter: false,
-      cellRenderer: (params) => {
-        return <div>{`₹ ${params.data.triple}`}</div>;
-      },
+      flex: 0.5,
     },
     {
       headerName: "Quad",
       field: "quad",
-      flex: 0.35,
       filter: false,
-      cellRenderer: (params) => {
-        return <div>{`₹ ${params.data.quad}`}</div>;
-      },
+      flex: 0.5,
     },
     {
       headerName: "CWB",
       field: "cwb",
       filter: false,
-      flex: 0.35,
-      cellRenderer: (params) => {
-        return <div>{`₹ ${params.data.cwb}`}</div>;
-      },
+      flex: 0.5,
     },
     {
-      headerName: "CNB (Above 5 yrs)",
+      headerName: "CNB (above 5 yrs)",
       filter: false,
       field: "cwb_above_5_yrs",
-      flex: 0.75,
-      cellRenderer: (params) => {
-        return <div>{`₹ ${params.data.cwb_above_5_yrs}`}</div>;
-      },
+      flex: 0.95,
     },
     {
-      headerName: "CNB (Below 5 yrs)",
+      headerName: "CNB (below 5 yrs)",
       filter: false,
       field: "cwb_below_5_yrs",
-      flex: 0.75,
-      cellRenderer: (params) => {
-        return <div>{`₹ ${params.data.cwb_below_5_yrs}`}</div>;
-      },
+      flex: 0.95,
     },
     {
-      headerName: "INF (Below 3 yrs)",
+      headerName: "INF (below 3 yrs)",
       filter: false,
       field: "inf_below_3_yrs",
-      flex: 0.73,
-      cellRenderer: (params) => {
-        return <div>{`₹ ${params.data.inf_below_3_yrs}`}</div>;
-      },
+      flex: 0.92,
     },
     {
-      headerName: "Edit",
       sortable: false,
       filter: false,
-      flex: 0.3,
+      flex: 0.25,
       cellRenderer: (params) => {
         return (
           <div className="flex items-center justify-center w-full h-full">
@@ -329,8 +303,8 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
   const defaultColDef = {
     sortable: true,
     filter: true,
-    cellStyle: { borderRight: "1px solid #d9d9db" },
     flex: 1,
+    cellStyle: { borderRight: "1px solid #d9d9db" },
     tooltipField: "name",
   };
 
@@ -355,13 +329,16 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
     const getRoomCategories = () => {
       axios.get(`${BASE_URL}api/v1/roomtype`).then((response) => {
         RoomCategory = response.data;
-        console.log("=====",response.data)
       });
     };
 
     getMealPlans();
     getRoomCategories();
     getData();
+
+    if (gridApi) {
+      gridApi.autoSizeColumns();
+    }
   }, [reload]);
 
   return (
@@ -414,6 +391,7 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
             rowData={row}
             defaultColDef={defaultColDef}
             enableBrowserTooltips={true}
+            autoSizeStrategy={"fitCellContents"}
           />
 
           <Modal
@@ -661,7 +639,7 @@ function HotelPrice({ name, MainSetOpen, hotelId }) {
                     disabled={able}
                     className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]"
                   >
-                    {tarifFirst ? "Save" : "Update"}
+                    {able ? "Processing..." : tarifFirst ? "Save" : "Update"}
                   </button>
                 </div>
               </div>

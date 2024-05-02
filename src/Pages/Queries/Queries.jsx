@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import CardGiftcardOutlinedIcon from "@mui/icons-material/CardGiftcardOutlined";
@@ -10,13 +10,37 @@ import NorthEastIcon from "@mui/icons-material/NorthEast";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { FaWhatsapp } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
+import CloseIcon from "@mui/icons-material/Close";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+import axios from "axios";
+import _ from "lodash";
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+let destinations = [];
+let clients = [];
+let corporate = [];
+let agents = [];
 
 function Queries() {
   const [search, setSearch] = useState("");
   const [gridApi, setGridApi] = useState(null);
+  const [able, setAble] = useState(false);
 
   const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
+  };
+
+  const [proposalModal, setProposalModal] = useState(false);
+  const [queryModal, setQueryModal] = useState(false);
+
+  const handleClose = (MODE) => {
+    if (MODE === "PROPOSAL") {
+      return setProposalModal(!proposalModal);
+    } else if (MODE === "QUERY") {
+      return setQueryModal(!queryModal);
+    }
   };
 
   const data = [
@@ -152,9 +176,9 @@ function Queries() {
               </div>
               <div className=" h-5 flex items-center text-slate-700 text-xs  ">
                 <select className="border border-slate-400 w-[90%] rounded">
-                  <option>Assingn To me</option>
-                  <option></option>
-                  <option></option>
+                  <option value={""}>Assingn To me</option>
+                  <option value={""}></option>
+                  <option value={""}></option>
                 </select>
               </div>
             </div>
@@ -233,6 +257,17 @@ function Queries() {
                     style={{ fontSize: 17 }}
                   />
                 </div>
+                <div
+                  onClick={() => {
+                    setProposalModal(true);
+                  }}
+                  className="group cursor-pointer hover:bg-black border border-black h-6 w-6 ml-1 rounded-full flex justify-center items-center"
+                >
+                  <CardGiftcardIcon
+                    className="group-hover:text-white"
+                    style={{ fontSize: 17 }}
+                  />
+                </div>
               </div>
             </div>
 
@@ -267,6 +302,36 @@ function Queries() {
     tooltipField: "name",
   };
 
+  const [errors, setErrors] = useState({ name: null, helperTxt: null });
+
+  useEffect(() => {
+    const getDestinations = () => {
+      axios.get(`${BASE_URL}api/v1/destination`).then((response) => {
+        destinations = response.data;
+      });
+    };
+    const getClients = () => {
+      axios.get(`${BASE_URL}api/v1/client`).then((response) => {
+        clients = response.data;
+      });
+    };
+    const getAgents = () => {
+      axios.get(`${BASE_URL}api/v1/agent`).then((response) => {
+        agents = response.data;
+      });
+    };
+    const getCorporate = () => {
+      axios.get(`${BASE_URL}api/v1/corporate`).then((response) => {
+        corporate = response.data;
+      });
+    };
+
+    getDestinations();
+    getClients();
+    getAgents();
+    getCorporate();
+  }, []);
+
   return (
     <div className="h-full w-full">
       <style>{`
@@ -299,7 +364,9 @@ function Queries() {
           />
           <div className="w-[40%] h-[80%]">
             <button
-              onClick={() => {}}
+              onClick={() => {
+                setQueryModal(true);
+              }}
               className="border w-[100%] border-slate-300 h-full bg-[#1d3f5a] text-white  text-[0.8rem] font-[700] rounded-md px-2 "
             >
               <span className="sm:block hidden">Add Queries</span>
@@ -388,6 +455,146 @@ function Queries() {
           />
         </div>
       </div>
+
+      <Modal
+        keepMounted
+        onClose={() => {
+          handleClose("PROPOSAL");
+        }}
+        open={proposalModal}
+        aria-labelledby="keep-mounted-modal-title"
+        aria-describedby="keep-mounted-modal-description"
+      >
+        <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[70%] h-fit"></div>
+      </Modal>
+
+      <Modal
+        keepMounted
+        open={queryModal}
+        aria-labelledby="keep-mounted-modal-title"
+        aria-describedby="keep-mounted-modal-description"
+      >
+        <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[50%] h-fit">
+          <div className="flex justify-between text-3xl items-center h-[10%] px-2">
+            <div className="font-bold text-lg"> Create Query </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                handleClose("QUERY");
+              }}
+            >
+              <CloseIcon />
+            </div>
+          </div>
+          <div className="flex justify-between w-full mt-2 h-[90%]">
+            <div className="w-[49%]">
+              <div>
+                <select
+                  className={`px-2 focus:outline-none w-full border h-10  focus:border  ${
+                    errors.name === "meal_plan_id"
+                      ? "border-red-600"
+                      : "hover:border-black border-[#d8d8d8]"
+                  }  rounded-md`}
+                  defaultValue={"DEFAULT"}
+                >
+                  <option value={"DEFAULT"} disabled={true}>
+                    Type
+                  </option>
+                  <option value="CLIENT">Client</option>
+                  <option value="AGENT">Agent</option>
+                  <option value="CORPORATE">Corporate</option>
+                </select>
+                <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                  {errors.name === "meal_plan_id" && errors.helperTxt}
+                </p>
+              </div>
+              <div className="mt-4">
+                <div className="w-full flex justify-between items-center">
+                  <div className="w-[25%]">
+                    <select
+                      className={`px-2 focus:outline-none w-full border h-10  focus:border  ${
+                        errors.name === "meal_plan_id"
+                          ? "border-red-600"
+                          : "hover:border-black border-[#d8d8d8]"
+                      }  rounded-md`}
+                      defaultValue={"DEFAULT"}
+                    >
+                      <option value="DEFAULT" disabled={true}>
+                        Title
+                      </option>
+                      <option value="Mr">Mr.</option>
+                      <option value="Mrs">Mrs.</option>
+                      <option value="Ms">Ms.</option>
+                      <option value="Dr">Dr.</option>
+                      <option value="Prof">Prof.</option>
+                    </select>
+                  </div>
+                  <div className="w-[72%]">
+                    <TextField
+                      id="outlined-basic"
+                      size="small"
+                      error={errors.name === "single"}
+                      label={"Clients Name"}
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                    />
+                  </div>
+                </div>
+                <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
+                  {errors.name === "meal_plan_id" && errors.helperTxt}
+                </p>
+              </div>
+              <div className="mt-4">
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  error={errors.name === "single"}
+                  label={"Clients Name"}
+                  variant="outlined"
+                  sx={{ width: "100%" }}
+                />
+                {
+                  <ul className="h-36 w-full  overflow-y-auto mt-1 border border-slate-400 rounded-sm" >
+                    <li className="bg-slate-200 p-1 font-[400] text-sm" >Select Phone/Mobile</li>
+                    <li className="p-1 hover:bg-black hover:text-white text-black bg-white border-b border-t border-slate-700 mt-1" >ob</li>
+                    <li className="p-1 hover:bg-black hover:text-white text-black bg-white border-b border-black " >ob</li>
+                    <li className="p-1 hover:bg-black hover:text-white text-black bg-white border-b border-black " >ob</li>
+                    <li className="p-1 hover:bg-black hover:text-white text-black bg-white border-b border-black " >ob</li>
+                    <li className="p-1 hover:bg-black hover:text-white text-black bg-white border-b border-black " >ob</li>
+                    <li className="p-1 hover:bg-black hover:text-white text-black bg-white border-b border-black " >ob</li>
+                
+                  </ul>
+                }
+              </div>
+            </div>
+            <div className="w-[49%]"></div>
+          </div>
+          <div className="mt-4 flex justify-between items-center">
+            <div
+              onClick={() => {
+                handleClose("QUERY");
+              }}
+              className=" w-[48%] rounded-md h-10"
+            >
+              <button
+                disabled={able}
+                className="hover:bg-[#c22626] w-full rounded-md  text-white bg-[#e51d27] h-full flex items-center justify-center"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <div onClick={() => {}} className=" w-[48%] rounded-md h-10  ">
+              <button
+                disabled={able}
+                className="w-full rounded-md h-full flex hover:bg-[#1a8d42] items-center justify-center text-white bg-[#04AA6D]"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

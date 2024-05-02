@@ -17,6 +17,8 @@ import PhoneInput from "react-phone-number-input";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 function Corporate() {
   const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
@@ -73,7 +75,7 @@ function Corporate() {
     } else {
       if (stat == "Add") {
         axios
-          .post("https://task.jajasoft.online/api/v1/corporate", fields)
+          .post(`${BASE_URL}api/v1/corporate`, fields)
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -99,7 +101,7 @@ function Corporate() {
             className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
             onClick={() => {
               axios
-                .delete(`https://task.jajasoft.online/api/v1/corporate/${id}`)
+                .delete(`${BASE_URL}api/v1/corporate/${id}`)
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
                   toast.success("Client Deleted Successfully");
@@ -130,7 +132,7 @@ function Corporate() {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://task.jajasoft.online/api/v1/corporate/${id}`, fields)
+      .put(`${BASE_URL}api/v1/corporate/${id}`, fields)
       .then((response) => {
         toast.success("Corporate Updated Successfully");
         setAble(false);
@@ -264,7 +266,7 @@ function Corporate() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("https://task.jajasoft.online/api/v1/corporate")
+        .get(`${BASE_URL}api/v1/corporate`)
         .then((response) => {
           setRow(response.data.reverse());
         });

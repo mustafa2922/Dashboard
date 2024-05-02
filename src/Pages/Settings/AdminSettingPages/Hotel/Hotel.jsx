@@ -26,10 +26,8 @@ import { toast } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { Blurhash } from "react-blurhash";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
-
 const MySwal = withReactContent(Swal);
 
 const email = "jaffarSaleem@gmail.com";
@@ -168,7 +166,7 @@ function Hotel() {
       headerName: "Destination",
       filter: false,
       cellStyle: { display: "flex", alignItems: "center" },
-      field: `destination.name`,
+      field: "destination.name",
       flex: 0.95,
       cellRenderer: (params) => {
         return (
@@ -183,7 +181,7 @@ function Hotel() {
       sortable: false,
       filter: false,
       cellStyle: { display: "flex", alignItems: "center" },
-      flex: 0.45,
+      flex: 0.55,
       cellRenderer: (params) => {
         return (
           <div
@@ -229,7 +227,7 @@ function Hotel() {
           </div>
         );
       },
-      flex: 1.1,
+      flex: 1.2,
     },
     {
       headerName: "Tarif Valid To",
@@ -258,8 +256,10 @@ function Hotel() {
     },
     {
       headerName: "Bank Details",
+      field: "bank",
       sortable: false,
       filter: false,
+      valueFormatter: Object,
       cellStyle: {
         display: "flex",
         alignItems: "center",
@@ -271,35 +271,35 @@ function Hotel() {
             onClick={() => {
               sethotelName(params.data.name);
               setBankOpen(true);
-              params.data.bank ? setBankFirst(false) : setBankFirst(true);
-              setBankId(params.data.bank ? params.data.bank.id : "");
-              setBankFields({
-                accomodation_id: params.data.id,
-                account_name: params.data.bank
-                  ? params.data.bank.account_name
-                  : "",
-                account_no: params.data.bank ? params.data.bank.account_no : "",
-                bank_name: params.data.bank ? params.data.bank.bank_name : "",
-                branch_name: params.data.bank
-                  ? params.data.bank.branch_name
-                  : "",
-                ifsci_code: params.data.bank ? params.data.bank.ifsci_code : "",
-                account_name_sec: params.data.bank
-                  ? params.data.bank.account_name_sec
-                  : "",
-                account_no_sec: params.data.bank
-                  ? params.data.bank.account_no_sec
-                  : "",
-                bank_name_sec: params.data.bank
-                  ? params.data.bank.bank_name_sec
-                  : "",
-                branch_name_sec: params.data.bank
-                  ? params.data.bank.branch_name_sec
-                  : "",
-                ifsci_code_sec: params.data.bank
-                  ? params.data.bank.ifsci_code_sec
-                  : "",
-              });
+              params.value ? setBankFirst(false) : setBankFirst(true);
+              setBankId(params.value ? params.value.id : "");
+              params.value
+                ? setBankFields({
+                    accomodation_id: params.data.id,
+                    account_name: params.value.account_name,
+                    account_no: params.value.account_no,
+                    bank_name: params.value.bank_name,
+                    branch_name: params.value.branch_name,
+                    ifsci_code: params.value.ifsci_code,
+                    account_name_sec: params.value.account_name_sec,
+                    account_no_sec: params.value.account_no_sec,
+                    bank_name_sec: params.value.bank_name_sec,
+                    branch_name_sec: params.value.branch_name_sec,
+                    ifsci_code_sec: params.value.ifsci_code_sec,
+                  })
+                : setBankFields({
+                    accomodation_id: params.data.id,
+                    account_name: "",
+                    account_no: "",
+                    bank_name: "",
+                    branch_name: "",
+                    ifsci_code: "",
+                    account_name_sec: "",
+                    account_no_sec: "",
+                    bank_name_sec: "",
+                    branch_name_sec: "",
+                    ifsci_code_sec: "",
+                  });
             }}
             className="underline cursor-pointer font-bold"
           >
@@ -312,6 +312,7 @@ function Hotel() {
     {
       headerName: "Status",
       field: "status",
+      filter:false,
       flex: 0.7,
       cellRenderer: (params) => {
         return (
@@ -573,6 +574,8 @@ function Hotel() {
     }
   };
 
+  // function to delete accommodation
+
   const handleDelete = () => {
     MySwal.fire({
       title: "Are you sure?",
@@ -605,11 +608,16 @@ function Hotel() {
     });
   };
 
+  // function to update accommodation
+
   const handleUpdate = () => {
     setAble(true);
     delete hotelFields.hotel_img;
-    const validate = ValidateFields("Accommodation");
-    if (validate) {
+    // const validate = ValidateFields("Accommodation");
+    if (
+      // validate
+      true // bank details removed by admin
+    ) {
       axios
         .put(`${BASE_URL}api/v1/accomodation/${id}`, hotelFields)
         .then((response) => {
@@ -912,7 +920,6 @@ function Hotel() {
               </div>
               <div className="flex justify-between w-full mt-2 h-[90%]">
                 <div className="flex flex-col w-[48%]">
-                  {" "}
                   {/* Pre-defined */}
                   <select
                     value={hotelFields.property_type}
@@ -1020,23 +1027,14 @@ function Hotel() {
                     </p>
                   </div>
                   <div className=" mt-2 w-full">
-                    <Textarea
+                    <textarea
                       placeholder="Address"
                       name="address"
                       autoComplete="off"
+                      className="border border-slate-400 !h-14 rounded-sm p-1 focus:outline-none active:outline-none resize-none w-full"
                       value={hotelFields.address}
                       onChange={(e) => {
                         handleChange(e);
-                      }}
-                      minRows={2}
-                      maxRows={5}
-                      sx={{
-                        width: "100%",
-                        backgroundColor: "#fff",
-                        borderColor: `${
-                          errors.name === "address" ? "red" : "#d3d3d3"
-                        }`,
-                        height: "60px",
                       }}
                     />
                     <p className="text-[0.6rem] text-red-600 h-2 flex items-start">
@@ -1073,21 +1071,14 @@ function Hotel() {
                     </p>
                   </div>
                   <div className="mt-3 w-full h-fit">
-                    <Textarea
+                    <textarea
                       placeholder="Details"
-                      minRows={2}
+                      className="border border-slate-400 !h-20 rounded-sm p-1 focus:outline-none active:outline-none resize-none w-full"
                       autoComplete="off"
-                      maxRows={5}
                       name="details"
                       value={hotelFields.details}
                       onChange={(e) => {
                         handleChange(e);
-                      }}
-                      sx={{
-                        width: "100%",
-                        backgroundColor: "#fff",
-                        borderColor: "#d3d3d3",
-                        height: "96px",
                       }}
                     />
                   </div>
@@ -1113,7 +1104,7 @@ function Hotel() {
                             <AddPhotoAlternateOutlinedIcon className="text-slate-500 hover:text-slate-950" />
                           </label>
                           <div className="hidden text-sm md:block overflow-x-auto">
-                            {hotelImage === "" ? `Select Hotel` : "Selected  "}
+                            {hotelImage === "" ? "Select Hotel" : "Selected  "}
                           </div>
                         </div>
                       </div>
@@ -1350,7 +1341,7 @@ function Hotel() {
               aria-labelledby="keep-mounted-modal-title"
               aria-describedby="keep-mounted-modal-description"
             >
-              <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[95%] md:w-[88%] h-fit">
+              <div className="p-4 rounded-md absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white w-[80%] md:w-[90%] h-fit">
                 <div className="h-full overflow-x-auto">
                   <HotelPrice
                     name={hotelName}
@@ -1396,7 +1387,9 @@ function Hotel() {
                       autoComplete="off"
                       variant="outlined"
                       name="account_name"
-                      value={bankFields.account_name}
+                      value={
+                        bankFields.account_name ? bankFields.account_name : ""
+                      }
                       onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
@@ -1414,18 +1407,19 @@ function Hotel() {
                       error={errors.name === "account_no"}
                       variant="outlined"
                       name="account_no"
-                      value={bankFields.account_no}
+                      value={bankFields.account_no ? bankFields.account_no : ""}
                       type="number"
                       onChange={handlebankChange}
-                      onKeyDown={(e) => {
-                        if (
-                          bankFields.account_no &&
-                          bankFields.account_no.length >= 16 &&
-                          e.key !== "Backspace"
-                        ) {
-                          e.preventDefault();
-                        }
-                      }}
+                      // Not needed
+                      // onKeyDown={(e) => {
+                      //   if (
+                      //     bankFields.account_no &&
+                      //     bankFields.account_no.length >= 16 &&
+                      //     e.key !== "Backspace"
+                      //   ) {
+                      //     e.preventDefault();
+                      //   }
+                      // }}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -1442,7 +1436,7 @@ function Hotel() {
                       variant="outlined"
                       error={errors.name === "bank_name"}
                       name="bank_name"
-                      value={bankFields.bank_name}
+                      value={bankFields.bank_name ? bankFields.bank_name : ""}
                       onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
@@ -1460,7 +1454,9 @@ function Hotel() {
                       autoComplete="off"
                       name="branch_name"
                       error={errors.name === "branch_name"}
-                      value={bankFields.branch_name}
+                      value={
+                        bankFields.branch_name ? bankFields.branch_name : ""
+                      }
                       onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
@@ -1477,18 +1473,19 @@ function Hotel() {
                       variant="outlined"
                       autoComplete="off"
                       name="ifsci_code"
-                      value={bankFields.ifsci_code}
+                      value={bankFields.ifsci_code ? bankFields.ifsci_code : ""}
                       error={errors.name === "ifsci_code"}
                       onChange={handlebankChange}
-                      onKeyDown={(e) => {
-                        if (
-                          bankFields.ifsci_code &&
-                          bankFields.ifsci_code.length >= 11 &&
-                          e.key !== "Backspace"
-                        ) {
-                          e.preventDefault();
-                        }
-                      }}
+                      // Not needed
+                      // onKeyDown={(e) => {
+                      //   if (
+                      //     bankFields.ifsci_code &&
+                      //     bankFields.ifsci_code.length >= 11 &&
+                      //     e.key !== "Backspace"
+                      //   ) {
+                      //     e.preventDefault();
+                      //   }
+                      // }}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -1508,7 +1505,11 @@ function Hotel() {
                       disabled={bankFirst ? false : click}
                       variant="outlined"
                       name="account_name_sec"
-                      value={bankFields.account_name_sec}
+                      value={
+                        bankFields.account_name_sec
+                          ? bankFields.account_name_sec
+                          : ""
+                      }
                       onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
@@ -1527,17 +1528,22 @@ function Hotel() {
                       variant="outlined"
                       name="account_no_sec"
                       type="number"
-                      value={bankFields.account_no_sec}
+                      value={
+                        bankFields.account_no_sec
+                          ? bankFields.account_no_sec
+                          : ""
+                      }
                       onChange={handlebankChange}
-                      onKeyDown={(e) => {
-                        if (
-                          bankFields.account_no_sec &&
-                          bankFields.account_no_sec.length >= 16 &&
-                          e.key !== "Backspace"
-                        ) {
-                          e.preventDefault();
-                        }
-                      }}
+                      // Not needed
+                      // onKeyDown={(e) => {
+                      //   if (
+                      //     bankFields.account_no_sec &&
+                      //     bankFields.account_no_sec.length >= 16 &&
+                      //     e.key !== "Backspace"
+                      //   ) {
+                      //     e.preventDefault();
+                      //   }
+                      // }}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -1554,7 +1560,9 @@ function Hotel() {
                       variant="outlined"
                       name="bank_name_sec"
                       error={errors.name === "bank_name_sec"}
-                      value={bankFields.bank_name_sec}
+                      value={
+                        bankFields.bank_name_sec ? bankFields.bank_name_sec : ""
+                      }
                       onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
@@ -1572,7 +1580,11 @@ function Hotel() {
                       variant="outlined"
                       error={errors.name === "branch_name_sec"}
                       name="branch_name_sec"
-                      value={bankFields.branch_name_sec}
+                      value={
+                        bankFields.branch_name_sec
+                          ? bankFields.branch_name_sec
+                          : ""
+                      }
                       onChange={handlebankChange}
                       sx={{ width: "100%" }}
                     />
@@ -1590,17 +1602,22 @@ function Hotel() {
                       variant="outlined"
                       autoComplete="off"
                       name="ifsci_code_sec"
-                      value={bankFields.ifsci_code_sec}
+                      value={
+                        bankFields.ifsci_code_sec
+                          ? bankFields.ifsci_code_sec
+                          : ""
+                      }
                       onChange={handlebankChange}
-                      onKeyDown={(e) => {
-                        if (
-                          bankFields.ifsci_code_sec &&
-                          bankFields.ifsci_code_sec.length >= 11 &&
-                          e.key !== "Backspace"
-                        ) {
-                          e.preventDefault();
-                        }
-                      }}
+                      // Not needed
+                      // onKeyDown={(e) => {
+                      //   if (
+                      //     bankFields.ifsci_code_sec &&
+                      //     bankFields.ifsci_code_sec.length >= 11 &&
+                      //     e.key !== "Backspace"
+                      //   ) {
+                      //     e.preventDefault();
+                      //   }
+                      // }}
                       sx={{ width: "100%" }}
                     />
                   </div>
@@ -1639,7 +1656,13 @@ function Hotel() {
                         : "hover:bg-green-900 bg-green-700"
                     }  items-center justify-center text-white `}
                   >
-                    {bankFirst ? "Save" : click ? "Edit" : "Update"}
+                    {able
+                      ? "Processing..."
+                      : bankFirst
+                      ? "Save"
+                      : click
+                      ? "Edit"
+                      : "Update"}
                   </button>
                 </div>
               </div>

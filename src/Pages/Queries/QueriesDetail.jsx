@@ -113,7 +113,7 @@ function QueriesDetail() {
         </div>
       </div>
 
-      <div className="flex flex-col justify-start h-[80vh] items-start mt-2 m-auto border border-slate-200 rounded-lg w-[99%]">
+      <div className="flex flex-col justify-start h-fit items-start mt-2 m-auto border border-slate-200 rounded-lg w-[99%]">
         <div className="border w-full rounded-t-lg py-1 bg-[#f5f7f9]">
           <div className="text-xs px-3 ">
             Created: 19-04-2024 | Last Updated: 19/04/2024 - 10:39 PM
@@ -166,8 +166,8 @@ function QueriesDetail() {
             </div>
           </div>
         </div>
-        <div className="flex flex-row w-full h-full  ">
-          <div className="w-[20%] flex flex-col border-r py-1 border-slate-300 bg-[#f5f7f9]">
+        <div className="flex flex-row w-full h-[68vh] "> 
+          <div className="w-[20%] h-full flex flex-col border-r py-1 bordr-slate-300 bg-[#f5f7f9]">
             {querypage.map((item, index) => {
               return (
                 <Link key={index} to={item.link}>
@@ -184,7 +184,7 @@ function QueriesDetail() {
               );
             })}
           </div>
-          <div className="w-[80%] h-full ">
+          <div className="w-[80%] h-[67vh] overflow-y-auto ">
             <Routes>
               <Route path="/" element={<Details />} />
               <Route path="/detail" element={<Details />} />

@@ -21,6 +21,8 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const Clients = () => {
   const [able, setAble] = useState(false);
   const [search, setSearch] = useState("");
@@ -76,7 +78,7 @@ const Clients = () => {
     } else {
       if (stat == "Add") {
         axios
-          .post("https://jajasend.site/api/v1/client", fields)
+          .post(`${BASE_URL}api/v1/client`, fields)
           .then((response) => {
             if (response.data == "success") {
               setReload(!reload);
@@ -102,7 +104,7 @@ const Clients = () => {
             className="w-8 h-6  text-xs bg-red-500 rounded-md text-white"
             onClick={() => {
               axios
-                .delete(`https://jajasend.site/api/v1/client/${id}`)
+                .delete(`${BASE_URL}api/v1/client/${id}`)
                 .then((response) => {
                   toast.dismiss(confirmationToastId);
                   toast.success("Client Deleted Successfully");
@@ -133,7 +135,7 @@ const Clients = () => {
   const handleUpdate = () => {
     setAble(true);
     axios
-      .put(`https://jajasend.site/api/v1/client/${id}`, fields)
+      .put(`${BASE_URL}api/v1/client/${id}`, fields)
       .then((response) => {
         toast.success("Client Updated Successfully");
         setReload(!reload);
@@ -248,7 +250,7 @@ const Clients = () => {
     }
   };
 
-  const quickFilter = () => {
+  const quickFilter = (search) => {
     gridApi.setGridOption("quickFilterText", search);
   };
 
@@ -263,7 +265,7 @@ const Clients = () => {
   useEffect(() => {
     const getdata = () => {
       axios
-        .get("https://jajasend.site/api/v1/client")
+        .get(`${BASE_URL}api/v1/client`)
         .then((response) => {
           setRow(response.data.reverse());
         });
